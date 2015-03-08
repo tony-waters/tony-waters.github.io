@@ -1,0 +1,235 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Using CORS to facilitate development of !co-located Server and Client apps &#8211; Home</title>
+<meta name="description" content="In these post-JSP days it can sometimes be convenient to develop your clent and server code completely separate, even though they may be co-located when in production. This is particularly the case when client and server portions are being worked on by different teams, but is not limited to this scenario. Separate development of client and server code can mean that the client has to make calls to a service on a different server (maybe in a different country, or just a different port on localhost), which may not be allowed because of the Same-Origin Policy implemented by modern browsers.
+
+">
+<meta name="keywords" content="CORS, Spring, AngularJs, Eclipse, NetBeans">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Using CORS to facilitate development of !co-located Server and Client apps">
+<meta name="twitter:description" content="In these post-JSP days it can sometimes be convenient to develop your clent and server code completely separate, even though they may be co-located when in production. This is particularly the case when client and server portions are being worked on by different teams, but is not limited to this scenario. Separate development of client and server code can mean that the client has to make calls to a service on a different server (maybe in a different country, or just a different port on localhost), which may not be allowed because of the Same-Origin Policy implemented by modern browsers.
+
+">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/default-thumb.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Using CORS to facilitate development of !co-located Server and Client apps">
+<meta property="og:description" content="In these post-JSP days it can sometimes be convenient to develop your clent and server code completely separate, even though they may be co-located when in production. This is particularly the case when client and server portions are being worked on by different teams, but is not limited to this scenario. Separate development of client and server code can mean that the client has to make calls to a service on a different server (maybe in a different country, or just a different port on localhost), which may not be allowed because of the Same-Origin Policy implemented by modern browsers.
+
+">
+<meta property="og:url" content="/using-cors-with-rest/">
+<meta property="og:site_name" content="Home">
+
+
+
+
+
+<link rel="canonical" href="/using-cors-with-rest/">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Home Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144-precomposed.png">
+
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<a href="/">Home</a>
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="/about/" >About</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/posts/" >Posts</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="/images/bio-photo.jpg" class="bio-photo" alt="Tony Waters bio photo">
+
+
+  <h3 itemprop="name">Tony Waters</h3>
+  <p></p>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="/using-cors-with-rest/" rel="bookmark" title="Using CORS to facilitate development of !co-located Server and Client apps">Using CORS to facilitate development of !co-located Server and Client apps</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>In these post-JSP days it can sometimes be convenient to develop your clent and server code completely separate, even though they may be co-located when in production. This is particularly the case when client and server portions are being worked on by different teams, but is not limited to this scenario. Separate development of client and server code can mean that the client has to make calls to a service on a different server (maybe in a different country, or just a different port on localhost), which may not be allowed because of the <a href="http://en.wikipedia.org/wiki/Same-origin_policy">Same-Origin Policy</a> implemented by modern browsers.</p>
+
+<p>I found myself in such a situation last year when I was developing a Spring REST service which was used by an AngularJs client. My IDE, Eclipse, was great when developing the server code, but when writing Angular I was bedazzled by <a href="https://blogs.oracle.com/geertjan/entry/integrated_angularjs_development">the great support provided in NetBeans 8</a>. Consequently I found myself switching between Eclipse and NetBeans depending upon whether I was writing server or client code. No real problem there. It seemed like the best of both worlds. That is until I began to make use of Angulars Ajax caperbilities to make calls to the REST server. Though they were both running on localhost, they were using different ports. Spring REST on the predictable <code>8080</code>,  and NetBeans on <code>8383</code>. Which from a Same Origin Policy perspective, is not allowed.</p>
+
+<p>Now, there’s obviously more than one way to solve this problem. I could co-locate the client and server source and configure the different IDEs to only act on different sections of it, or perform a little source copying during the build process to make sure everything was in one place. In both of these solutions the Same Origin Policy goes away because the client and server are co-located when running, and we can forget we ever heard of it.</p>
+
+<p>An alternative is to expect the client and server to be co-located in the development environment(s). If we take this route, we have to tell the server to accept requests from locations other than its own using <a href="http://www.w3.org/TR/cors/">Cross-Origin Resource Sharing or CORS</a>.</p>
+
+<p>In JEE we can do this using a <code>Filter</code>. Add Spring to the mix and we can annotate the filter as a <code>@Component</code> so it is included without having to do anything else. Here’s the finished class:</p>
+
+<pre><code>import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class CorsFilter implements Filter {
+
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+		HttpServletResponse response = (HttpServletResponse) res;
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers", "x-http-method-override, x-requested-with, content-Type, origin, authorization, accept, client-security-token");
+		chain.doFilter(req, res);
+	}
+
+	public void init(FilterConfig filterConfig) {
+		// do stuff when filter created
+	}
+
+	public void destroy() {
+		// do stuff when filter destroyed
+	}
+}
+</code></pre>
+
+      <hr />
+      <footer role="contentinfo">
+        
+        <p class="byline"><strong>Using CORS to facilitate development of !co-located Server and Client apps</strong> was published on <time datetime="2015-02-02T00:00:00+00:00">February 02, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="/value-objects-2/" title="Mapping DDD Value Objects using JPA - Part 2">Mapping DDD Value Objects using JPA - Part 2</a></li>
+    
+      <li><a href="/value-objects/" title="Mapping DDD Value Objects using JPA - Part 1">Mapping DDD Value Objects using JPA - Part 1</a></li>
+    
+      <li><a href="/jekyll-page-centric-site/" title="Creating a page-centric site using Jekyll and GitHub Pages">Creating a page-centric site using Jekyll and GitHub Pages</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  <footer>
+    
+
+<span>&copy; 2015 Tony Waters. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> using the <a href="http://mademistakes.com/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a> theme.</span>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="/assets/js/scripts.min.js"></script>
+
+	        
+
+</body>
+</html>

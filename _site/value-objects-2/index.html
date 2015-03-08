@@ -1,0 +1,452 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Mapping DDD Value Objects using JPA - Part 2 &#8211; Home</title>
+<meta name="description" content="
+  Tracking the identity of ENTITIES is essential, but attaching identity to other objects can hurt system performance, add analytical work, and muddle the model by making all objects look the same. (Evans 2003)
+
+
+">
+<meta name="keywords" content="DDD, JPA">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Mapping DDD Value Objects using JPA - Part 2">
+<meta name="twitter:description" content="
+  Tracking the identity of ENTITIES is essential, but attaching identity to other objects can hurt system performance, add analytical work, and muddle the model by making all objects look the same. (Evans 2003)
+
+
+">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/default-thumb.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mapping DDD Value Objects using JPA - Part 2">
+<meta property="og:description" content="
+  Tracking the identity of ENTITIES is essential, but attaching identity to other objects can hurt system performance, add analytical work, and muddle the model by making all objects look the same. (Evans 2003)
+
+
+">
+<meta property="og:url" content="/value-objects-2/">
+<meta property="og:site_name" content="Home">
+
+
+
+
+
+<link rel="canonical" href="/value-objects-2/">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Home Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144-precomposed.png">
+
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<a href="/">Home</a>
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="/about/" >About</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/posts/" >Posts</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="/images/bio-photo.jpg" class="bio-photo" alt="Tony Waters bio photo">
+
+
+  <h3 itemprop="name">Tony Waters</h3>
+  <p></p>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="/value-objects-2/" rel="bookmark" title="Mapping DDD Value Objects using JPA - Part 2">Mapping DDD Value Objects using JPA - Part 2</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <blockquote>
+  <p>Tracking the identity of ENTITIES is essential, but attaching identity to other objects can hurt system performance, add analytical work, and muddle the model by making all objects look the same. (Evans 2003)</p>
+</blockquote>
+
+<p>In a <a href="/value-objects">previous post</a> I looked at the <a href="http://en.wikipedia.org/wiki/Domain-driven_design">Domain Driven Design</a> concept of Value Objects as outlined by Eric Evans (2003). In this second post I want to show how we can persist such objects to a relational database using JPA.</p>
+
+<p>In this example I’m using H2 as the database and Hibernate as the JPA provider. It has also been tested with EclipseLink. <a href="">Source code</a> is available on GitHub.</p>
+
+<h3 id="mapping-a-value-object-in-jpa-using-embeddable">Mapping a Value Object in JPA using @Embeddable</h3>
+<p>The JPA Specification recognises that not everything is an Entity:</p>
+
+<blockquote>
+  <p>An entity may use other fine-grained classes to represent entity state. Instances of these classes, unlike entity instances, do not have persistent identity of their own. Instead, they exist only as part of the state of the entity to which they belong (JSR 338 - Java Persistence API 2.1)</p>
+</blockquote>
+
+<p>These <code>Embeddable</code> classes provides a convenient mapping for Value Objects. Here are the pertinent parts of the <code>Month</code> Value Object from <a href="/value-objects">Part 1</a>, annotated as a JPA <code>Embeddable</code>:</p>
+
+<pre><code>@Embeddable
+public class Month implements Comparable&lt;Month&gt; {
+	
+	@Column(name="MONTH")
+	private final String value;
+	
+	@SuppressWarnings("unused")
+	private Month() {
+		this.value = null;
+	}
+
+	public Month(String value) {
+		if(!isValid(value)) {
+			throw new DomainException("Not a valid month " + value);
+		}
+		this.value = value;
+	}
+
+	// ... code omitted for brevity ...
+} 
+</code></pre>
+
+<p>In line with the JPA Specification, we provide a no-argument constructor. Consequently we must also provide a value for any <code>final</code> fields within this constructor. To prevent instantiation of this class without passing in a <code>value</code> we make this constructor private, and add a <code>@SuppressWarnings</code> annotation to remove the ensuing ‘never used locally’ warning.</p>
+
+<p>This is an example of JPA making demands upon how we construct our domain classes. It is in direct opposition to DDD which encourages us to only include what is required for the domain. To use Value Objects in JPA some compramises may have to be made.</p>
+
+<p>To see <code>Month</code> in action we need to include it in an Entity:</p>
+
+<pre><code>@Entity
+@Table(name="FOO")
+public class Foo {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ID")
+	private Long entityId;
+	
+	@Version
+	@Column(name="VERSION")
+	private Integer version;
+
+	@Column(name="BAA")
+	private String baa;
+	
+	@Embedded
+	private Month birthMonth;
+	
+	// ... code omitted for brevity ...
+	
+}
+</code></pre>
+
+<p>When we launch the application Hibernate issues the following SQL to create the table:</p>
+
+<pre><code>create table FOO (
+	ID bigint generated by default as identity,
+	BAA varchar(255),
+	MONTH varchar(6),
+	VERSION integer,
+	primary key (ID)
+)
+</code></pre>
+
+<h3 id="overiding-jpa-attributes-in-value-objects">Overiding JPA Attributes in Value Objects</h3>
+<p>If we wanted to use the same Value Object in two places in the same Entity, this would give us two columns with the same name, which would be invalid. Neither would this work if we wanted a different column name depending on the Entity the Value Object in embedded into. </p>
+
+<p>JPA provides the <code>@AttributesOverride</code> annotation for this purpose. We use it to say “I want to use this particular Value Object, but I want it to have a different column name in the database table”. We could either remove it, or leave it in as a default value when no other <code>@Column</code> name is provided.</p>
+
+<pre><code>@Embedded
+@AttributeOverride(name = "value", column = @Column(name = "BIRTH_MONTH"))
+private Month birthMonth;
+
+@Embedded
+@AttributeOverride(name = "value", column = @Column(name = "FOO_MONTH"))
+private Month fooMonth;
+</code></pre>
+
+<p>Here is the new DDL produced by Hibernate:</p>
+
+<pre><code>create table FOO (
+	ID bigint generated by default as identity,
+	BAA varchar(255),
+	BIRTH_MONTH varchar(255),
+	FOO_MONTH varchar(255),
+	VERSION integer,
+	primary key (ID)
+)
+</code></pre>
+
+<h3 id="overiding-jpa-attributes-in-composite-value-objects">Overiding JPA Attributes in Composite Value Objects</h3>
+<p>In part 1 of this post I gave an example of a <code>MonthRange</code> as a composite Value Object. Here is what it looks like with JPA annotations:</p>
+
+<pre><code>@Embeddable
+public class MonthRange {
+
+	@AttributeOverride(name = "value", column = @Column(name = "START_MONTH"))
+	private final Month start;
+	
+	@AttributeOverride(name = "value", column = @Column(name = "END_MONTH"))
+	private final Month end;
+
+	@SuppressWarnings("unused")
+	private MonthRange() {
+		this.start = null;
+		this.end = null;
+	}
+	
+	public MonthRange(Month start, Month end) {
+		if(!isValid(start, end)) {
+			throw new DomainException("Not a valid month range[" + start.getMonthAsString() + "-" + end.getMonthAsString() +"]");
+		}
+		this.start = start;
+		this.end = end;
+	}
+	
+	// ... code omitted for brevity ...
+}
+</code></pre>
+
+<p><code>MonthRange</code> is an <code>@Embeddable</code> object, which is itself composed of <code>@Embeddedable</code> objects. We could now embed the <code>MonthRange</code> into an Entity Object. Here is how we override the column name for <code>Month</code> from within the Entity class:</p>
+
+<pre><code>@Entity
+@Table(name="FOO")
+public class Foo {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="ID")
+	private Long entityId;
+	
+	@Version
+	@Column(name="VERSION")
+	private Integer version;
+
+	@Column(name="BAA")
+	private String baa;
+	
+	@Embedded
+	@AttributeOverride(name = "value", column = @Column(name = "BIRTH_MONTH"))
+	private Month birthMonth;
+	
+	@Embedded
+	@AttributeOverride(name = "value", column = @Column(name = "FOO_MONTH"))
+	private Month fooMonth;
+	
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "start.value", column = @Column(name = "CURRENT_START_MONTH")),
+		@AttributeOverride(name = "end.value", column = @Column(name = "CURRENT_END_MONTH"))
+	})
+	private MonthRange currentMonthRange;
+	
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "start.value", column = @Column(name = "PREVIOUS_START_MONTH")),
+		@AttributeOverride(name = "end.value", column = @Column(name = "PREVIOUS_END_MONTH"))
+	})
+	private MonthRange previousMonthRange;
+	
+	public Foo() {
+		super();
+	}
+	
+	// ... code omitted for brevity ...
+	
+}
+</code></pre>
+
+<p>Here’s what it produces on Hibernate:</p>
+
+<pre><code>create table FOO (
+	ID bigint generated by default as identity,
+	BAA varchar(255),
+	BIRTH_MONTH varchar(255),
+	CURRENT_END_MONTH varchar(255),
+	CURRENT_START_MONTH varchar(255),
+	FOO_MONTH varchar(255),
+	PREVIOUS_END_MONTH varchar(255),
+	PREVIOUS_START_MONTH varchar(255),
+	VERSION integer,
+	primary key (ID)
+)
+</code></pre>
+
+<h3 id="collections-of-embeddables">Collections of Embeddables</h3>
+<blockquote>
+  <p>A persistent field or property of an entity or embeddable class may correspond to a collection of a basic type or embeddable class (JSR 338 - Java Persistence API 2.1)</p>
+</blockquote>
+
+<p>JPA allows for collections of <code>Embeddable</code>s. This is similar to a <code>OneToMany</code> association, needing a separate table to hold the values. Here is an example:</p>
+
+<pre><code>@ElementCollection
+@CollectionTable(name="FOO_MONTH", joinColumns=@JoinColumn(name="FOO_ID"))
+private Collection&lt;Month&gt; months = new ArrayList&lt;Month&gt;();
+</code></pre>
+
+<p>Here’s what Hibernate does with it:</p>
+
+<pre><code>create table FOO (
+	ID bigint generated by default as identity,
+	BAA varchar(255),
+	BIRTH_MONTH varchar(255),
+	CURRENT_END_MONTH varchar(255),
+	CURRENT_START_MONTH varchar(255),
+	FOO_MONTH varchar(255),
+	PREVIOUS_END_MONTH varchar(255),
+	PREVIOUS_START_MONTH varchar(255),
+	VERSION integer,
+	primary key (ID)
+)
+
+create table FOOBAA_MONTH (
+	FOO_ID bigint not null,
+	MONTH varchar(255)
+)
+
+alter table FOOBAA_MONTH 
+	add constraint FK_f3gxv3hla3nch460sx3ss6oex 
+	foreign key (FOO_ID) 
+	references FOO
+</code></pre>
+
+<p>An important restriction on collections of <code>Embeddable</code> classes is that:</p>
+
+<blockquote>
+  <p>An embeddable class (including an embeddable class within another embeddable class) that is con-
+tained within an element collection must not contain an element collection</p>
+</blockquote>
+
+<p>Which means we cannot nest a collection of <code>Embeddable</code>s within another collection of <code>Embeddables</code>. The reasons for this are explained here. While the restriction may seem like an ‘edge case’, I find it can sometimes force us to use an Entity in place of a Value Object.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>In Part 1 of this post I looked at the Domain Driven Design concept of Value Objects and outlined a way of creating such an object by following Eric Evans’ advice. In this follow-up post I have tried to show how <code>Embeddable</code>s provide an obvious means of mapping Value Objects to a relational database when using JPA.</p>
+
+<p>I’ve also tried to show how producing these mappings is not always such a ‘clean’ process. Compromises have to be made between the tenents of DDD and the platform used for its implementation.</p>
+
+<p>Source code for the examples shown here, along with some basic ‘sanity check’ tests, are available on GitHub.</p>
+
+      <hr />
+      <footer role="contentinfo">
+        
+        <p class="byline"><strong>Mapping DDD Value Objects using JPA - Part 2</strong> was published on <time datetime="2015-02-10T00:00:00+00:00">February 10, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="/value-objects/" title="Mapping DDD Value Objects using JPA - Part 1">Mapping DDD Value Objects using JPA - Part 1</a></li>
+    
+      <li><a href="/using-cors-with-rest/" title="Using CORS to facilitate development of !co-located Server and Client apps">Using CORS to facilitate development of !co-located Server and Client apps</a></li>
+    
+      <li><a href="/jekyll-page-centric-site/" title="Creating a page-centric site using Jekyll and GitHub Pages">Creating a page-centric site using Jekyll and GitHub Pages</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  <footer>
+    
+
+<span>&copy; 2015 Tony Waters. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> using the <a href="http://mademistakes.com/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a> theme.</span>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="/assets/js/scripts.min.js"></script>
+
+	        
+
+</body>
+</html>

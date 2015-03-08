@@ -1,0 +1,450 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Mapping DDD Value Objects using JPA - Part 1 &#8211; Home</title>
+<meta name="description" content="In a recent project I drew upon a number of concepts from Domain Driven Design. Among them Value Objects, which Eric Evans says:
+
+">
+<meta name="keywords" content="DDD, JPA">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Mapping DDD Value Objects using JPA - Part 1">
+<meta name="twitter:description" content="In a recent project I drew upon a number of concepts from Domain Driven Design. Among them Value Objects, which Eric Evans says:
+
+">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/default-thumb.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mapping DDD Value Objects using JPA - Part 1">
+<meta property="og:description" content="In a recent project I drew upon a number of concepts from Domain Driven Design. Among them Value Objects, which Eric Evans says:
+
+">
+<meta property="og:url" content="/value-objects/">
+<meta property="og:site_name" content="Home">
+
+
+
+
+
+<link rel="canonical" href="/value-objects/">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Home Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144-precomposed.png">
+
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<a href="/">Home</a>
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="/about/" >About</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/posts/" >Posts</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+
+	<img src="/images/bio-photo.jpg" class="bio-photo" alt="Tony Waters bio photo">
+
+
+  <h3 itemprop="name">Tony Waters</h3>
+  <p></p>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="/value-objects/" rel="bookmark" title="Mapping DDD Value Objects using JPA - Part 1">Mapping DDD Value Objects using JPA - Part 1</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>In a recent project I drew upon a number of concepts from <a href="http://en.wikipedia.org/wiki/Domain-driven_design">Domain Driven Design</a>. Among them Value Objects, which Eric Evans says:</p>
+
+<blockquote>
+  <p>represent a descriptive aspect of the domain that has no conceptual identity (Evans 2003)</p>
+</blockquote>
+
+<p>In terms of creating them he offers the following advice:</p>
+
+<blockquote>
+  <p>When you care only about the attributes of an element of the model, classify it as a VALUE OBJECT. Making it express the meaning of attributes it conveys and give it related functionality. Treat the VALUE OBJECT as immutable. Don’t give it any identity and avoid the design complexities necessary to maintain ENTITIES (Evans 2003)</p>
+</blockquote>
+
+<p>I’d like to outline what a Value Object is in this context and show a simple approach to using them in an application that uses JPA with a relational database.</p>
+
+<p>By way of example I’ll use a (simplified) Value Object from my last project, <code>Month</code> - which denotes a ‘specific month in a specific year’. It could be (and at some point was) represented by a <code>String</code> with the format ‘YYYYmm’. I’ll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.</p>
+
+<h2 id="good-value-objects">‘Good’ Value Objects</h2>
+<p>Re-jigging Evans’s quote, to make a good Value Object one must:</p>
+
+<ol>
+  <li>make it express the meaning of its attribute(s)</li>
+  <li>treat it as immutable</li>
+  <li>don’t give it any identity</li>
+  <li>give it related functionality</li>
+</ol>
+
+<h3 id="make-it-express-the-meaning-of-its-attributes">1. Make it express the meaning of its attribute(s)</h3>
+<p>The Value Object we want to create is used to represent a single attribute – a ‘month in a year’. It wraps a <code>String</code> object that holds the month in the format ‘yyyyMM’. However, Evans seems to be steering us away from calling it something ending in <code>Wrapper</code>, towards “expressing the meaning of the attribute it conveys”. To this end, we could choose to express this attribute in a class named something along the lines of <code>YearMonth</code>, <code>MonthInYear</code> or <code>Month</code> <sup><a href="#notes">[1]</a></sup>:</p>
+
+<pre><code>public class Month {
+	private final String value;
+
+	public Month(String value) {
+		this.value = value;
+	}
+}
+</code></pre>
+
+<p>Now when we work with months the code is more readable, conveying <i>the concept of the attribute being wrapped</i>. </p>
+
+<h3 id="treat-it-as-immutable">2. Treat it as immutable</h3>
+<p>There are no setters in <code>Month</code> to mutate the <code>value</code>. And we’ve declared the field itself <code>final</code>. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is <a href="http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html">a little more involved</a> than we are showing here. Also, if we use reflection, nothing is immutable.</p>
+
+<p>The important thing is that we <i>treat</i> it as immutable, and try to make that clear to future maintainers of the system through the design on the object:</p>
+
+<blockquote>
+  <p>Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential. (Evans 2003)</p>
+</blockquote>
+
+<h3 id="dont-give-it-any-identity">3. Don’t give it any identity</h3>
+<p>Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. It is common, then, to see Value Objects use all of their fields in the <code>equals()</code> and <code>hashCode()</code> calculations. This is in opposition to an Entity where these methods will compare on some form of ID.</p>
+
+<p><code>Month</code> has no database or domain identity, so no ID in the calculations. A combination of the fields are used instead (in this case the single field <code>value</code>):</p>
+
+<pre><code>@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((value == null) ? 0 : value.hashCode());
+	return result;
+}
+
+@Override
+public boolean equals(Object obj) {
+	if (this == obj) return true;
+	if (obj == null) return false;
+	if (getClass() != obj.getClass()) return false;
+	Month other = (Month) obj;
+	if (value == null) {
+		if (other.value != null) return false;
+	} else if (!value.equals(other.value)) {
+		return false;
+	}
+	return true;
+}
+</code></pre>
+
+<p>The fact that two different <code>Month</code> objects are equal so long as their <code>value</code> is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  </p>
+
+<h3 id="give-it-related-functionality">4. Give it related functionality</h3>
+<p>Our Value Object now becomes a magnet for any month-related functionality. We’ll start with validation. Here is the (over-simplified) validation, it uses a <code>static</code> method for validation so that calling code can do a pre-creation validity check if it so chooses:</p>
+
+<pre><code>public class Month {
+	private final String value;
+
+	public Month(String value) {
+		if(!isValid(value)) {
+			throw new DomainValidationException("Not a valid month " + value);
+		}
+		this.value = value;
+	}
+
+	
+	public static boolean isValid(String yearMonth) {
+		if(yearMonth == null || !isInteger(yearMonth) || yearMonth.length() != 6) {
+			return false;
+		}
+		return true;
+	}
+	
+	private static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch(NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+}
+</code></pre>
+
+<p>The <code>isValid()</code> method is where we will put our increasing understanding of what it means for a <code>Month</code> object to be valid. Through this process we can make it impossible to create an invalid <code>Month</code>. And its always clear in our calling code that we’re dealing with months:</p>
+
+<pre><code>String myMonthString = "201501";
+if(Month.isValid(myMonthString)) {
+	new Month(myMonthString);
+}
+
+new Month(null); // throws Exception
+
+new Month("20150"); // throws Exception
+
+new Month("abcdef"); // throws Exception
+</code></pre>
+
+<p>Also, whenever the need for new month-related functionality, there is an obvious place to put it. Here we implement the <code>Comparable</code> interface to add the functionality to compare two <code>Month</code> objects:</p>
+
+<pre><code>public class Month implements Comparable&lt;Month&gt; {
+	
+	// ... code omitted for brevity ...
+	
+	@Override
+	public int compareTo(Month other) {
+		if(other == null) {
+			throw new NullPointerException();
+		}
+		Integer thisMonth = Integer.valueOf(this.value);
+		Integer otherMonth = Integer.valueOf(other.getMonthAsString());
+		if(otherMonth &gt; thisMonth) {
+			return 1;
+		} else if(otherMonth &lt; thisMonth) {
+			return -1;
+		}
+		return 0;
+	}
+
+	// ... code omitted for brevity ...
+	
+}	
+</code></pre>
+
+<p>Now we have followed Eric’s guidelines to identify/create a Value Object, let’s pause a moment to understand what we have gained.</p>
+
+<h2 id="what-we-gain">What we gain</h2>
+<p>First, because our concept of ‘month in a year’ is encapsulated in the <code>Month</code> class, it is easily testable. If we had used a <code>String</code> to represent it, we would undoubtedly be re-testing the responses to different month <code>String</code>s at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.</p>
+
+<p>Second, because a <code>Month</code> validates itself, there is less validation code elsewhere. This is really a more specific version of the previous point. But given that we no longer need to test for responses to invalid values for the month <code>String</code> anywhere else in the application, it deserves a mention. Since we can’t construct an invalid <code>Month</code>, there is nothing to test for.</p>
+
+<p>Third, code that uses the <code>Month</code> class becomes more succinct and more readable. Non-developers are more likely to understand the logic than if we had stuck to the <code>String</code> representation.</p>
+
+<p>Forth, tracking the lifecycle of an Entity has a degree of overhead and complexity associated with it, even with modern ORM frameworks. If we utilise Value Objects fully we will have a simpler, more maintainable and performant system.</p>
+
+<p>There’s probably more.</p>
+
+<p>Before concluding Part 1 of this 2-part post, its worth mentioning another (perhaps obvious) feature of Value Objects.</p>
+
+<h2 id="composite-value-objects">Composite Value Objects</h2>
+
+<blockquote>
+  <p>A VALUE OBJECT can be an assemblage of other objects (Evans 2003)</p>
+</blockquote>
+
+<p>When you think about it, there is nothing to stop us creating Value Objects from other Value Objects.  Continuing our example with the <code>Month</code> Value Object, imagine a scenario where we wanted to represent a range of months – like January 2001 to August 2015.</p>
+
+<p>We already have a <code>Month</code> Value Object so lets re-use it:</p>
+
+<pre><code>public class MonthRange {
+
+	private final Month start;
+	
+	private final Month end;
+	
+	public MonthRange(Month start, Month end) {
+		if(!isValid(start, end)) {
+			throw new DomainException("Not a valid month range");
+		}
+		this.start = start;
+		this.end = end;
+	}
+	
+	public static boolean isValid(Month start, Month end) {
+		// no need to check start and end for null - its already done in Month
+		if(start.compareTo(end) != 1) { 
+			return false;
+		}
+		return true;
+	}
+}
+</code></pre>
+
+<p>The <code>equals()</code> and <code>hashCode()</code> of this new composite Value Object holds no reference to any identity, as we expect from a Value Object, and is instead made up of the objects constituent fields (themselves Value Objects):</p>
+
+<pre><code>	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((end == null) ? 0 : end.hashCode());
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		MonthRange other = (MonthRange) obj;
+		if (end == null) {
+			if (other.end != null)
+				return false;
+		} else if (!end.equals(other.end))
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
+		return true;
+	} 
+</code></pre>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>Following Evans (2003) I have outlined a method of creating Value Objects, specifically:</p>
+
+<ol>
+  <li>make it express the meaning of its attribute(s)</li>
+  <li>treat it as immutable</li>
+  <li>don’t give it any identity</li>
+  <li>give it related functionality</li>
+</ol>
+
+<p>If you’re anything like me, at some point you will have thought “isn’t a lot of this just good design practice that applies to any class?” After all, we’re supposed to give classes meaningful names. And we’re supposed to co-locate data and the methods that relate to it within a class – that’s just encapsulation! And this is of course true. In this sense a DDD Value Object is rooted in a wider context of Java best practices.</p>
+
+<p>In <a href="/value-objects-2">Part 2</a> of this post I will look at how <code>Embeddable</code>s provide a means to represent Value Objects in a JPA environment.</p>
+
+<hr />
+
+<h3 id="a-namenotesanotes"><a name="notes"></a>Notes</h3>
+
+<ol>
+  <li>The project in question was using Java 7. I think <code>YearMonth</code> is a good name to use for this concept, but since Java 8 has <a href="http://docs.oracle.com/javase/8/docs/api/index.html?java/time/package-summary.html">a very nice time API</a> (goodbye Joda-Time!) which, among other things, provides a <code>YearMonth</code> class, this is perhaps not so good a choice.</li>
+</ol>
+
+<h3 id="resources">Resources</h3>
+<p><a href="http://www.domaindrivendesign.org/books/evans_2003">Domain-Driven Design: Tackling Complexity in the Heart of Software</a> – Eric Evans seminal 2003 work on Domain Driven Design.</p>
+
+<p><a href="http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson">Power Use of Value Objects in DDD</a> – A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program’s architecture and make it more readable and testable.</p>
+
+
+      <hr />
+      <footer role="contentinfo">
+        
+        <p class="byline"><strong>Mapping DDD Value Objects using JPA - Part 1</strong> was published on <time datetime="2015-02-05T00:00:00+00:00">February 05, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="/value-objects-2/" title="Mapping DDD Value Objects using JPA - Part 2">Mapping DDD Value Objects using JPA - Part 2</a></li>
+    
+      <li><a href="/using-cors-with-rest/" title="Using CORS to facilitate development of !co-located Server and Client apps">Using CORS to facilitate development of !co-located Server and Client apps</a></li>
+    
+      <li><a href="/jekyll-page-centric-site/" title="Creating a page-centric site using Jekyll and GitHub Pages">Creating a page-centric site using Jekyll and GitHub Pages</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  <footer>
+    
+
+<span>&copy; 2015 Tony Waters. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> using the <a href="http://mademistakes.com/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a> theme.</span>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="/assets/js/scripts.min.js"></script>
+
+	        
+
+</body>
+</html>
