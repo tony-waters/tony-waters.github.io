@@ -1,17 +1,17 @@
 ---
 layout: post
-title: Using CORS to facilitate development of !co-located Server and Client apps
+title: Using CORS to simplify development of distributed Server and Client applications
 tags: [CORS, Spring, AngularJs, Eclipse, NetBeans]
 ---
 In these post-JSP days it can sometimes be convenient to develop your clent and server code completely separate, even though they may be co-located when in production. This is particularly the case when client and server portions are being worked on by different teams, but is not limited to this scenario. Separate development of client and server code can mean that the client has to make calls to a service on a different server (maybe in a different country, or just a different port on localhost), which may not be allowed because of the [Same-Origin Policy](http://en.wikipedia.org/wiki/Same-origin_policy) implemented by modern browsers.
 
-I found myself in such a situation last year when I was developing a Spring REST service which was used by an AngularJs client. My IDE, Eclipse, was great when developing the server code, but when writing Angular I was bedazzled by [the great support provided in NetBeans 8](https://blogs.oracle.com/geertjan/entry/integrated_angularjs_development). Consequently I found myself switching between Eclipse and NetBeans depending upon whether I was writing server or client code. No real problem there. It seemed like the best of both worlds. That is until I began to make use of Angulars Ajax caperbilities to make calls to the REST server. Though they were both running on localhost, they were using different ports. Spring REST on the predictable `8080`,  and NetBeans on `8383`. Which from a Same Origin Policy perspective, is not allowed.
+I found myself in such a situation last year when I was the sole developer of a Spring REST service which was used by an AngularJs client. My IDE, Eclipse, was great when developing the server code, but when I began the client code I was bedazzled by [the great support provided in NetBeans 8](https://blogs.oracle.com/geertjan/entry/integrated_angularjs_development). Consequently I found myself switching between Eclipse and NetBeans depending upon whether I was writing server or client code. No real problem there. It seemed like the best of both worlds. That is until I began to make use of Angulars Ajax caperbilities to make calls to the REST server. Though they were both running on localhost, they were using different ports. Spring REST on the predictable `8080`,  and NetBeans on `8383`. Which from a Same Origin Policy perspective, is not allowed.
 
 Now, there's obviously more than one way to solve this problem. I could co-locate the client and server source and configure the different IDEs to only act on different sections of it, or perform a little source copying during the build process to make sure everything was in one place. In both of these solutions the Same Origin Policy goes away because the client and server are co-located when running, and we can forget we ever heard of it.
 
-An alternative is to expect the client and server to be co-located in the development environment(s). If we take this route, we have to tell the server to accept requests from locations other than its own using [Cross-Origin Resource Sharing or CORS](http://www.w3.org/TR/cors/).
+An alternative is to allow the client and server to be distributed in the development environment(s). If we take this route, we have to tell the server to accept requests from locations other than its own using [Cross-Origin Resource Sharing or CORS](http://www.w3.org/TR/cors/).
 
-In JEE we can do this using a `Filter`. Add Spring to the mix and we can annotate the filter as a `@Component` so its included without having to do anything else. Here's the finished class:
+In JEE we can do this using a `Filter`. Add Spring to the mix and we can annotate the filter as a `@Component` so it is included without having to do anything else. Here's the finished class:
 
 	import java.io.IOException;
 	

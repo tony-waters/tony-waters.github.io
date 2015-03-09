@@ -17,7 +17,7 @@ I'd like to outline what a Value Object is in this context and show a simple app
 By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'YYYYmm'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
 ##'Good' Value Objects
-Re-jigging Evans's quote, to make a good Value Object one must:
+Re-jigging Evans quote, to make a good Value Object one must:
 
 1. make it express the meaning of its attribute(s)
 2. treat it as immutable
@@ -39,14 +39,16 @@ The Value Object we want to create is used to represent a single attribute -- a 
 Now when we work with months the code is more readable, conveying <i>the concept of the attribute being wrapped</i>. 
 	
 ###2. Treat it as immutable
-There are no setters in `Month` to mutate the `value`. And we've declared the field itself `final`. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is [a little more involved](http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html) than we are showing here. Also, if we use reflection, nothing is immutable.
-
-The important thing is that we <i>treat</i> it as immutable, and try to make that clear to future maintainers of the system through the design on the object:
+There are no setters in `Month` to mutate the `value`. And we've declared the field itself `final`. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is [a little more involved](http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html) than is shown here. Also, if we use reflection, nothing is immutable.
 
 >Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential. (Evans 2003)
 
+The important thing is that we <i>treat</i> it as immutable, and try to make that clear to future maintainers of the system through the design on the class.
+
 ###3. Don’t give it any identity
-Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. It is common, then, to see Value Objects use all of their fields in the `equals()` and `hashCode()` calculations. This is in opposition to an Entity where these methods will compare on some form of ID.
+Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. 
+
+It is common, then, to see Value Objects use all of their fields in `equals()` and `hashCode()` calculations. This is in opposition to an Entity where these methods will compare on some form of ID.
 
 `Month` has no database or domain identity, so no ID in the calculations. A combination of the fields are used instead (in this case the single field `value`):
 
@@ -76,7 +78,7 @@ Value Objects have no identity apart from the combination of their field values.
 The fact that two different `Month` objects are equal so long as their `value` is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  
 
 ###4. Give it related functionality
-Our Value Object now becomes a magnet for any month-related functionality. We'll start with validation. Here is the (over-simplified) validation, it uses a `static` method for validation so that calling code can do a pre-creation validity check if it so chooses:
+Our Value Object now becomes a magnet for any month-related functionality. We'll start with some (over-simplified) validation, using a `static` `isValid()` method so that calling code can do a pre-creation validity check if it so chooses:
 
 	public class Month {
 		private final String value;
@@ -104,9 +106,12 @@ Our Value Object now becomes a magnet for any month-related functionality. We'll
 			}
 			return true;
 		}
+		
+		// ... code omitted for brevity ...
+		
 	}
 
-The `isValid()` method is where we will put our increasing understanding of what it means for a `Month` object to be valid. Through this process we can make it impossible to create an invalid `Month`. And its always clear in our calling code that we're dealing with months:
+The `isValid()` method is where we locate our increasing understanding of what it means for a `Month` object to be valid. Through this process it becomes increasingly difficult to create an invalid `Month`. And it's always clear in our calling code that we are dealing with months:
 
 	String myMonthString = "201501";
 	if(Month.isValid(myMonthString)) {
@@ -119,12 +124,20 @@ The `isValid()` method is where we will put our increasing understanding of what
 	
 	new Month("abcdef"); // throws Exception
 
-Also, whenever the need for new month-related functionality, there is an obvious place to put it. Here we implement the `Comparable` interface to add the functionality to compare two `Month` objects:
+Also, whenever the need for new month-related functionality, there is an obvious place to put it. Here we add some functionality to compare two `Month` objects:
 
 	public class Month implements Comparable<Month> {
 		
 		// ... code omitted for brevity ...
+			
+		public boolean isBefore(Month other) {
+			return this.compareTo(other) == -1;
+		}
 		
+		public boolean isAfter(Month other) {
+			return this.compareTo(other) == 1;
+		}
+	
 		@Override
 		public int compareTo(Month other) {
 			if(other == null) {
@@ -132,10 +145,10 @@ Also, whenever the need for new month-related functionality, there is an obvious
 			}
 			Integer thisMonth = Integer.valueOf(this.value);
 			Integer otherMonth = Integer.valueOf(other.getMonthAsString());
-			if(otherMonth > thisMonth) {
-				return 1;
-			} else if(otherMonth < thisMonth) {
+			if(thisMonth < otherMonth) {
 				return -1;
+			} else if(thisMonth > otherMonth) {
+				return 1;
 			}
 			return 0;
 		}
@@ -144,12 +157,12 @@ Also, whenever the need for new month-related functionality, there is an obvious
 		
 	}	
 
-Now we have followed Eric's guidelines to identify/create a Value Object, let's pause a moment to understand what we have gained.
+Now we have followed Eric's guidelines to identify/create a Value Object, let's look moment at what we have gained.
 
 ##What we gain
-First, because our concept of 'month in a year' is encapsulated in the `Month` class, it is easily testable. If we had used a `String` to represent it, we would undoubtedly be re-testing the responses to different month `String`s at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.
+First, because our concept of 'month in a year' is encapsulated in the `Month` class, it is easily testable. If we had used a `String` to represent it, we would undoubtedly be re-testing the responses to different month `Strings` at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.
  
-Second, because a `Month` validates itself, there is less validation code elsewhere. This is really a more specific version of the previous point. But given that we no longer need to test for responses to invalid values for the month `String` anywhere else in the application, it deserves a mention. Since we can't construct an invalid `Month`, there is nothing to test for.
+Second, because a `Month` validates itself, there is less validation code elsewhere. This is really a more specific version of the previous point. But given that we no longer need to test for responses to invalid values for the month `String` anywhere else in the application, it deserves a mention. Since we can't construct an invalid `Month`, there is nothing to test for outside the `Month` itself.
 
 Third, code that uses the `Month` class becomes more succinct and more readable. Non-developers are more likely to understand the logic than if we had stuck to the `String` representation.
 
@@ -163,9 +176,7 @@ Before concluding Part 1 of this 2-part post, its worth mentioning another (perh
 
 >A VALUE OBJECT can be an assemblage of other objects (Evans 2003)
 
-When you think about it, there is nothing to stop us creating Value Objects from other Value Objects.  Continuing our example with the `Month` Value Object, imagine a scenario where we wanted to represent a range of months -- like January 2001 to August 2015.
-
-We already have a `Month` Value Object so lets re-use it:
+When you think about it, there is nothing to stop us creating Value Objects from other Value Objects.  Continuing our example with `Month`, imagine a scenario where we wanted to represent a range of months:
 
 	public class MonthRange {
 	
@@ -182,12 +193,11 @@ We already have a `Month` Value Object so lets re-use it:
 		}
 		
 		public static boolean isValid(Month start, Month end) {
-			// no need to check start and end for null - its already done in Month
-			if(start.compareTo(end) != 1) { 
-				return false;
-			}
-			return true;
+			return start.isBefore(end);
 		}
+	
+		// ... code omitted for brevity ...
+		
 	}
 
 The `equals()` and `hashCode()` of this new composite Value Object holds no reference to any identity, as we expect from a Value Object, and is instead made up of the objects constituent fields (themselves Value Objects):
@@ -220,18 +230,10 @@ The `equals()` and `hashCode()` of this new composite Value Object holds no refe
 			return true;
 		} 
 
-##Conclusion
-Following Evans (2003) I have outlined a method of creating Value Objects, specifically:
+##Conclusion to Part 1
+If you're anything like me, at some point you will have thought "isn't a lot of this just good design practice that applies to any class?" After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it within a class -- that's just encapsulation! And this is of course true. In this sense a DDD Value Object is rooted in a wider context of Java best practices.
 
-1. make it express the meaning of its attribute(s)
-2. treat it as immutable
-3. don’t give it any identity
-4. give it related functionality
-
-
-If you're anything like me, at some point you will have thought "isn't a lot of this just good design practice that applies to any class?" After all, we're supposed to give classes meaningful names. And we're supposed to co-locate data and the methods that relate to it within a class -- that's just encapsulation! And this is of course true. In this sense a DDD Value Object is rooted in a wider context of Java best practices.
-
-In [Part 2](/value-objects-2) of this post I will look at how `Embeddable`s provide a means to represent Value Objects in a JPA environment.
+In [Part 2](/value-objects-2) of this post I will look at how `Embeddables` provide a convenient way to represent Value Objects in a JPA environment.
 
 <hr />
 
