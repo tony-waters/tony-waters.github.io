@@ -7,7 +7,7 @@ tags: [DDD, JPA]
 
 In a [previous post](/value-objects) I looked at the [Domain Driven Design](http://en.wikipedia.org/wiki/Domain-driven_design) concept of Value Objects as outlined by Eric Evans (2003). In this second post I want to show how we can persist such objects to a relational database using JPA.
 
-In this example I'm using H2 as the database and Hibernate as the JPA provider. It has also been tested with EclipseLink. [Source code]() is available on GitHub.
+In this example I'm using H2 as the database and Hibernate as the JPA provider. It has also been tested with EclipseLink. [Source code](https://github.com/tony-waters/example-value-objects) is available on GitHub.
 
 ###Mapping a Value Object in JPA using @Embeddable
 The JPA Specification recognises that not everything is an Entity:
