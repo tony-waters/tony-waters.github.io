@@ -1,0 +1,487 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Users, Roles and Permissions unobtrusively with Spring Security 3.2 using JPA and Java config &#8211; Home</title>
+<meta name="description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:
+
+">
+<meta name="keywords" content="">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Users, Roles and Permissions unobtrusively with Spring Security 3.2 using JPA and Java config">
+<meta name="twitter:description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:
+
+">
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/default-thumb.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Users, Roles and Permissions unobtrusively with Spring Security 3.2 using JPA and Java config">
+<meta property="og:description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:
+
+">
+<meta property="og:url" content="/spring-security-1/">
+<meta property="og:site_name" content="Home">
+
+
+
+
+
+<link rel="canonical" href="/spring-security-1/">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Home Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+	<script src="/assets/js/vendor/html5shiv.min.js"></script>
+	<script src="/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700%7CPT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144-precomposed.png">
+
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+</head>
+
+<body class="post">
+
+<!--[if lt IE 9]><div class="browser-upgrade alert alert-info">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div><![endif]-->
+
+<div class="navigation-wrapper">
+	<div class="site-name">
+		<a href="/">Home</a>
+	</div><!-- /.site-name -->
+	<div class="top-navigation">
+		<nav role="navigation" id="site-nav" class="nav">
+		    <ul>
+		        
+				    
+				        
+				    
+				    <li><a href="/about/" >About</a></li>
+				
+				    
+				        
+				    
+				    <li><a href="/posts/" >Posts</a></li>
+				
+		    </ul>
+		</nav>
+	</div><!-- /.top-navigation -->
+</div><!-- /.navigation-wrapper -->
+
+
+
+<div id="main" role="main">
+  <div class="article-author-side">
+    
+    
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+	<img src="/images/bio-photo.jpg" class="bio-photo" alt="Tony Waters bio photo">
+
+
+  <h3 itemprop="name">Tony Waters</h3>
+  <p></p>
+  
+  
+  
+  
+  <a href="http://linkedin.com/in/drtonywaters" class="author-social" target="_blank"><i class="fa fa-fw fa-linkedin-square"></i> LinkedIn</a>
+  
+  
+  <a href="http://github.com/tony-waters" class="author-social" target="_blank"><i class="fa fa-fw fa-github"></i> Github</a>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+  </div>
+  <article class="post">
+    <div class="headline-wrap">
+      
+        <h1><a href="/spring-security-1/" rel="bookmark" title="Users, Roles and Permissions unobtrusively with Spring Security 3.2 using JPA and Java config">Users, Roles and Permissions unobtrusively with Spring Security 3.2 using JPA and Java config</a></h1>
+      
+    </div><!--/ .headline-wrap -->
+    <div class="article-wrap">
+      <p>Spring Security 3 (documentation and standard schemas) doesn’t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:</p>
+
+<pre><code>@PreAuthorize("hasRole('ROLE_USER')")
+boolean readFoo();
+</code></pre>
+
+<p>… rather than this:</p>
+
+<pre><code>@PreAuthorize("hasPermission('PERM_READ_FOO')")
+boolean readFoo();
+</code></pre>
+
+<p>I want to show how we can use Spring Security 3 for unobtrusively implementing authorisation, where:</p>
+
+<ol>
+  <li>Authorisation is based on Permissions, not Roles</li>
+  <li>The core domain model has no knowledge of the security model</li>
+  <li>The security model has no knowledge of how it is implemented (ie. Spring Security)</li>
+</ol>
+
+<p>Source code and tests can be found on <a href="">GitHub</a>. Best understanding can be obtained by running the tests there, but here’s the walkthrough:</p>
+
+<h2 id="the-core-domain">The core domain</h2>
+<p>To begin, we will create an entity for our core domain which represents a <code>Member</code> – basically a registered user in the system:</p>
+
+<pre><code>@Entity
+@Table(name="MEMBER")
+public class Member {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID")
+	private Long entityId;
+
+	@Version
+	@Column(name = "VERSION")
+	private Integer version;
+
+	@Column(name = "USERNAME")
+	private String username;
+
+	@Column(name = "FIRST_NAME")
+	private String firstName;
+
+	@Column(name = "LAST_NAME")
+	private String lastName;
+
+	public String getUsername() {
+		return username;
+	}
+}
+</code></pre>
+
+<p>I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only link between a member and the security domain is the username.</p>
+
+<p>The <code>Member</code> knows nothing of security concerns.</p>
+
+<h2 id="the-security-domain">The security domain</h2>
+<p>We define a separate security domain where we describe the security needs of our application. A user of our system (a <code>Member</code>) has a related <code>Credential</code> in the security domain (containing a username and password):</p>
+
+<pre><code>@Entity
+@Table(name="CREDENTIALS")
+public class Credentials {
+
+	@Id
+	@Column(name = "USERNAME")
+	private String username;
+	
+	@Column(name = "PASSWORD")
+	private String password;
+	
+	@Column(name = "ENABLED")
+	private Boolean enabled;
+	
+	@Version
+	@Column(name = "VERSION")
+	private Integer version;
+	
+	@ManyToMany
+	@JoinTable(
+			name = "MEMBER_ROLE", 
+			joinColumns = {@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")}, 
+			inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")}
+	)
+	private Collection&lt;Role&gt; roles = new HashSet&lt;Role&gt;();
+	
+	// ... code omitted for brevity ...
+}
+</code></pre>
+
+<p>Specific <code>Credentials</code> are associated with one or more <code>Roles</code>:</p>
+
+<pre><code>@Entity
+@Table(name="ROLE")
+public class Role {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID")
+	private Long entityId;
+
+	@Version
+	@Column(name = "VERSION")
+	private Integer version;
+	
+	@Column(name="NAME")
+	private String name;
+	
+	@ManyToMany
+	@JoinTable(
+			name = "ROLE_PERMISSION", 
+			joinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")}, 
+			inverseJoinColumns = {@JoinColumn(name = "PERMISSION_ID", referencedColumnName = "ID")}
+	)
+	private Collection&lt;Permission&gt; permissions = new HashSet&lt;Permission&gt;();
+	
+	// ... code omitted for brevity ...
+
+}
+</code></pre>
+
+<p>And a <code>Role</code> is associated with one or more <code>Persissions</code>:</p>
+
+<pre><code>@Entity
+@Table(name="PERMISSION")
+public class Permission {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID")
+	private Long entityId;
+
+	@Version
+	@Column(name = "VERSION")
+	private Integer version;
+	
+	@Column(name="NAME")
+	private String name;
+
+	// ... code omitted for brevity ...
+	
+}
+</code></pre>
+
+<p>Although representing security concerns, these three classes know nothing of how those concerns are implemented. There is no reference to Spring Security anywhere in the <a href="">source code</a>. </p>
+
+<p>Their JPA mappings produce the following five tables:</p>
+
+<pre><code>create table CREDENTIALS (
+    USERNAME varchar(255) not null,
+    ENABLED boolean,
+    PASSWORD varchar(255),
+    VERSION integer,
+    primary key (USERNAME)
+)
+
+create table MEMBER (
+    ID bigint generated by default as identity,
+    FIRST_NAME varchar(255),
+    LAST_NAME varchar(255),
+    USERNAME varchar(255),
+    VERSION integer,
+    primary key (ID)
+)
+
+create table MEMBER_ROLE (
+    USERNAME varchar(255) not null,
+    ROLE_ID bigint not null
+)
+
+create table PERMISSION (
+    ID bigint generated by default as identity,
+    NAME varchar(255),
+    VERSION integer,
+    primary key (ID)
+)
+
+create table ROLE (
+    ID bigint generated by default as identity,
+    NAME varchar(255),
+    VERSION integer,
+    primary key (ID)
+)
+
+create table ROLE_PERMISSION (
+    ROLE_ID bigint not null,
+    PERMISSION_ID bigint not null
+)
+</code></pre>
+
+<p>Having created our security domain classes, lets look at how we would implement this using ‘out-of-the-box’ Spring Security.</p>
+
+<h2 id="spring-security----userdetailsservice-userdetails-and-grantedauthority">Spring Security – UserDetailsService, UserDetails, and GrantedAuthority</h2>
+<p>In order to slot into the Spring Security infastructure we will be working with three Spring interfaces from the <code>org.springframework.security.core</code> package. First, <code>UserDetailsService</code>, which is the entry point in this code for Spring Security. It will load the <code>UserDetails</code> associated with the provided username:</p>
+
+<pre><code>public interface UserDetailsService {
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+}
+</code></pre>
+
+<p><code>UserDetails</code> contains security-related information about the user, including what they are allowed to do (<code>GrantedAuthority</code>):</p>
+
+<pre><code>public interface UserDetails extends Serializable {
+    Collection&lt;? extends GrantedAuthority&gt; getAuthorities();
+    String getPassword();
+    String getUsername();
+    boolean isAccountNonExpired();
+    boolean isAccountNonLocked();
+    boolean isCredentialsNonExpired();
+    boolean isEnabled();
+}
+</code></pre>
+
+<p>A <code>GrantedAuthority</code> is a string representation of a permission the user has, such as <code>PERM_READ_FOO</code> or <code>PREM_DELETE_FOO</code>:</p>
+
+<pre><code>public interface GrantedAuthority extends Serializable {
+    String getAuthority();
+}
+</code></pre>
+
+<p>To use Spring Security we will implement a version of <code>UserDetails</code> and <code>UserDetailsService</code> that works with our data structure and domain classes.</p>
+
+<h2 id="implementing-the-security-domain-classes-using-springsecurity">Implementing the security domain classes using SpringSecurity</h2>
+<p><code>CredentialsAdapter</code> is used to integrate our security domain with Spring Security. It wraps a <code>Credentials</code> object and treats it as a <code>UserDetails</code> object:</p>
+
+<pre><code>public class CredentialsAdapter implements UserDetails {
+	
+	private Credentials credentials;
+	
+	public CredentialsAdapter(Credentials credentials) {
+		this.credentials = credentials;
+	}
+	
+	@Override
+	public Collection&lt;GrantedAuthority&gt; getAuthorities() {
+		Set&lt;GrantedAuthority&gt; authorities = new HashSet&lt;GrantedAuthority&gt;();
+		for(Role role : credentials.getRoles()) {
+			for(Permission permission : role.getPermissions()) {
+				authorities.add(new SimpleGrantedAuthority(permission.getName()));
+			}
+		}
+		return authorities;
+	}
+
+	@Override
+	public String getPassword() {
+		return credentials.getPassword();
+	}
+
+	@Override
+	public String getUsername() {
+		return credentials.getUsername();
+	}
+
+	// ... code omitted for brevity ...
+}
+</code></pre>
+
+<p>Notice that <code>getAuthorities()</code> now returns a collection of whatever <code>Permissions</code> are associated with the <code>Credentials</code>, rather than <code>Roles</code>. By returning them as a collection of <code>GrantedAuthority</code> objects we can use the <code>CredentialsAdapter</code> from within our implementation of <code>UserDetailsService</code>:</p>
+
+<pre><code>@Service("authService")
+@Transactional
+public class CredentialsService implements UserDetailsService {
+	
+	@Autowired
+	private CredentialsRepository credentialsRepository;
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Credentials credentials = credentialsRepository.findOne(username);
+		if(credentials == null) {
+			throw new UsernameNotFoundException(username);
+		}
+		return new CredentialsAdapter(credentials);
+	}
+}
+</code></pre>
+
+<h3 id="conclusion">Conclusion</h3>
+<p>While Spring Security doesn’t appear to support it ‘out-of-the-box’, it is easily adapted to work in an environment where:</p>
+
+<ol>
+  <li>Authorisation is based on Permissions, not Roles</li>
+  <li>The core domain model has no knowledge of the security model</li>
+  <li>The security model has no knowledge of how it is implemented (ie. Spring Security)</li>
+</ol>
+
+<p>So we can now write this:</p>
+
+<pre><code>@PreAuthorize("hasRole('PERM_READ_FOO')")
+boolean readFoo();
+</code></pre>
+
+<p>And avoid hard-coding roles into our system. While it would be nicer to have <code>hasPermission</code> rather that <code>hasRole</code>, I think I can live with it.</p>
+
+
+      <hr />
+      <footer role="contentinfo">
+        
+        <p class="byline"><strong>Users, Roles and Permissions unobtrusively with Spring Security 3.2 using JPA and Java config</strong> was published on <time datetime="2015-03-11T00:00:00+00:00">March 11, 2015</time>.</p>
+      </footer>
+    </div><!-- /.article-wrap -->
+  
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrap">
+  <div class="related-articles">
+  <h4>You might also enjoy <small class="pull-right">(<a href="/posts/">View all posts</a>)</small></h4>
+    <ul>
+    
+      <li><a href="/value-objects-2/" title="Mapping DDD Value Objects using JPA - Part 2">Mapping DDD Value Objects using JPA - Part 2</a></li>
+    
+      <li><a href="/value-objects/" title="Mapping DDD Value Objects using JPA - Part 1">Mapping DDD Value Objects using JPA - Part 1</a></li>
+    
+      <li><a href="/using-cors-with-rest/" title="Using CORS to simplify development of distributed Server and Client applications">Using CORS to simplify development of distributed Server and Client applications</a></li>
+    
+    </ul>
+    <hr />
+  </div><!-- /.related-articles -->
+  <footer>
+    
+
+<span>&copy; 2015 Tony Waters. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a></span>
+
+  </footer>
+</div><!-- /.footer-wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="/assets/js/scripts.min.js"></script>
+
+	        
+
+</body>
+</html>
