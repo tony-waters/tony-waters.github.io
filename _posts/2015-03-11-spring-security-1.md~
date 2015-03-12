@@ -272,6 +272,19 @@ We use the `CredentialsAdapter` in our implementation of `UserDetailsService`:
 		}
 	}
 
+So we can now write this:
+
+	@PreAuthorize("hasRole('PERM_READ_FOO')")
+	boolean readFoo();
+
+And avoid hard-coding roles into our system. Though it would be nicer to have something more descriptive than `hasRole`.
+
+Fortunately, the root class for dealing with the Spring Security expression evaluations `org.springframework.security.access.expression.SecurityExpressionRoot` provides an `hasAuthority()` method which simply calls the `hasRole()` method. So we can write:
+
+	@PreAuthorize("hasAuthority('PERM_READ_FOO')")
+	boolean readFoo();
+
+
 ###Conclusion
 While Spring Security doesn't appear to support it 'out-of-the-box', it is easily adapted to work in an environment where:
 
@@ -279,10 +292,4 @@ While Spring Security doesn't appear to support it 'out-of-the-box', it is easil
 2. The core domain model has no knowledge of the security model
 3. The security model has no knowledge of how it is implemented (ie. Spring Security)
 
-So we can now write this:
-
-	@PreAuthorize("hasRole('PERM_READ_FOO')")
-	boolean readFoo();
-
-And avoid hard-coding roles into our system. While it would be nicer to have `hasPermission` rather that `hasRole`, I think I can live with it.
 

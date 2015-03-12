@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="/feed.xml" />
 <link rel="alternate" type="text/html" href="" />
-<updated>2015-03-12T00:30:21+00:00</updated>
+<updated>2015-03-12T11:32:00+00:00</updated>
 <id>/</id>
 <author>
   <name>Tony Waters</name>
@@ -97,7 +97,7 @@ public class Member {
 &lt;p&gt;The &lt;code&gt;Member&lt;/code&gt; knows nothing of security concerns.&lt;/p&gt;
 
 &lt;h2 id=&quot;the-security-domain&quot;&gt;The security domain&lt;/h2&gt;
-&lt;p&gt;We define a separate security domain where we describe the security needs of our application. A user of our system (a &lt;code&gt;Member&lt;/code&gt;) has a related &lt;code&gt;Credential&lt;/code&gt; in the security domain (containing a username and password):&lt;/p&gt;
+&lt;p&gt;We define a separate security domain where we describe the security needs of our application. A user of our system (a &lt;code&gt;Member&lt;/code&gt;) has a related &lt;code&gt;Credentials&lt;/code&gt; in the security domain (containing a username and password):&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;@Entity
 @Table(name=&quot;CREDENTIALS&quot;)
@@ -245,17 +245,17 @@ create table ROLE_PERMISSION (
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;A &lt;code&gt;GrantedAuthority&lt;/code&gt; is a string representation of a permission the user has, such as &lt;code&gt;PERM_READ_FOO&lt;/code&gt; or &lt;code&gt;PREM_DELETE_FOO&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;A &lt;code&gt;GrantedAuthority&lt;/code&gt; is a string representation of a permission the user has, such as &lt;code&gt;PERM_READ_FOO&lt;/code&gt; or &lt;code&gt;PERM_DELETE_FOO&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;public interface GrantedAuthority extends Serializable {
     String getAuthority();
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;To use Spring Security we will implement a version of &lt;code&gt;UserDetails&lt;/code&gt; and &lt;code&gt;UserDetailsService&lt;/code&gt; that works with our data structure and security domain classes.&lt;/p&gt;
+&lt;p&gt;To use Spring Security we will implement a version of &lt;code&gt;UserDetails&lt;/code&gt; and &lt;code&gt;UserDetailsService&lt;/code&gt; that works with our security domain classes.&lt;/p&gt;
 
 &lt;h2 id=&quot;implementing-the-security-domain-classes-using-spring-security&quot;&gt;Implementing the security domain classes using Spring Security&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;CredentialsAdapter&lt;/code&gt; is used to integrate our security domain with Spring Security. It wraps a &lt;code&gt;Credentials&lt;/code&gt; object in order to treat it as a &lt;code&gt;UserDetails&lt;/code&gt; object:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CredentialsAdapter&lt;/code&gt; is used to integrate our security domain with Spring Security. It adapts a &lt;code&gt;Credentials&lt;/code&gt; object so it may be treated as a &lt;code&gt;UserDetails&lt;/code&gt; object:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;public class CredentialsAdapter implements UserDetails {
 	
@@ -312,6 +312,20 @@ public class CredentialsService implements UserDetailsService {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;So we can now write this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@PreAuthorize(&quot;hasRole('PERM_READ_FOO')&quot;)
+boolean readFoo();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And avoid hard-coding roles into our system. Though it would be nicer to have something more descriptive than &lt;code&gt;hasRole&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Fortunately, the root class for dealing with the Spring Security expression evaluations &lt;code&gt;org.springframework.security.access.expression.SecurityExpressionRoot&lt;/code&gt; provides an &lt;code&gt;hasAuthority()&lt;/code&gt; method which simply calls the &lt;code&gt;hasRole()&lt;/code&gt; method. So we can write:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@PreAuthorize(&quot;hasAuthority('PERM_READ_FOO')&quot;)
+boolean readFoo();
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;While Spring Security doesn’t appear to support it ‘out-of-the-box’, it is easily adapted to work in an environment where:&lt;/p&gt;
 
@@ -321,13 +335,7 @@ public class CredentialsService implements UserDetailsService {
   &lt;li&gt;The security model has no knowledge of how it is implemented (ie. Spring Security)&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;So we can now write this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@PreAuthorize(&quot;hasRole('PERM_READ_FOO')&quot;)
-boolean readFoo();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And avoid hard-coding roles into our system. While it would be nicer to have &lt;code&gt;hasPermission&lt;/code&gt; rather that &lt;code&gt;hasRole&lt;/code&gt;, I think I can live with it.&lt;/p&gt;
+&lt;p&gt;Source code and tests can be found on &lt;a href=&quot;https://github.com/tony-waters/example-spring-security&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 
 
     &lt;p&gt;&lt;a href=&quot;/spring-security-1/&quot;&gt;Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 using JPA and Java config&lt;/a&gt; was originally published by Tony Waters at &lt;a href=&quot;&quot;&gt;Home&lt;/a&gt; on March 11, 2015.&lt;/p&gt;
