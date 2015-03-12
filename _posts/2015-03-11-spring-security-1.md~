@@ -66,7 +66,7 @@ I have only included this class to represent the core domain, and show how it is
 The `Member` knows nothing of security concerns.
 
 ##The security domain
-We define a separate security domain where we describe the security needs of our application. A user of our system (a `Member`) has a related `Credential` in the security domain (containing a username and password):
+We define a separate security domain where we describe the security needs of our application. A user of our system (a `Member`) has a related `Credentials` in the security domain (containing a username and password):
 
 	@Entity
 	@Table(name="CREDENTIALS")
@@ -208,16 +208,16 @@ First, `UserDetailsService`, which is the entry point in this code for Spring Se
 	    boolean isEnabled();
 	}
 
-A `GrantedAuthority` is a string representation of a permission the user has, such as `PERM_READ_FOO` or `PREM_DELETE_FOO`:
+A `GrantedAuthority` is a string representation of a permission the user has, such as `PERM_READ_FOO` or `PERM_DELETE_FOO`:
 
 	public interface GrantedAuthority extends Serializable {
 	    String getAuthority();
 	}
 
-To use Spring Security we will implement a version of `UserDetails` and `UserDetailsService` that works with our data structure and security domain classes.
+To use Spring Security we will implement a version of `UserDetails` and `UserDetailsService` that works with our security domain classes.
 
 ##Implementing the security domain classes using Spring Security
-`CredentialsAdapter` is used to integrate our security domain with Spring Security. It wraps a `Credentials` object in order to treat it as a `UserDetails` object:
+`CredentialsAdapter` is used to integrate our security domain with Spring Security. It adapts a `Credentials` object so it may be treated as a `UserDetails` object:
 
 	public class CredentialsAdapter implements UserDetails {
 		
