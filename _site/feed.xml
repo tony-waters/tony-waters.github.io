@@ -4,7 +4,7 @@
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
 <link rel="self" type="application/atom+xml" href="/feed.xml" />
 <link rel="alternate" type="text/html" href="" />
-<updated>2015-03-12T11:32:00+00:00</updated>
+<updated>2015-03-13T13:14:18+00:00</updated>
 <id>/</id>
 <author>
   <name>Tony Waters</name>
@@ -27,7 +27,7 @@
     
   </author>
   <content type="html">
-    &lt;p&gt;Spring Security 3 (documentation and standard schemas) doesn’t seem to allow for the common configuration of User -&amp;gt; Role -&amp;gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:&lt;/p&gt;
+    &lt;p&gt;Spring Security 3 (documentation and standard schemas) doesn’t seem to allow for the common configuration of User -&amp;gt; Role -&amp;gt; Permission, and instead leans towards hard-coding roles into the security configuration. It encourages us to do this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;@PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
 boolean readFoo();
@@ -92,7 +92,7 @@ public class Member {
 )
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only link between a member and the security domain is the username.&lt;/p&gt;
+&lt;p&gt;I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is the username.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;Member&lt;/code&gt; knows nothing of security concerns.&lt;/p&gt;
 
@@ -320,7 +320,7 @@ boolean readFoo();
 
 &lt;p&gt;And avoid hard-coding roles into our system. Though it would be nicer to have something more descriptive than &lt;code&gt;hasRole&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;Fortunately, the root class for dealing with the Spring Security expression evaluations &lt;code&gt;org.springframework.security.access.expression.SecurityExpressionRoot&lt;/code&gt; provides an &lt;code&gt;hasAuthority()&lt;/code&gt; method which simply calls the &lt;code&gt;hasRole()&lt;/code&gt; method. So we can write:&lt;/p&gt;
+&lt;p&gt;Fortunately, the root class for dealing with Spring Security expression evaluation (&lt;code&gt;org.springframework.security.access.expression.SecurityExpressionRoot&lt;/code&gt;) provides an &lt;code&gt;hasAuthority()&lt;/code&gt; method which simply calls the &lt;code&gt;hasRole()&lt;/code&gt; method. So we can write:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;@PreAuthorize(&quot;hasAuthority('PERM_READ_FOO')&quot;)
 boolean readFoo();
@@ -869,9 +869,14 @@ new Month(&quot;abcdef&quot;); // throws Exception
 &lt;/ol&gt;
 
 &lt;h3 id=&quot;resources&quot;&gt;Resources&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;http://www.domaindrivendesign.org/books/evans_2003&quot;&gt;Domain-Driven Design: Tackling Complexity in the Heart of Software&lt;/a&gt; – Eric Evans seminal 2003 work on Domain Driven Design.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson&quot;&gt;Power Use of Value Objects in DDD&lt;/a&gt; – A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program’s architecture and make it more readable and testable.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://www.domaindrivendesign.org/books/evans_2003&quot;&gt;Domain-Driven Design: Tackling Complexity in the Heart of Software&lt;/a&gt; – Eric Evans seminal 2003 work on Domain Driven Design.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson&quot;&gt;Power Use of Value Objects in DDD&lt;/a&gt; – A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program’s architecture and make it more readable and testable.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
 
     &lt;p&gt;&lt;a href=&quot;/value-objects/&quot;&gt;Mapping DDD Value Objects using JPA - Part 1&lt;/a&gt; was originally published by Tony Waters at &lt;a href=&quot;&quot;&gt;Home&lt;/a&gt; on February 05, 2015.&lt;/p&gt;

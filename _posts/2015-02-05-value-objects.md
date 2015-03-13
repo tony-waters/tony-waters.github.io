@@ -242,7 +242,7 @@ In [Part 2](/value-objects-2) of this post I will look at how `Embeddables` prov
 1. The project in question was using Java 7. I think `YearMonth` is a good name to use for this concept, but since Java 8 has [a very nice time API](http://docs.oracle.com/javase/8/docs/api/index.html?java/time/package-summary.html) (goodbye Joda-Time!) which, among other things, provides a `YearMonth` class, this is perhaps not so good a choice.
 
 ###Resources
-[Domain-Driven Design: Tackling Complexity in the Heart of Software](http://www.domaindrivendesign.org/books/evans_2003) -- Eric Evans seminal 2003 work on Domain Driven Design.
+- [Domain-Driven Design: Tackling Complexity in the Heart of Software](http://www.domaindrivendesign.org/books/evans_2003) -- Eric Evans seminal 2003 work on Domain Driven Design.
 
-[Power Use of Value Objects in DDD](http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson) -- A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program's architecture and make it more readable and testable.
+- [Power Use of Value Objects in DDD](http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson) -- A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program's architecture and make it more readable and testable.
 

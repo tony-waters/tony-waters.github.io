@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <title>Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 using JPA and Java config &#8211; Home</title>
-<meta name="description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:
+<meta name="description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security configuration. It encourages us to do this:
 
 ">
 <meta name="keywords" content="">
@@ -15,7 +15,7 @@
 
 <!-- Twitter Cards -->
 <meta name="twitter:title" content="Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 using JPA and Java config">
-<meta name="twitter:description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:
+<meta name="twitter:description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security configuration. It encourages us to do this:
 
 ">
 
@@ -28,7 +28,7 @@
 <meta property="og:locale" content="en_GB">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 using JPA and Java config">
-<meta property="og:description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:
+<meta property="og:description" content="Spring Security 3 (documentation and standard schemas) doesn&#8217;t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security configuration. It encourages us to do this:
 
 ">
 <meta property="og:url" content="/spring-security-1/">
@@ -117,7 +117,7 @@
 
 <div itemscope itemtype="http://schema.org/Person">
 
-	<img src="/images/bio-photo.jpg" class="bio-photo" alt="Tony Waters bio photo">
+	<img src="/images/bio-image.jpg" class="bio-photo" alt="Tony Waters bio photo">
 
 
   <h3 itemprop="name">Tony Waters</h3>
@@ -149,7 +149,7 @@
       
     </div><!--/ .headline-wrap -->
     <div class="article-wrap">
-      <p>Spring Security 3 (documentation and standard schemas) doesn’t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:</p>
+      <p>Spring Security 3 (documentation and standard schemas) doesn’t seem to allow for the common configuration of User -&gt; Role -&gt; Permission, and instead leans towards hard-coding roles into the security configuration. It encourages us to do this:</p>
 
 <pre><code>@PreAuthorize("hasRole('ROLE_USER')")
 boolean readFoo();
@@ -214,7 +214,7 @@ public class Member {
 )
 </code></pre>
 
-<p>I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only link between a member and the security domain is the username.</p>
+<p>I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is the username.</p>
 
 <p>The <code>Member</code> knows nothing of security concerns.</p>
 
@@ -442,7 +442,7 @@ boolean readFoo();
 
 <p>And avoid hard-coding roles into our system. Though it would be nicer to have something more descriptive than <code>hasRole</code>.</p>
 
-<p>Fortunately, the root class for dealing with the Spring Security expression evaluations <code>org.springframework.security.access.expression.SecurityExpressionRoot</code> provides an <code>hasAuthority()</code> method which simply calls the <code>hasRole()</code> method. So we can write:</p>
+<p>Fortunately, the root class for dealing with Spring Security expression evaluation (<code>org.springframework.security.access.expression.SecurityExpressionRoot</code>) provides an <code>hasAuthority()</code> method which simply calls the <code>hasRole()</code> method. So we can write:</p>
 
 <pre><code>@PreAuthorize("hasAuthority('PERM_READ_FOO')")
 boolean readFoo();

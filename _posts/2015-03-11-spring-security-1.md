@@ -2,7 +2,7 @@
 title: Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 using JPA and Java config
 layout: post
 ---
-Spring Security 3 (documentation and standard schemas) doesn't seem to allow for the common configuration of User -> Role -> Permission, and instead leans towards hard-coding roles into the security annotations. It encourages us to do this:
+Spring Security 3 (documentation and standard schemas) doesn't seem to allow for the common configuration of User -> Role -> Permission, and instead leans towards hard-coding roles into the security configuration. It encourages us to do this:
 
 	@PreAuthorize("hasRole('ROLE_USER')")
 	boolean readFoo();
@@ -61,7 +61,7 @@ Here is the SQL:
         primary key (ID)
     )
 
-I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only link between a member and the security domain is the username.
+I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is the username.
 
 The `Member` knows nothing of security concerns.
 
@@ -279,7 +279,7 @@ So we can now write this:
 
 And avoid hard-coding roles into our system. Though it would be nicer to have something more descriptive than `hasRole`.
 
-Fortunately, the root class for dealing with the Spring Security expression evaluations `org.springframework.security.access.expression.SecurityExpressionRoot` provides an `hasAuthority()` method which simply calls the `hasRole()` method. So we can write:
+Fortunately, the root class for dealing with Spring Security expression evaluation (`org.springframework.security.access.expression.SecurityExpressionRoot`) provides an `hasAuthority()` method which simply calls the `hasRole()` method. So we can write:
 
 	@PreAuthorize("hasAuthority('PERM_READ_FOO')")
 	boolean readFoo();
