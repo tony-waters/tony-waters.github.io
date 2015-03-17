@@ -9,7 +9,7 @@ Spring Security 3 (documentation and standard schemas) doesn't seem to allow for
 
 ... rather than this:
 
-	@PreAuthorize("hasPermission('PERM_READ_FOO')")
+	@PreAuthorize("hasAuthority('PERM_READ_FOO')")
 	boolean readFoo();
 
 I want to show how we can use Spring Security 3 for unobtrusively implementing authorisation, where:
@@ -18,7 +18,7 @@ I want to show how we can use Spring Security 3 for unobtrusively implementing a
 2. The core domain model has no knowledge of the security model
 3. The security model has no knowledge of how it is implemented (ie. Spring Security)
 
-Source code and tests can be found on [GitHub](https://github.com/tony-waters/example-spring-security). Best understanding can be obtained by running the tests there, but here's the walk-through:
+Source code and tests can be found on [GitHub](https://github.com/tony-waters/example-spring-security/tree/1-permission-based-authorisation). Best understanding can be obtained by running the tests there, but here's the walk-through:
 
 ##The core domain
 To begin, we will create an entity for our core domain which represents a `Member` -- basically a registered user in the system:
@@ -149,7 +149,7 @@ And a `Role` is associated with one or more `Permissions`:
 		
 	}
 
-Although representing security concerns, these three classes know nothing of how those concerns are implemented. There is no reference to Spring Security anywhere in the [source code](https://github.com/tony-waters/example-spring-security/tree/master/src/main/java/com/example/model/security). 
+Although representing security concerns, these three classes know nothing of how those concerns are implemented. There is no reference to Spring Security anywhere in the [source code](https://github.com/tony-waters/example-spring-security/tree/1-permission-based-authorisation/src/main/java/com/example/model/security). 
 
 Their JPA mappings produce the following five tables:
 
@@ -292,5 +292,5 @@ While Spring Security doesn't appear to support it 'out-of-the-box', it is easil
 2. The core domain model has no knowledge of the security model
 3. The security model has no knowledge of how it is implemented (ie. Spring Security)
 
-Source code and tests can be found on [GitHub](https://github.com/tony-waters/example-spring-security).
+Source code and tests can be found on [GitHub](https://github.com/tony-waters/example-spring-security/tree/1-permission-based-authorisation).
 

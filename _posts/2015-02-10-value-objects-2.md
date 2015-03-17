@@ -42,7 +42,7 @@ In line with the JPA Specification, we provide a no-argument constructor. Conseq
 
 This is an example of JPA making demands upon how we construct our domain classes. It is in direct opposition to DDD which encourages us to only include what is required for the domain. To use DDD Value Objects in JPA some compramises may have to be made.
 
-To see `Month` in action we include it the Entity class `Foo`:
+To see `Month` in action we include it in the Entity class `Foo`:
 
 	@Entity
 	@Table(name="FOO")
@@ -104,7 +104,7 @@ Here is the new SQL produced by Hibernate:
 The presence of `AttributeOverride` means an Entity can specify its own configuration for any `Embeddable` classes it uses. Which makes `Embeddables` re-usable across any number of Entities.
 
 ###Overiding JPA Attributes in Composite Value Objects
-In part 1 of this post I gave an example of a `MonthRange` as a composite Value Object. Here is what it looks like as an `Embeddable`:
+In part 1 of this post I gave the  example of `MonthRange` as a composite Value Object. Here is what it looks like as an `Embeddable`:
 
 	@Embeddable
 	public class MonthRange {

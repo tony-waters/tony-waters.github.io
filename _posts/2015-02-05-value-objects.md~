@@ -14,7 +14,7 @@ In terms of creating them he offers the following advice:
 
 I'd like to outline what a Value Object is in this context and show a simple approach to using them in an application that uses JPA with a relational database.
 
-By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'YYYYmm'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
+By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'yyyyMM'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
 ##'Good' Value Objects
 Re-jigging Evans quote, to make a good Value Object one must:
@@ -48,7 +48,7 @@ The important thing is that we <i>treat</i> it as immutable, and try to make tha
 ###3. Don’t give it any identity
 Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. 
 
-It is common, then, to see Value Objects use all of their fields in `equals()` and `hashCode()` calculations. This is in opposition to an Entity where these methods will compare on some form of ID.
+It is common, then, to see Value Objects use all of their fields in `equals()` and `hashCode()` calculations. This is in opposition to an Entity where these methods usually compare on some form of ID.
 
 `Month` has no database or domain identity, so no ID in the calculations. A combination of the fields are used instead (in this case the single field `value`):
 
@@ -242,7 +242,7 @@ In [Part 2](/value-objects-2) of this post I will look at how `Embeddables` prov
 1. The project in question was using Java 7. I think `YearMonth` is a good name to use for this concept, but since Java 8 has [a very nice time API](http://docs.oracle.com/javase/8/docs/api/index.html?java/time/package-summary.html) (goodbye Joda-Time!) which, among other things, provides a `YearMonth` class, this is perhaps not so good a choice.
 
 ###Resources
-[Domain-Driven Design: Tackling Complexity in the Heart of Software](http://www.domaindrivendesign.org/books/evans_2003) -- Eric Evans seminal 2003 work on Domain Driven Design.
+- [Domain-Driven Design: Tackling Complexity in the Heart of Software](http://www.domaindrivendesign.org/books/evans_2003) -- Eric Evans seminal 2003 work on Domain Driven Design.
 
-[Power Use of Value Objects in DDD](http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson) -- A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program's architecture and make it more readable and testable.
+- [Power Use of Value Objects in DDD](http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson) -- A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program's architecture and make it more readable and testable.
 

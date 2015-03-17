@@ -14,7 +14,7 @@ In terms of creating them he offers the following advice:
 
 I'd like to outline what a Value Object is in this context and show a simple approach to using them in an application that uses JPA with a relational database.
 
-By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'YYYYmm'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
+By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'yyyyMM'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
 ##'Good' Value Objects
 Re-jigging Evans quote, to make a good Value Object one must:
@@ -48,7 +48,7 @@ The important thing is that we <i>treat</i> it as immutable, and try to make tha
 ###3. Don’t give it any identity
 Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. 
 
-It is common, then, to see Value Objects use all of their fields in `equals()` and `hashCode()` calculations. This is in opposition to an Entity where these methods will compare on some form of ID.
+It is common, then, to see Value Objects use all of their fields in `equals()` and `hashCode()` calculations. This is in opposition to an Entity where these methods usually compare on some form of ID.
 
 `Month` has no database or domain identity, so no ID in the calculations. A combination of the fields are used instead (in this case the single field `value`):
 
@@ -78,7 +78,7 @@ It is common, then, to see Value Objects use all of their fields in `equals()` a
 The fact that two different `Month` objects are equal so long as their `value` is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  
 
 ###4. Give it related functionality
-Our Value Object now becomes a magnet for any month-related functionality. We'll start with some (over-simplified) validation, using a `static` `isValid()` method so that calling code can do a pre-creation validity check if it so chooses:
+Our Value Object now becomes a magnet for any month-related functionality. We'll start with some (over-simplified) validation, using a `static isValid()` method so that calling code can do a pre-creation validity check if it so chooses:
 
 	public class Month {
 		private final String value;
