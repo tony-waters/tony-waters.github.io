@@ -13,6 +13,28 @@ description: "This is what I do."
 
 <p>Following best practices is important to me, and I prefer to stick to standards where practicable. I have used TDD for some time, and the related Java technologies (DbUnit, Mockito, JUnit, . I have not used BDD in a project but have learned Cucumber and ??? and used it enough to desire to use it in my next one.</p>
 
-<p>And if you've not already guessed, I'm looking for my next contacting position. Drop me a line if I'm what you're looking for, or if you have any comments on the site content.</p>
+<p>And if you've not already guessed, I'm looking for my next contacting position. Drop me a line if I'm what you're looking for, or if you have any comments on the site content.
+
+<h3>Cons</h3>
+<p>May need some help re-calibrating using JEE without The Spring Framework.</p>
+<p>May keep saying "I don't understand why we don't use annotations" if we're not using annotations</p>
+<p>Really dislikes 'hacks' and may spend too long trying to find some alternative.</p>
+
+
+
+
+
+
+<p>My last project brought some challenges. Working alone for the first time, having complete control of the project, I had to make design decisions I had not previously had to make. I found ideas around Domain Driven Design useful here. Also, AngularJS is a real joy when compared to Tiles and JSP, but the documentation can be lacking where it comes to higher level design. I have tried to distil some of what I learned here.</p>
+
+
+
+
+SKILLS:
+
+Client-side: 	AngularJS, JavaScript, jQuery, Ajax, CSS, Bootstrap
+Server-side: 	JPA , Spring-Data, REST, Spring MVC, Tiles, JSP, Hibernate, SQL, QueryDsl
+Testing:	JUnit, DbUnit, Mockito, MockMvc 
+Other:	 	Maven, Eclipse, NetBeans
 
 <p>You can Email me at tony@not1bit.co.uk</p>

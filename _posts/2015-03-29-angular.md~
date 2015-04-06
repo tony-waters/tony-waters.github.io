@@ -5,15 +5,7 @@ tags: [DDD, JPA]
 header-img: "img/angular3.jpg"
 ---
 
->judging from mailing list, IRC questions, and so on ... there's a lot of confusion about them [directives] ... its probably my fault. I should have done a better job documenting
->
-> -- (Angular creator)
 
-AngularJs is a powerful and flexible framework, but badly documented in some places. Directives are the [killer] feature, but writing them can be very confusing, and there is also not much on best practices or general high-level design patterns, so even getting to writing them as a fundamental development activity is not [encouraged].
-
-It is also moving at a fast pace. Some of the features discussed here was introduced in version 1.2 (first released Nov 2013) or 1.3 (Oct 2014) -- so things are moving at pace in the Angular world. Also, new features in 1.4 are set to slightly change how we do things. And Angular 2 is on the horizon, and its promise of Web Components.
-
-In a series of posts, I'd like to look at what we can do right now, with Angular 1.3, to create re-usable components, and extend HTML to the needs of our application. Effectibvely making HTML into a Domain Specific Language.
 
 I'll start by focusing on creating and testing a re-usable 'month picker' component.
 
@@ -40,22 +32,31 @@ Lets turn our attention to the end product. In order to know when we have finish
 Here is a sneek preview of the finished component operating in single-select mode:
 
 <script src="{{site.root}}/angular/js/angular.js"></script>
-<div ng-app="monthPickerModule" class="demo">
+<div ng-app="monthPickerModule" class="demo row">
 
-    <month-picker 
-        multi="false" 
-        month-selected-expression="value1 = month">
-    </month-picker>
-    <h4>Selected:{[{value1}]}</h4>
+	<div class="panel panel-default col-md-4 col-md-offset-1">
+	  <div class="panel-heading">Single Select Mode</div>
+	  <div class="panel-body">
+	    <month-picker 
+	        multi="false" 
+	        month-selected-expression="value1 = month">
+	    </month-picker>
+	  </div>
+	</div>
+	
+	<div class="panel panel-default col-md-4 col-md-offset-3">
+	  <div class="panel-heading">Multi Select Mode</div>
+	  <div class="panel-body">
+	    <month-picker 
+	        multi="true" 
+	        month-selected-expression="value2 = month">
+	    </month-picker>
+	  </div>
 
-	<p>And here it is in multi-select mode:</p>
-    
-    <month-picker 
-        multi="true" 
-        month-selected-expression="value2 = month">
-    </month-picker>
-    <h4>Selected:{[{value2}]}</h4>
-    <script src="{{site.root}}/angular/monthPicker.js"></script>
+	</div>
+	<h4 class="col-md-offset-1">Single Select: [[[ value1 ]]]</h4>
+	<h4 class="col-md-offset-1">Multi Select: [[[ value2 ]]]</h4>
+	<script src="{{site.root}}/angular/demo2/monthPicker.js"></script>
 </div>
 
 We want to make including this component on a page as simple as possible for the 'end-user' (someone developing the site, perhaps ourselves). At a minimum we will need to inclue in this new element a way of specifying single-select or multi-select mode, and some way of getting the seleced month(s) into the scope of the controller of the rendered page.

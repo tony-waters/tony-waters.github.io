@@ -26,7 +26,7 @@ In a series of posts, I'd like to look at what we can do right now, with Angular
          <sidebar>
              <panel heading="Month picker">
                  <month-picker 
-                     multi="{[{ctrl.multiMode}]}" 
+                     multi="[[[ ctrl.multiMode ]]]" 
                      month-selected-expression="ctrl.selectMonth(month)">
                  </month-picker>
              </panel>
