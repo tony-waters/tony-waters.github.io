@@ -2,6 +2,7 @@
 layout: post
 title: Creating a page-centric site using Jekyll and GitHub Pages
 tags: [Jekyll, theme, responsive, blog, template]
+header-img: "img/jekyll2.jpg"
 ---
 [Jekyll](http://jekyllrb.com/) is the 'blog aware' static site generator powering [GitHub Pages](https://pages.github.com/). It takes [Liquid](http://liquidmarkup.org/) templates, static assets (like CSS and JavaScript), and [markdown](http://daringfireball.net/projects/markdown/) documents, and outputs a site.
 

@@ -1,8 +1,0 @@
----
-layout: page
-title: About
-tags: [about, Jekyll, theme, responsive]
-modified: 2014-08-08T20:53:07.573882-04:00
-comments: true
----
-Full-stack JEE Developer with strong core Java, Spring and Design. 5 years Java/Spring development, 6 years as Java/JEE Trainer. Server-side and client-side skills.

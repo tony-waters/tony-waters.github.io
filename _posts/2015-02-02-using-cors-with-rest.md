@@ -2,6 +2,7 @@
 layout: post
 title: Using CORS to simplify development of distributed Server and Client applications
 tags: [CORS, Spring, AngularJs, Eclipse, NetBeans]
+header-img: "img/java4.jpg"
 ---
 In these post-JSP days it can sometimes be convenient to develop your clent and server code completely separate, even though they may be co-located when in production. This is particularly the case when client and server portions are being worked on by different teams, but is not limited to this scenario. Separate development of client and server code can mean that the client has to make calls to a service on a different server (maybe in a different country, or just a different port on localhost), which may not be allowed because of the [Same-Origin Policy](http://en.wikipedia.org/wiki/Same-origin_policy) implemented by modern browsers.
 

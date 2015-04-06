@@ -2,6 +2,7 @@
 layout: post
 title: Mapping DDD Value Objects using JPA - Part 1
 tags: [DDD, JPA]
+header-img: "img/java3.jpg"
 ---
 
 In a recent project I drew upon a number of concepts from [Domain Driven Design](http://en.wikipedia.org/wiki/Domain-driven_design). Among them Value Objects, which Eric Evans says:

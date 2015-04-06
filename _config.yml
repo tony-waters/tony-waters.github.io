@@ -1,38 +1,17 @@
-# Site wide configuration
+# Site settings
+title: not 1 bit
+header-img: img/not1bit.jpg
+email: your-email@yourdomain.com
+description: "Some stuff"
+baseurl: ""
+#url: "http://yourdomain.com"
+twitter_username: SBootstrap
+github_username:  davidtmiller
+facebook_username:  IronSummitMedia
 
-title:            Home
-locale:           en_GB
-url:              
-
-
-# Jekyll configuration
-
-permalink:   /:categories/:title/
-markdown:    kramdown
+# Build settings
+markdown: kramdown
 highlighter: pygments
-sass:
-  sass_dir: _sass
-  style: compressed
-gems:
-  - jekyll-sitemap
-
-kramdown:
-  auto_ids: true
-  footnote_nr: 1
-  entity_output: as_char
-  toc_levels: 1..6
-  use_coderay: false
-
-
-# Site owner
-owner:
-  name: Tony Waters
-  avatar: bio-image.jpg
-  bio: ""
-  linkedin: drtonywaters
-  disqus-shortname: 
-  github: tony-waters
-  stackoverflow: #http://stackoverflow.com/users/123456/username
-
-include: [".htaccess"]
-exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]
+permalink: pretty
+paginate: 5
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]

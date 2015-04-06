@@ -2,6 +2,7 @@
 layout: post
 title: Mapping DDD Value Objects using JPA - Part 2
 tags: [DDD, JPA]
+header-img: "img/java3.jpg"
 ---
 >Tracking the identity of ENTITIES is essential, but attaching identity to other objects can hurt system performance, add analytical work, and muddle the model by making all objects look the same. (Evans 2003)
 
@@ -180,7 +181,7 @@ Here's what it produces on Hibernate:
 ###Collections of Embeddables
 >A persistent field or property of an entity or embeddable class may correspond to a collection of a basic type or embeddable class (JSR 338 - Java Persistence API 2.1)
 
-JPA allows for collections of `Embeddables` via its `ElementCollection` mapping. In this scenario the `Embeddables` are held in a separate table and not actually embedded in the Entities table. Similar to a `OneToMany` association, but without any requirement for inverse mapping. This is how we would add a collection of `Months` to our `Foo` Entity:
+JPA allows for collections of `Embeddables` via its `ElementCollection` mapping. In this scenario the `Embeddables` are held in a separate table rather than being embedded in the Entities table. Similar to a `OneToMany` association, but without any requirement for inverse mapping. This is how we would add a collection of `Months` to our `Foo` Entity:
 
 	@ElementCollection
 	@CollectionTable(name="FOO_MONTH", joinColumns=@JoinColumn(name="FOO_ID"))

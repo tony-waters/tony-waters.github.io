@@ -9,7 +9,7 @@ I found myself in such a situation last year when I was the sole developer of a 
 
 Now, there's obviously more than one way to solve this problem. I could co-locate the client and server source and configure the different IDEs to only act on different sections of it, or perform a little source copying during the build process to make sure everything was in one place. In both of these solutions the Same Origin Policy goes away because the client and server are co-located when running, and we can forget we ever heard of it.
 
-An alternative is to allow the client and server to be distributed in the development environment(s). If we take this route, we have to tell the server to accept requests from locations other than its own using [Cross-Origin Resource Sharing or CORS](http://www.w3.org/TR/cors/).
+An alternative is to allow the client and server to be distributed (if only a port away) in the development environment(s). If we take this route, we have to tell the server to accept requests from locations other than its own using [Cross-Origin Resource Sharing or CORS](http://www.w3.org/TR/cors/).
 
 In JEE we can do this using a `Filter`. Add Spring to the mix and we can annotate the filter as a `@Component` so it is included without having to do anything else. Here's the finished class:
 
