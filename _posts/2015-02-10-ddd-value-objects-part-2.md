@@ -19,7 +19,7 @@ The JPA Specification recognises that not everything is an Entity:
 >
 > ~ JSR 338 - Java Persistence API 2.1
 
-These `Embeddable` classes provides a convenient mapping for Value Objects. Here are the pertinent parts of the `Month` class from oart 1, annotated as a JPA `Embeddable`:
+These `Embeddable` classes provides a convenient mapping for Value Objects. Here are the pertinent parts of the `Month` class from part 1, annotated as a JPA `Embeddable`:
 
 {% highlight java linenos %}
 @Embeddable
@@ -118,7 +118,7 @@ create table FOO (
 The presence of `AttributeOverride` means an Entity can specify its own configuration for any `Embeddable` classes it uses. Which makes `Embeddables` re-usable across any number of Entities.
 
 ###Overiding JPA Attributes in Composite Value Objects
-In part 1 of this post I gave the  example of `MonthRange` as a composite Value Object. Here is what it looks like as an `Embeddable`:
+In [part 1]({{ "/2015/02/05/ddd-value-objects-part-1" | prepend: site.baseurl }}) of this post I gave the  example of `MonthRange` as a composite Value Object. Here is what it looks like as an `Embeddable`:
 
 {% highlight java linenos %}
 @Embeddable
