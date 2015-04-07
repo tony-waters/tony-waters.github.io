@@ -202,7 +202,7 @@ create table FOO (
 >
 > ~ JSR 338 - Java Persistence API 2.1
 
-JPA allows for collections of `Embeddables` via its `ElementCollection` mapping. In this scenario the `Embeddables` are held in a separate table rather than being embedded in the Entities table. Similar to a `OneToMany` association, but without any requirement for inverse mapping. This is how we would add a collection of `Months` to our `Foo` Entity:
+JPA allows for collections of `Embeddables` via its `ElementCollection` mapping. In this scenario the `Embeddables` must be held in a separate table rather than being embedded in the Entities table. Similar to a `OneToMany` association, but without any requirement for inverse mapping. This is how we would add a collection of `Months` to our `Foo` Entity:
 
 {% highlight java linenos %}
 @ElementCollection
