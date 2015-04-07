@@ -8,14 +8,14 @@ header-img: "img/jekyll2.jpg"
 
 While Jekyll excells at creating blog-centric static sites, its not so clear from the documentation how to create a basic page-centric site. [Here](http://tony-waters.github.io/example-jekyll/) is one I created by way of example. It contains information for visitors to a conference on 'whatever', including a welcome page, a page for each speaker, and a directions page ([source code](https://github.com/tony-waters/example-jekyll)).
 
-![Image alt]({{ site.baseurl }}/images/2015-02-18-conference-alice.png "image title")
+![Image alt]({{ site.baseurl }}/img/2015-02-18-conference-alice.png "a page from the sample site")
 
 ###Jekyll folder structure
 Creating a new Jekyll site usually involves running `jekyll new my-site-name` to creats a ready made structure with some sample data that can be immediately viewed using `jekyll serve`. To keep it as clean as possible, I've created a minimal structure by hand instead. At minimum, Jeckyll needs a `_config.yml` file and a page to serve. I've added folers for `_layouts` and `_includes`.
 
 Here is the final folder structure containing all the files needed to create the site. Notice there is no mention of posts.
 
-![Image alt]({{ site.baseurl }}/images/2015-02-18-folders.png "image title")
+![Image alt]({{ site.baseurl }}/img/2015-02-18-folders.png "the folder structure")
 
 ###The markdown
 
