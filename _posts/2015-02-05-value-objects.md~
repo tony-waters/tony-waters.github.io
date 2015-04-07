@@ -46,6 +46,8 @@ Now when we work with months the code is more readable, conveying <i>the concept
 ###2. Treat it as immutable
 There are no setters in `Month` to mutate the `value`. And we've declared the field itself `final`. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is [a little more involved](http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html) than is shown here. And if we use reflection, nothing is immutable.
 
+Just how far should we go with this?
+
 The important thing is that we <i>treat</i> Value Objects as immutable, and communicate that to future maintainers of the system through their design:
 
 >Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential.
@@ -263,7 +265,7 @@ Evans himself has been quick to note that DDD is not a completely new approach t
 
 In terms of Value Objects, its not that they are a new idea. Its more about having a blueprint for identifying and coding them, and understanding the way they can simplify a design in fundamental ways. I am not suggesting 'looking for' potential Value Objects too early in the design, but there is value in identifying them when they do appear, and encapsulating the concept they represent before it proliferates through the different layers of the application. 
 
-This concludes my brief look at the design of Value Objects. In [Part 2](/value-objects-2) of this post I will look at how we can represent these types of objects to simplify the ORM in an application using JPA.
+This concludes my brief look at the design of Value Objects. In [Part 2](/value-objects-2) of this post I will look at how we can use Value Objects to simplify the ORM in an application using JPA.
 
 <hr />
 
