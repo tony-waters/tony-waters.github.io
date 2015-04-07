@@ -33,7 +33,7 @@ Here is a sneek preview of the finished component operating in each of its two m
 <script src="{{site.root}}/angular/js/angular.js"></script>
 <div ng-app="monthPickerModule" class="demo row">
 
-	<div class="panel panel-default col-md-4 col-md-offset-1">
+	<div class="panel panel-default col-md-5">
 	  <div class="panel-heading">Single Select Mode</div>
 	  <div class="panel-body">
 	    <month-picker 
