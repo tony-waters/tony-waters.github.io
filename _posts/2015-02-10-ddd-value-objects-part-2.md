@@ -17,7 +17,7 @@ The JPA Specification recognises that not everything is an Entity:
 
 >An entity may use other fine-grained classes to represent entity state. Instances of these classes, unlike entity instances, do not have persistent identity of their own. Instead, they exist only as part of the state of the entity to which they belong
 >
-> ~ JSR 338 - Java Persistence API 2.1
+> ~ JSR 338 (Java Persistence API 2.1)
 
 These `Embeddable` classes provides a convenient mapping for Value Objects. Here are the pertinent parts of the `Month` class from part 1, annotated as a JPA `Embeddable`:
 
@@ -200,7 +200,7 @@ create table FOO (
 ###Collections of Embeddables
 >A persistent field or property of an entity or embeddable class may correspond to a collection of a basic type or embeddable class 
 >
-> ~ JSR 338 - Java Persistence API 2.1
+> ~ JSR 338 (Java Persistence API 2.1)
 
 JPA allows for collections of `Embeddables` via its `ElementCollection` mapping. In this scenario the `Embeddables` must be held in a separate table rather than being embedded in the Entities table. Similar to a `OneToMany` association, but without any requirement for inverse mapping. This is how we would add a collection of `Months` to our `Foo` Entity:
 
@@ -241,7 +241,7 @@ An important restriction on collections of `Embeddable` classes is that:
 
 >An embeddable class (including an embeddable class within another embeddable class) that is contained within an element collection must not contain an element collection
 >
-> ~ JSR 338 - Java Persistence API 2.1
+> ~ JSR 338 (Java Persistence API 2.1)
 
 Which means we cannot nest a collection of `Embeddables` within another collection of `Embeddables`. While this restriction may seem like an 'edge case', it can sometimes force us to use an Entity in place of a Value Object.
 
