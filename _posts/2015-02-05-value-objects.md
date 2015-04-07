@@ -253,7 +253,15 @@ public boolean equals(Object obj) {
 {% endhighlight %}
 
 ##Conclusion to Part 1
-If you're anything like me, at some point you will have thought "isn't a lot of this just good design practice that applies to any class?" After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it within a class -- that's just encapsulation! And this is of course true. In this sense a DDD Value Object is rooted in a wider context of Java best practices.
+If you're anything like me, at some point you will have thought "isn't a lot of this just good design, so what's new here?" After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it within a class -- that's just encapsulation! And this is of course true.
+
+Evans himself has been quick to note that DDD is not a completely new approach to creating systems, but rather:
+
+>... a framework for making design decisions and a technical vocabulary for discussing domain design. It is a synthesis of widely accepted best practices along with my own insights and experiences. Projects facing complex domains can use this framework to approach domain-driven design systematically.
+>
+> ~ <i>ibid.</i>
+
+In this sense a DDD Value Object is rooted in a wider context of Java best practices.
 
 In [Part 2](/value-objects-2) of this post I will look at how `Embeddables` provide a convenient way to represent Value Objects in a JPA environment.
 
