@@ -89,36 +89,38 @@ The fact that two different `Month` objects are equal so long as their `value` i
 ###4. Give it related functionality
 Our Value Object now becomes a magnet for any month-related functionality. We'll start with some (over-simplified) validation, using a `static isValid()` method so that calling code can do a pre-creation validity check if it so chooses:
 
-	public class Month {
-		private final String value;
-	
-		public Month(String value) {
-			if(!isValid(value)) {
-				throw new DomainValidationException("Not a valid month " + value);
-			}
-			this.value = value;
+{% highlight java linenos %}
+public class Month {
+	private final String value;
+
+	public Month(String value) {
+		if(!isValid(value)) {
+			throw new DomainValidationException("Not a valid month " + value);
 		}
-	
-		
-		public static boolean isValid(String yearMonth) {
-			if(yearMonth == null || !isInteger(yearMonth) || yearMonth.length() != 6) {
-				return false;
-			}
-			return true;
-		}
-		
-		private static boolean isInteger(String s) {
-			try {
-				Integer.parseInt(s);
-			} catch(NumberFormatException e) {
-				return false;
-			}
-			return true;
-		}
-		
-		// ... code omitted for brevity ...
-		
+		this.value = value;
 	}
+
+	
+	public static boolean isValid(String yearMonth) {
+		if(yearMonth == null || !isInteger(yearMonth) || yearMonth.length() != 6) {
+			return false;
+		}
+		return true;
+	}
+	
+	private static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch(NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	// ... code omitted for brevity ...
+	
+}
+{% endhighlight %}
 
 The `isValid()` method is where we locate our increasing understanding of what it means for a `Month` object to be valid. Through this process it becomes increasingly difficult to create an invalid `Month`. And it's always clear in our calling code that we are dealing with months:
 

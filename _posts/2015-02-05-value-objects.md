@@ -8,7 +8,7 @@ In a recent project I drew upon a number of concepts from [Domain Driven Design]
 
 > represent a descriptive aspect of the domain that has no conceptual identity
 >
-> - <i>(Evans 2003)</i>
+> ~ <i>(Evans 2003)</i>
 
 In terms of creating them he offers the following advice:
 
