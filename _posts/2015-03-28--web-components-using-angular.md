@@ -9,7 +9,7 @@ header-img: "img/angular2.jpg"
 >
 > ~ (Angular creator)
 
-AngularJs is a powerful and flexible framework, but badly documented in some places. It is also moving at a fast pace. Some of the features discussed here was introduced in version 1.2 (first released Nov 2013) or 1.3 (Oct 2014). Also, new features in 1.4 are set to slightly change how we do things. And Angular 2 is on the horizon, and its promise of Web Components.
+AngularJs is a powerful and flexible framework, but badly documented in some places. It is also moving at a fast pace. Some of the features discussed here were first introduced in version 1.2 (released Nov 2013) or the current version 1.3 (released Oct 2014). Also, new features in 1.4 are set to slightly change how we do/did things in 1.3. And Angular 2 is on the horizon, and its promise of Web Components.
 
 The fluctuating changes and lack of good documentation particularly effects directives, which at first may seem like some higher level design function only suitable for meta-developers. Writing them can seem very daunting at first. Also, there is also not much on best practices or general high-level design patterns, so even getting to writing them as a fundamental development activity is seemingly not encouraged.
 
