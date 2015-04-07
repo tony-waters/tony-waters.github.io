@@ -19,33 +19,36 @@ I'd like to outline what a Value Object is in this context and show a simple app
 By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'yyyyMM'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
 ###'Good' Value Objects
-Re-jigging Evans quote, to make a good Value Object one must:
+Re-jigging Evans' quote, to make a good Value Object one must:
 
 1. make it express the meaning of its attribute(s)
 2. treat it as immutable
 3. don’t give it any identity
 4. give it related functionality
 
-
 ###1. Make it express the meaning of its attribute(s)
 The Value Object we want to create is used to represent a single attribute -- a 'month in a year'. It wraps a `String` object that holds the month in the format 'yyyyMM'. However, Evans seems to be steering us away from calling it something ending in `Wrapper`, towards "expressing the meaning of the attribute it conveys". To this end, we could choose to express this attribute in a class named something along the lines of `YearMonth`, `MonthInYear` or `Month` <sup>[[1]](#notes)</sup>:
 
-	public class Month {
-		private final String value;
-	
-		public Month(String value) {
-			this.value = value;
-		}
+{% highlight java linenos %}
+public class Month {
+	private final String value;
+
+	public Month(String value) {
+		this.value = value;
 	}
+}
+{% endhighlight %}
 
 Now when we work with months the code is more readable, conveying <i>the concept of the attribute being wrapped</i>. 
 	
 ###2. Treat it as immutable
-There are no setters in `Month` to mutate the `value`. And we've declared the field itself `final`. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is [a little more involved](http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html) than is shown here. Also, if we use reflection, nothing is immutable.
+There are no setters in `Month` to mutate the `value`. And we've declared the field itself `final`. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is [a little more involved](http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html) than is shown here. And if we use reflection, nothing is immutable.
+
+The important thing is that we <i>treat</i> Value Objects as immutable, and make that clear to future maintainers of the system through their design.
 
 >Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential. (Evans 2003)
 
-The important thing is that we <i>treat</i> it as immutable, and try to make that clear to future maintainers of the system through the design on the class.
+
 
 ###3. Don’t give it any identity
 Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. 
