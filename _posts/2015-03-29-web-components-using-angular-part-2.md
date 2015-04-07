@@ -5,7 +5,7 @@ tags: [DDD, JPA]
 header-img: "img/angular3.jpg"
 ---
 
-In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate how we use directives to build components. You can see it in action [here]({{ site.root }}/example-angular) and its source code [here](https://github.com/tony-waters/example-angular/tree/master).
+In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate building components using AngularJs 1.3. You can see it in action [here]({{ site.root }}/example-angular) and its source code [here](https://github.com/tony-waters/example-angular/tree/master).
 
 In this post I will focus on the 'month picker' component.
 
