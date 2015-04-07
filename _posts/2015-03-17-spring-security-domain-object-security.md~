@@ -78,7 +78,7 @@ public class MemberPermissionEvaluator implements PermissionEvaluator {
 
 Now when we run our tests, a logged in user can only perform operations on its own associated `Member`.
 
-Although it has not been used in this example, we could further refine our requirements by considering other permissions. As well as checking for `isOwner`, we may want to check for `isEditor`, `isReviewer`, and so on. It would not be too much work to write a better `PermissionEvaluator` to do this.
+We could further refine our requirements by considering other permissions. As well as checking for `isOwner`, we may want to check for `isEditor`, `isReviewer`, and so on. It would not be too much work to write a better `PermissionEvaluator` to do this.
 
 Also, Since Spring Security uses a single `PermissionEvaluator`, should we require similar restrictions placed on other objects (which is likely), then we would have to write a better `PermissionEvaluator` that delegated to other `PermissionEvaluators`<sup>[[1]](#notes)</sup>.
 
