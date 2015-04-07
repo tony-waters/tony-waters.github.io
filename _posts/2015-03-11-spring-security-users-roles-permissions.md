@@ -229,7 +229,7 @@ public interface UserDetails extends Serializable {
 }
 {% endhighlight %}
 
-A `GrantedAuthority` is a string representation of a permission granted to the user, such as `PERM_READ_FOO` or `PERM_DELETE_FOO`:
+A `GrantedAuthority` is a string representation of a permission granted to the user, such as 'PERM_READ_FOO' or 'PERM_DELETE_FOO':
 
 {% highlight java linenos %}
 public interface GrantedAuthority extends Serializable {
