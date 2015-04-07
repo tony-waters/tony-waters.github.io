@@ -5,13 +5,13 @@ tags: [DDD, JPA]
 header-img: "img/angular2.jpg"
 ---
 
->... judging from mailing list, IRC questions, and so on ... there's a lot of confusion about directives ... its probably my fault. I should have done a better job documenting
+>... judging from mailing list, IRC questions, and so on ... there's a lot of confusion about directives ... its probably my fault. I should have done a better job documenting.
 >
 > ~ (Angular creator)
 
 AngularJs is a powerful and flexible framework, but badly documented in some places. It is also moving at a fast pace. Some of the features discussed here were first introduced in version 1.2 (released Nov 2013) or the current version 1.3 (released Oct 2014). Also, new features in 1.4 are set to slightly change how we do/did things in 1.3. And Angular 2 is on the horizon, and its promise of Web Components.
 
-The fluctuating changes and lack of good documentation particularly effects directives, which at first may seem like some higher level design function (which they are). And there is not much on best practices or general high-level design patterns, so even getting to write directives as a fundamental development activity is seemingly not encouraged.
+The fluctuating changes and lack of good documentation particularly effects directives, which at first may seem like some higher level design function (which is true) not meant for day-to-day use by mere mortals (which is false). And there is not much on best practices or general high-level design patterns, so even getting to write directives as a fundamental development activity is seemingly not encouraged.
 
 Yet directives are Angulars killer feature.
 
