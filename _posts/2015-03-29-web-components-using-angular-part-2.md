@@ -127,9 +127,9 @@ Here is the complete HTML template used to create `<month picker>`, note no refe
 <div class="month-picker">
     <button 
         class="month-button btn btn-default col-md-4" 
-        ng-repeat="month in vm.months" 
-        ng-class="{ 'active': vm.isSelected(month) }"
-        ng-click="vm.selectMonth(month)">{{month}}
+        ng-repeat="month in ctrl.months" 
+        ng-class="{ 'active': ctrl.isSelected(month) }"
+        ng-click="ctrl.selectMonth(month)">{[{month}]}
     </button>
 </div>
 {% endhighlight %}
@@ -138,35 +138,34 @@ Here is the complete HTML template used to create `<month picker>`, note no refe
 A controller function is needed to feed our template. Angular 1.2 introduced the `Controller As` syntax which means we can drop reference to `$scope` from the controllers. Our controller function uses this new syntax:
 
 {% highlight js linenos %}
-function controller () {
-	var vm = this;
-	
-	// api
-	
-	vm.isSelected = isSelected
-	vm.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-	vm.multi = false
-	vm.selected = []
-	vm.selectMonth = selectMonth
+ function controller () {
+     var ctrl = this;
+     
+     // api
+     
+     ctrl.isSelected = isSelected
+     ctrl.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+     ctrl.multi = false
+     ctrl.selected = []
+     ctrl.selectMonth = selectMonth
 
-	// api methods
-	
-	function isSelected(month) {
-		return vm.selected.indexOf(month) > -1
-	}
+     // api methods
 
-	function selectMonth(month) {
-	// refactor to switch
-		if (isMultiMode()) {
-			if (isSelected(month)) {
-                 var index = vm.selected.indexOf(month)
-                 vm.selected.splice(index, 1)
+     function isSelected(month) {
+         return ctrl.selected.indexOf(month) > -1
+     }
+
+     function selectMonth(month) {
+         if (isMultiMode()) {
+             if (isSelected(month)) {
+                 var index = ctrl.selected.indexOf(month)
+                 ctrl.selected.splice(index, 1)
              } else {
-                 vm.selected.push(month)
+                 ctrl.selected.push(month)
              }
          } else {
-             vm.selected = []
-             vm.selected.push(month)
+             ctrl.selected = []
+             ctrl.selected.push(month)
          }
          monthSelectedExpressionCallback()
      }
@@ -174,11 +173,11 @@ function controller () {
      // private methods
 
      function isMultiMode() {
-         return vm.multi === 'true'
+         return ctrl.multi === 'true'
      }
 
      function monthSelectedExpressionCallback() {
-         vm.monthSelectedExpression({'month': vm.selected})
+         ctrl.monthSelectedExpression({'month': ctrl.selected})
      }
  }
 {% endhighlight %}
@@ -193,9 +192,9 @@ Here is the directive function we will be using for `<month-picker>`:
 {% highlight js linenos %}
  function directive() {
      return {
-     		templateUrl: 'monthPicker/monthPicker.html',
          restrict: 'AE',
          replace: true,
+         templateUrl: 'monthPicker.html',
          scope: {
              multi: '@?',
              monthSelectedExpression: '&'
