@@ -240,6 +240,8 @@ alter table FOOBAA_MONTH
 An important restriction on collections of `Embeddable` classes is that:
 
 >An embeddable class (including an embeddable class within another embeddable class) that is contained within an element collection must not contain an element collection
+>
+> ~ JSR 338 - Java Persistence API 2.1
 
 Which means we cannot nest a collection of `Embeddables` within another collection of `Embeddables`. While this restriction may seem like an 'edge case', it can sometimes force us to use an Entity in place of a Value Object.
 
