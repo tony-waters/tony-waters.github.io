@@ -3,7 +3,7 @@ title: Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 and
 layout: post
 header-img: "img/spring5.jpg"
 ---
-Spring Security 3 (documentation and standard schemas) doesn't appear to 'encourage' the common configuration of User -> Role -> Permission, and instead leans towards hard-coding roles into the security configuration. Leaving us with this:
+If the documentation and standard schemas are anything to go by, Spring Security 3 doesn't appear to encourage the common configuration of User -> Role -> Permission, and instead leans towards hard-coding roles into the security configuration. Leaving us coding this:
 
 {% highlight java linenos %}
 @PreAuthorize("hasRole('ROLE_USER')")
@@ -17,7 +17,7 @@ boolean readFoo();
 boolean readFoo();
 {% endhighlight %}
 
-I want to show how we can use Spring Security 3 for unobtrusively implementing authorisation, where:
+I want to show how we can use Spring Security 3 for (unobtrusively) implementing authorisation, where:
 
 1. Authorisation is based on Permissions, not Roles
 2. The core domain model has no knowledge of the security model

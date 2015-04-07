@@ -3,7 +3,7 @@ title: Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 and
 layout: post
 header-img: "img/spring5.jpg"
 ---
-Spring Security 3 (documentation and standard schemas) doesn't appear to 'encourage' the common configuration of User -> Role -> Permission, and instead leans towards hard-coding roles into the security configuration. Leaving us with this:
+If the documentation and standard schemas are anything to go by, Spring Security 3 doesn't appear to encourage the common configuration of User -> Role -> Permission, and instead leans towards hard-coding roles into the security configuration. Leaving us coding this:
 
 {% highlight java linenos %}
 @PreAuthorize("hasRole('ROLE_USER')")
@@ -213,6 +213,7 @@ First, `UserDetailsService`, which is the entry point in this code for Spring Se
 public interface UserDetailsService {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }
+{% endhighlight %}
 
 `UserDetails` contains security-related information about the user, including what they are allowed to do (`GrantedAuthority`):
 
@@ -226,6 +227,7 @@ public interface UserDetails extends Serializable {
     boolean isCredentialsNonExpired();
     boolean isEnabled();
 }
+{% endhighlight %}
 
 A `GrantedAuthority` is a string representation of a permission the user has, such as `PERM_READ_FOO` or `PERM_DELETE_FOO`:
 
@@ -233,6 +235,7 @@ A `GrantedAuthority` is a string representation of a permission the user has, su
 public interface GrantedAuthority extends Serializable {
     String getAuthority();
 }
+{% endhighlight %}
 
 To use Spring Security we will implement a version of `UserDetails` and `UserDetailsService` that works with our security domain classes.
 
@@ -271,6 +274,7 @@ public class CredentialsAdapter implements UserDetails {
 
 	// ... code omitted for brevity ...
 }
+{% endhighlight %}
 
 Notice that `getAuthorities()` now returns a collection of `Credentials` -> `Roles` -> `Permissions`, rather than `Credentials` -> `Roles`.
 
@@ -293,12 +297,14 @@ public class CredentialsService implements UserDetailsService {
 		return new CredentialsAdapter(credentials);
 	}
 }
+{% endhighlight %}
 
 So we can now write this:
 
 {% highlight java linenos %}
 @PreAuthorize("hasRole('PERM_READ_FOO')")
 boolean readFoo();
+{% endhighlight %}
 
 And avoid hard-coding roles into our system. Though it would be nicer to have something more descriptive than `hasRole`.
 
@@ -307,7 +313,7 @@ Fortunately, the root class for dealing with Spring Security expression evaluati
 {% highlight java linenos %}
 @PreAuthorize("hasAuthority('PERM_READ_FOO')")
 boolean readFoo();
-
+{% endhighlight %}
 
 ###Conclusion
 While Spring Security doesn't appear to support it 'out-of-the-box', it is easily adapted to work in an environment where:
