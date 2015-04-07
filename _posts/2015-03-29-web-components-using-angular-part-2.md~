@@ -5,13 +5,13 @@ tags: [DDD, JPA]
 header-img: "img/angular3.jpg"
 ---
 
-In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate how we can use directives to build Web Components. You can see it in action [here]({{ site.root }}/example-angular).
+In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate how we may use directives to build Web Components. You can see it in action [here]({{ site.root }}/example-angular).
 
 In this post I will focus on the 'month picker' component.
 
 ###The new HTML element we are creating
 
-In order to know when we have finished developing the month-picker component, we need some requirements. These will be a great help when it comes to testing. Since we will be testing with Jasmine, lets save ourselves some work and put the requirements into a Jasmine-style BDD format:
+The best way to understand the month-picker component is by looking at its requirements. We will be testing with Jasmine, so here they are in a Jasmine-style BDD format:
 
 <pre>
   Given a MonthPicker directive

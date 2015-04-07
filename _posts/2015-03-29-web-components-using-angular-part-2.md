@@ -11,7 +11,7 @@ In this post I will focus on the 'month picker' component.
 
 ###The new HTML element we are creating
 
-In order to know when we have finished developing the month-picker component, we need some requirements. These will be a great help when it comes to testing. Since we will be testing with Jasmine, lets save ourselves some work and put the requirements into a Jasmine-style BDD format:
+The best way to understand the month-picker component is by looking at its requirements. We will be testing with Jasmine, so here they are in a Jasmine-style BDD format:
 
 <pre>
   Given a MonthPicker directive
@@ -28,7 +28,7 @@ In order to know when we have finished developing the month-picker component, we
 
 </pre>
 
-Here is a sneek preview of the finished component operating in each mode:
+Here is a sneek preview of the finished component operating in each of its two modes:
 
 <script src="{{site.root}}/angular/js/angular.js"></script>
 <div ng-app="monthPickerModule" class="demo row">
