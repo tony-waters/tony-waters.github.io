@@ -8,12 +8,13 @@ In a recent project I drew upon a number of concepts from [Domain Driven Design]
 
 > represent a descriptive aspect of the domain that has no conceptual identity
 >
-> ~ <i>(Evans 2003)</i>
+> ~ <i>Evans 2003</i>
 
 In terms of creating them he offers the following advice:
 
 >When you care only about the attributes of an element of the model, classify it as a VALUE OBJECT. Making it express the meaning of attributes it conveys and give it related functionality. Treat the VALUE OBJECT as immutable. Don’t give it any identity and avoid the design complexities necessary to maintain ENTITIES
->- <i>(ibid.)</i>
+>
+> ~ <i>ibid.</i>
 
 I'd like to outline what a Value Object is in this context and show a simple approach to using them in an application that uses JPA with a relational database.
 
@@ -49,7 +50,7 @@ The important thing is that we <i>treat</i> Value Objects as immutable, and comm
 
 >Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential.
 >
->- <i>(ibid.)</i>
+> ~ <i>ibid.</i>
 
 
 
@@ -124,49 +125,53 @@ public class Month {
 
 The `isValid()` method is where we locate our increasing understanding of what it means for a `Month` object to be valid. Through this process it becomes increasingly difficult to create an invalid `Month`. And it's always clear in our calling code that we are dealing with months:
 
-	String myMonthString = "201501";
-	if(Month.isValid(myMonthString)) {
-		new Month(myMonthString);
-	}
-	
-	new Month(null); // throws Exception
-	
-	new Month("20150"); // throws Exception
-	
-	new Month("abcdef"); // throws Exception
+{% highlight java linenos %}
+String myMonthString = "201501";
+if(Month.isValid(myMonthString)) {
+	new Month(myMonthString);
+}
+
+new Month(null); // throws Exception
+
+new Month("20150"); // throws Exception
+
+new Month("abcdef"); // throws Exception
+{% endhighlight %}
 
 Also, whenever the need for new month-related functionality, there is an obvious place to put it. Here we add some functionality to compare two `Month` objects:
 
-	public class Month implements Comparable<Month> {
-		
-		// ... code omitted for brevity ...
-			
-		public boolean isBefore(Month other) {
-			return this.compareTo(other) == -1;
-		}
-		
-		public boolean isAfter(Month other) {
-			return this.compareTo(other) == 1;
-		}
+{% highlight java linenos %}
+public class Month implements Comparable<Month> {
 	
-		@Override
-		public int compareTo(Month other) {
-			if(other == null) {
-				throw new NullPointerException();
-			}
-			Integer thisMonth = Integer.valueOf(this.value);
-			Integer otherMonth = Integer.valueOf(other.getMonthAsString());
-			if(thisMonth < otherMonth) {
-				return -1;
-			} else if(thisMonth > otherMonth) {
-				return 1;
-			}
-			return 0;
-		}
-	
-		// ... code omitted for brevity ...
+	// ... code omitted for brevity ...
 		
-	}	
+	public boolean isBefore(Month other) {
+		return this.compareTo(other) == -1;
+	}
+	
+	public boolean isAfter(Month other) {
+		return this.compareTo(other) == 1;
+	}
+
+	@Override
+	public int compareTo(Month other) {
+		if(other == null) {
+			throw new NullPointerException();
+		}
+		Integer thisMonth = Integer.valueOf(this.value);
+		Integer otherMonth = Integer.valueOf(other.getMonthAsString());
+		if(thisMonth < otherMonth) {
+			return -1;
+		} else if(thisMonth > otherMonth) {
+			return 1;
+		}
+		return 0;
+	}
+
+	// ... code omitted for brevity ...
+	
+}	
+{% endhighlight %}
 
 Now we have followed Eric's guidelines to identify/create a Value Object, let's look moment at what we have gained.
 
@@ -185,61 +190,67 @@ Before concluding Part 1 of this 2-part post, its worth mentioning another (perh
 
 ##Composite Value Objects
 
->A VALUE OBJECT can be an assemblage of other objects (Evans 2003)
+>A VALUE OBJECT can be an assemblage of other objects
+>
+> ~ <i>ibid.</i>
 
 When you think about it, there is nothing to stop us creating Value Objects from other Value Objects.  Continuing our example with `Month`, imagine a scenario where we wanted to represent a range of months:
 
-	public class MonthRange {
+{% highlight java linenos %}
+public class MonthRange {
+
+	private final Month start;
 	
-		private final Month start;
-		
-		private final Month end;
-		
-		public MonthRange(Month start, Month end) {
-			if(!isValid(start, end)) {
-				throw new DomainException("Not a valid month range");
-			}
-			this.start = start;
-			this.end = end;
-		}
-		
-		public static boolean isValid(Month start, Month end) {
-			return start.isBefore(end);
-		}
+	private final Month end;
 	
-		// ... code omitted for brevity ...
-		
+	public MonthRange(Month start, Month end) {
+		if(!isValid(start, end)) {
+			throw new DomainException("Not a valid month range");
+		}
+		this.start = start;
+		this.end = end;
 	}
+	
+	public static boolean isValid(Month start, Month end) {
+		return start.isBefore(end);
+	}
+
+	// ... code omitted for brevity ...
+	
+}
+{% endhighlight %}
 
 The `equals()` and `hashCode()` of this new composite Value Object holds no reference to any identity, as we expect from a Value Object, and is instead made up of the objects constituent fields (themselves Value Objects):
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((end == null) ? 0 : end.hashCode());
-			result = prime * result + ((start == null) ? 0 : start.hashCode());
-			return result;
-		}
-	
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) return true;
-			if (obj == null) return false;
-			if (getClass() != obj.getClass()) return false;
-			MonthRange other = (MonthRange) obj;
-			if (end == null) {
-				if (other.end != null)
-					return false;
-			} else if (!end.equals(other.end))
-				return false;
-			if (start == null) {
-				if (other.start != null)
-					return false;
-			} else if (!start.equals(other.start))
-				return false;
-			return true;
-		} 
+{% highlight java linenos %}
+@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((end == null) ? 0 : end.hashCode());
+	result = prime * result + ((start == null) ? 0 : start.hashCode());
+	return result;
+}
+
+@Override
+public boolean equals(Object obj) {
+	if (this == obj) return true;
+	if (obj == null) return false;
+	if (getClass() != obj.getClass()) return false;
+	MonthRange other = (MonthRange) obj;
+	if (end == null) {
+		if (other.end != null)
+			return false;
+	} else if (!end.equals(other.end))
+		return false;
+	if (start == null) {
+		if (other.start != null)
+			return false;
+	} else if (!start.equals(other.start))
+		return false;
+	return true;
+} 
+{% endhighlight %}
 
 ##Conclusion to Part 1
 If you're anything like me, at some point you will have thought "isn't a lot of this just good design practice that applies to any class?" After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it within a class -- that's just encapsulation! And this is of course true. In this sense a DDD Value Object is rooted in a wider context of Java best practices.
