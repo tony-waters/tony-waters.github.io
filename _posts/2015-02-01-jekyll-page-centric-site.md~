@@ -15,7 +15,7 @@ Creating a new Jekyll site usually involves running `jekyll new my-site-name` to
 
 Here is the final folder structure containing all the files needed to create the site. Notice there is no mention of posts.
 
-![Image alt]({{ site.baseurl }}/imag/2015-02-18-folders.png "the folder structure")
+![Image alt]({{ site.baseurl }}/img/2015-02-18-folders.png "the folder structure")
 
 ###The markdown
 
