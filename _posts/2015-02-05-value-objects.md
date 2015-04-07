@@ -261,7 +261,7 @@ Evans himself has been quick to note that DDD is not a completely new approach t
 >
 > ~ <i>ibid.</i>
 
-In terms of Value Objects, its not that they are a new idea. Its more about having a blueprint for identifying and coding them, and understanding the way they can simplify a design in fundamental ways. I am not suggesting 'looking for' potential Value Objects too early in the design, but there is value in identifying them when they do appear, and encapsulating the concept they represent before it proliferates through the different layers of the application. 
+In terms of Value Objects, its not that they are a new idea. Its more about having a blueprint for identifying and coding them, and understanding the way they can help simplify a design. I am not suggesting 'looking for' potential Value Objects too early in the design, but there is value in identifying them when they do appear, and encapsulating the concept they represent before it proliferates through layers of the application. 
 
 This concludes my brief look at the design of Value Objects. In [Part 2](/value-objects-2) of this post I will look at how we can use Value Objects to simplify the ORM in an application using JPA.
 

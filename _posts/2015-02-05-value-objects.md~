@@ -16,7 +16,7 @@ In terms of creating them he offers the following advice:
 >
 > ~ <i>ibid.</i>
 
-I'd like to outline what a Value Object is in this context. Then in part 2 of this post I'll show a simple approach to using them in an application that uses JPA with a relational database.
+I'd like to outline what a Value Object is in this context. Then in part 2 of this post I'll show a simple approach to using them in a JPA-based application.
 
 By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'yyyyMM'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
@@ -261,7 +261,7 @@ Evans himself has been quick to note that DDD is not a completely new approach t
 >
 > ~ <i>ibid.</i>
 
-In terms of Value Objects, its not that they are a new idea. Its more about having a blueprint for identifying and coding them, and understanding the way they can simplify a design in fundamental ways. I am not suggesting 'looking for' potential Value Objects too early in the design, but there is value in identifying them when they do appear, and encapsulating the concept they represent before it proliferates through the different layers of the application. 
+In terms of Value Objects, its not that they are a new idea. Its more about having a blueprint for identifying and coding them, and understanding the way they can help simplify a design. I am not suggesting 'looking for' potential Value Objects too early in the design, but there is value in identifying them when they do appear, and encapsulating the concept they represent before it proliferates through different layers of the application. 
 
 This concludes my brief look at the design of Value Objects. In [Part 2](/value-objects-2) of this post I will look at how we can use Value Objects to simplify the ORM in an application using JPA.
 
