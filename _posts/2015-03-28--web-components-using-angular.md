@@ -37,7 +37,7 @@ In a series of posts, I'd like to look at what we can do right now, with Angular
                  <checkbox class="text-info" label="| info" model="ctrl.showInfo"></checkbox>
                  <hr />
                  <span>
-                     filter message: <input type='text' ng-model="ctrl.messageFilter"></input>
+                     filter message: <input type='text' width="10" ng-model="ctrl.messageFilter"></input>
                  </span>
              </panel>
          </sidebar>
