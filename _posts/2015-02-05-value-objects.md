@@ -41,7 +41,7 @@ public class Month {
 }
 {% endhighlight %}
 
-Now when we work with months the code is more readable, conveying <i>the concept of the attribute being wrapped</i>. 
+I've gone for `Month`, and resisted appending `Wrapper` or any of its permutations. Now when we work with months the code is a little more readable -- conveying the concept of the <i>attribute</i> being wrapped, rather than the wrapping. 
 	
 ###2. Treat it as immutable
 There are no setters in `Month` to mutate the `value`. And we've declared the field itself `final`. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is [a little more involved](http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html) than is shown here. And if we use reflection, nothing is immutable.
@@ -52,7 +52,7 @@ Just how far should we go with this?
 >
 > ~ <i>ibid.</i>
 
-The important thing is that we <i>treat</i> Value Objects as immutable, and communicate that to future maintainers of the system through their design:
+The important thing is that we <i>treat</i> Value Objects as immutable, and communicate that to future maintainers of the system through their design.
 
 ###3. Don’t give it any identity
 Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. 
