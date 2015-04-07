@@ -5,7 +5,7 @@ tags: [DDD, JPA]
 header-img: "img/angular3.jpg"
 ---
 
-In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate how we may use directives to build Web Components. You can see it in action [here]({{ site.root }}/example-angular).
+In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate how we may use directives to build Web Components. You can see it in action [here]({{ site.root }}/example-angular) and its source code [here](https://github.com/tony-waters/example-angular/tree/master).
 
 In this post I will focus on the 'month picker' component.
 
@@ -119,7 +119,7 @@ To write this directive we will need:
 4. a module to keep it all in
 
 ###1. A template containing the HTML
-Nothing special about the components HTML template. It only knows about its controller, represented here by `ctrl`. We do not specify  the actual controller in this template. We will use the directive function to wire things up instead.
+Nothing special about the components HTML template. It only knows about its controller, represented here by `ctrl`. We do not specify the actual controller in this template. We will use the directive function to wire things up instead.
 
 Here is the complete HTML template used to create `<month picker>`, note no reference to scope:
 

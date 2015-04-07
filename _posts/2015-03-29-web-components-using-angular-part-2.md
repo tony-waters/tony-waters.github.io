@@ -5,7 +5,7 @@ tags: [DDD, JPA]
 header-img: "img/angular3.jpg"
 ---
 
-In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate how we may use directives to build Web Components. You can see it in action [here]({{ site.root }}/example-angular).
+In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate how we may use directives to build Web Components. You can see it in action [here]({{ site.root }}/example-angular) and its source code [here](https://github.com/tony-waters/example-angular/tree/master).
 
 In this post I will focus on the 'month picker' component.
 
@@ -247,6 +247,8 @@ Here is the complete module definition for the month picker component, showing t
 	
  }
 {% endhighlight %}
+
+You can find the full code [here](https://github.com/tony-waters/example-angular/blob/master/monthPicker.js).
 
 I had planned to look at how we can test our new component, but I'll save that for a later post. What I'd like to do next is show how we can use directives to give a consistent structure to our pages. So I'll cover that first.
 
