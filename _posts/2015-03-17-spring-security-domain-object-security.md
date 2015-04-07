@@ -3,24 +3,9 @@ title: Domain Object Security without ACLs using Spring Security 3.2
 layout: post
 header-img: "img/spring5.jpg"
 ---
-In the [previous post]({{ "/2015/03/11/spring-security-users-roles-permissions" | prepend: site.baseurl }}) I looked at adapting Spring Security to work with Permissions to avoid hard-coding Roles into the security configuration. Writing this:
+In my [previous post]({{ "/2015/03/11/spring-security-users-roles-permissions" | prepend: site.baseurl }}) I looked at adapting Spring Security to work with Permissions to avoid hard-coding Roles into the security configuration. In this post I want to move past generic roles and permissions to look at how we can grant or deny access to specific objects within our application.
 
-
-{% highlight java linenos %}
-@PreAuthorize("hasAuthority('PERM_READ_FOO')")
-boolean readFoo();
-{% endhighlight %}
-
-Instead of this:
-
-{% highlight java linenos %}
-@PreAuthorize("hasRole('ROLE_USER')")
-boolean readFoo();
-{% endhighlight %}
-
-Although this provides more flexibility, it is often not enough. We may need to check a users permission to access particular objects within our domain.
-
-While system-wide fine grained domain object security should find us reaching for the Access Control List (ACL) schema, there are situations where an ACL approach would be overkill. 
+To be more precise, how we can gran or deny access to a particular user (who), accessing a particular method (where), with a particular domain object as a parameter (what). One solution to this is to use an ACL, but this can be overkill in some scenarios.
 
 Spring Security is highly configurable, providing numerous hooks into its framework. Continuing with the example in my previous post, I want to show two methods of introducing domain object security that do not rely on ACLs.
 
