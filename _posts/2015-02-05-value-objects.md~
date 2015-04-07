@@ -8,7 +8,7 @@ In a recent project I drew upon a number of concepts from [Domain Driven Design]
 
 > represent a descriptive aspect of the domain that has no conceptual identity
 >
-> ~ <i>Evans 2003</i>
+> ~ <i>Eric Evans 2003</i>
 
 In terms of creating them he offers the following advice:
 
@@ -136,8 +136,9 @@ new Month(null); // throws Exception
 new Month("20150"); // throws Exception
 
 new Month("abcdef"); // throws Exception
+{% endhighlight %}
 
-Also, whenever the need for new month-related functionality, there is an obvious place to put it. Here we add some functionality to compare two `Month` objects:
+Now, whenever the need for new month-related functionality, there is an obvious place to put it. Here we add some functionality to compare two `Month` objects:
 
 {% highlight java linenos %}
 public class Month implements Comparable<Month> {
@@ -170,8 +171,9 @@ public class Month implements Comparable<Month> {
 	// ... code omitted for brevity ...
 	
 }	
+{% endhighlight %}
 
-Now we have followed Eric's guidelines to identify/create a Value Object, let's look moment at what we have gained.
+Let's look at what we gain by following Eric's guidelines to identify/create Value Objects.
 
 ##What we gain
 First, because our concept of 'month in a year' is encapsulated in the `Month` class, it is easily testable. If we had used a `String` to represent it, we would undoubtedly be re-testing the responses to different month `Strings` at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.
@@ -194,57 +196,61 @@ Before concluding Part 1 of this 2-part post, its worth mentioning another (perh
 
 When you think about it, there is nothing to stop us creating Value Objects from other Value Objects.  Continuing our example with `Month`, imagine a scenario where we wanted to represent a range of months:
 
-	public class MonthRange {
+{% highlight java linenos %}
+public class MonthRange {
+
+	private final Month start;
 	
-		private final Month start;
-		
-		private final Month end;
-		
-		public MonthRange(Month start, Month end) {
-			if(!isValid(start, end)) {
-				throw new DomainException("Not a valid month range");
-			}
-			this.start = start;
-			this.end = end;
-		}
-		
-		public static boolean isValid(Month start, Month end) {
-			return start.isBefore(end);
-		}
+	private final Month end;
 	
-		// ... code omitted for brevity ...
-		
+	public MonthRange(Month start, Month end) {
+		if(!isValid(start, end)) {
+			throw new DomainException("Not a valid month range");
+		}
+		this.start = start;
+		this.end = end;
 	}
+	
+	public static boolean isValid(Month start, Month end) {
+		return start.isBefore(end);
+	}
+
+	// ... code omitted for brevity ...
+	
+}
+{% endhighlight %}
 
 The `equals()` and `hashCode()` of this new composite Value Object holds no reference to any identity, as we expect from a Value Object, and is instead made up of the objects constituent fields (themselves Value Objects):
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((end == null) ? 0 : end.hashCode());
-			result = prime * result + ((start == null) ? 0 : start.hashCode());
-			return result;
-		}
-	
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) return true;
-			if (obj == null) return false;
-			if (getClass() != obj.getClass()) return false;
-			MonthRange other = (MonthRange) obj;
-			if (end == null) {
-				if (other.end != null)
-					return false;
-			} else if (!end.equals(other.end))
-				return false;
-			if (start == null) {
-				if (other.start != null)
-					return false;
-			} else if (!start.equals(other.start))
-				return false;
-			return true;
-		} 
+{% highlight java linenos %}
+@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((end == null) ? 0 : end.hashCode());
+	result = prime * result + ((start == null) ? 0 : start.hashCode());
+	return result;
+}
+
+@Override
+public boolean equals(Object obj) {
+	if (this == obj) return true;
+	if (obj == null) return false;
+	if (getClass() != obj.getClass()) return false;
+	MonthRange other = (MonthRange) obj;
+	if (end == null) {
+		if (other.end != null)
+			return false;
+	} else if (!end.equals(other.end))
+		return false;
+	if (start == null) {
+		if (other.start != null)
+			return false;
+	} else if (!start.equals(other.start))
+		return false;
+	return true;
+} 
+{% endhighlight %}
 
 ##Conclusion to Part 1
 If you're anything like me, at some point you will have thought "isn't a lot of this just good design practice that applies to any class?" After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it within a class -- that's just encapsulation! And this is of course true. In this sense a DDD Value Object is rooted in a wider context of Java best practices.

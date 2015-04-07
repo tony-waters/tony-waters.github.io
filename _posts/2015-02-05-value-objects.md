@@ -8,7 +8,7 @@ In a recent project I drew upon a number of concepts from [Domain Driven Design]
 
 > represent a descriptive aspect of the domain that has no conceptual identity
 >
-> ~ <i>Evans 2003</i>
+> ~ <i>Eric Evans 2003</i>
 
 In terms of creating them he offers the following advice:
 
@@ -138,7 +138,7 @@ new Month("20150"); // throws Exception
 new Month("abcdef"); // throws Exception
 {% endhighlight %}
 
-Also, whenever the need for new month-related functionality, there is an obvious place to put it. Here we add some functionality to compare two `Month` objects:
+Now, whenever the need for new month-related functionality, there is an obvious place to put it. Here we add some functionality to compare two `Month` objects:
 
 {% highlight java linenos %}
 public class Month implements Comparable<Month> {
@@ -173,9 +173,9 @@ public class Month implements Comparable<Month> {
 }	
 {% endhighlight %}
 
-Now we have followed Eric's guidelines to identify/create a Value Object, let's look moment at what we have gained.
+Let's look at what we gain by following Eric's guidelines to identify/create Value Objects.
 
-##What we gain
+###What we gain
 First, because our concept of 'month in a year' is encapsulated in the `Month` class, it is easily testable. If we had used a `String` to represent it, we would undoubtedly be re-testing the responses to different month `Strings` at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.
  
 Second, because a `Month` validates itself, there is less validation code elsewhere. This is really a more specific version of the previous point. But given that we no longer need to test for responses to invalid values for the month `String` anywhere else in the application, it deserves a mention. Since we can't construct an invalid `Month`, there is nothing to test for outside the `Month` itself.
