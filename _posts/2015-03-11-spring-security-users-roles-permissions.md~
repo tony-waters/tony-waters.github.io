@@ -17,7 +17,7 @@ boolean readFoo();
 boolean readFoo();
 {% endhighlight %}
 
-I want to show how we can use Spring Security 3 for unobtrusively implementing authorisation, where:
+I want to show how we can use Spring Security 3 for (unobtrusively) implementing authorisation, where:
 
 1. Authorisation is based on Permissions, not Roles
 2. The core domain model has no knowledge of the security model
