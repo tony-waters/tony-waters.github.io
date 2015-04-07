@@ -5,36 +5,14 @@ description: "This is what I do."
 ---
 <img class="bio-image" src="{{site.root}}/img/bio-image.jpg"></img>
 
-<p>Hello, my name is Tony Waters. I am a full-stack JEE Developer with strong core Java, Spring and Design Patterns. 5 years Java/Spring development, 6 years as a Java/JEE Trainer. I am a Sun Certified Java Programmer, and Web Component Developer.</p>
+<p>Hello, my name is Tony Waters. I am a JEE Developer with strong core Java, Spring and Design Patterns. 5 years Java/Spring development, and the same as a Java/JEE Trainer. I am a Sun Certified Java Programmer, and Web Component Developer.</p>
 
-<p>I have server-side and client-side skills. I consider myself a Java/JEE developer with good knowledge of JavaScript, HTML, and CSS. As such I don't mind if my Objects are java.lang or JSON based. I also really like using AngularJS.</p>
+<p>I have server-side and client-side skills. A good knowledge of JavaScript, HTML, and CSS. As such I don't mind if my Objects are java.lang or JSON based. I also really like using AngularJS.</p>
 
-<p>I have worked with big database systems like Oracle, and run my tests in RAM on tiny ones like H2. I like to develop in Java so want to abstract the data source as soon as practicably possible. So I prefer JPA to SQL. But I'm good to sit round a table with a DBA and discuss the transition. I may even be able to explain the difference between an inner and outer join without resorting to "one gives you less results" (providing I can us a Venn diagram and no one asks any questions).</p>
+<p>I have worked with big database systems like Oracle, and run my tests in RAM on tiny ones like H2. I like to develop in Java, so prefer JPA to SQL. But I'm good to sit round a table with a DBA and discuss the transition.</p>
 
-<p>Following best practices is important to me, and I prefer to stick to standards where practicable. I have used TDD for some time, and the related Java technologies (DbUnit, Mockito, JUnit, . I have not used BDD in a project but have learned Cucumber and ??? and used it enough to desire to use it in my next one.</p>
+<p>Following best practices is important to me, and I prefer to stick to standards where practicable. I have used TDD for some time, and the related Java technologies (JUint, DbUnit, Mockito, Hamcrest, Fest/AssertJ), and have introduced BDD into my practices. I have worked in teams where the ethos has been agile-oriented, following continuous integration and working iteratively and incrementally with the Product Owner.
 
-<p>And if you've not already guessed, I'm looking for my next contacting position. Drop me a line if I'm what you're looking for, or if you have any comments on the site content.
-
-<h3>Cons</h3>
-<p>May need some help re-calibrating using JEE without The Spring Framework.</p>
-<p>May keep saying "I don't understand why we don't use annotations" if we're not using annotations</p>
-<p>Really dislikes 'hacks' and may spend too long trying to find some alternative.</p>
-
-
-
-
-
-
-<p>My last project brought some challenges. Working alone for the first time, having complete control of the project, I had to make design decisions I had not previously had to make. I found ideas around Domain Driven Design useful here. Also, AngularJS is a real joy when compared to Tiles and JSP, but the documentation can be lacking where it comes to higher level design. I have tried to distil some of what I learned here.</p>
-
-
-
-
-SKILLS:
-
-Client-side: 	AngularJS, JavaScript, jQuery, Ajax, CSS, Bootstrap
-Server-side: 	JPA , Spring-Data, REST, Spring MVC, Tiles, JSP, Hibernate, SQL, QueryDsl
-Testing:	JUnit, DbUnit, Mockito, MockMvc 
-Other:	 	Maven, Eclipse, NetBeans
+<p>I'm looking for my next contacting position, so drop me a line if I'm what you're looking for, or if you have any comments on the site content.</p>
 
 <p>You can Email me at tony@not1bit.co.uk</p>
