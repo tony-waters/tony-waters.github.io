@@ -18,14 +18,13 @@ I'd like to outline what a Value Object is in this context and show a simple app
 
 By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'yyyyMM'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
-##'Good' Value Objects
-Re-jigging Evans quote, to make a good Value Object one must:
+###'Good' Value Objects
+Re-jigging Evans' quote, to make a good Value Object one must:
 
 1. make it express the meaning of its attribute(s)
 2. treat it as immutable
 3. don’t give it any identity
 4. give it related functionality
-
 
 ###1. Make it express the meaning of its attribute(s)
 The Value Object we want to create is used to represent a single attribute -- a 'month in a year'. It wraps a `String` object that holds the month in the format 'yyyyMM'. However, Evans seems to be steering us away from calling it something ending in `Wrapper`, towards "expressing the meaning of the attribute it conveys". To this end, we could choose to express this attribute in a class named something along the lines of `YearMonth`, `MonthInYear` or `Month` <sup>[[1]](#notes)</sup>:
