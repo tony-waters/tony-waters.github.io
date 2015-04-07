@@ -89,7 +89,7 @@ To configure an isolate scope we pass a directive an empty scope object (`{}`). 
 },
 {% endhighlight %}
 
-The value passed to these two properties represents the relationship between the parent/page scope and the component scope:
+The value passed to these two properties represents the relationship between the parent/page scope and the isolate scope of the directive:
 
 * `@` means a value is passed from the parent scope into the isolate directive scope
 * `=` is for 2-way binding between the isolate scope of the directive and the parent scope

@@ -76,7 +76,7 @@ The secret of this working is related to directive scope.
 ###A note on directive scope
 Its worth understanding the relationship this `<month-picker>` tag has with its directive. 
 
-By default a directive shares its parent scope, so has access to the scope of the page it is included on. We could use this for any communication between our directive and the page without any further work. For example, we could have the directive call a method in the page controller. While this approach is convenient it is not a very encapsulated solution, and makes `<month-picker>` less re-usable.
+By default a directive shares its parent scope, so has access to the scope of the page it is included on. We could use this for any communication between our directive and the page without any further work. For example, we could have the directive call a method in the page controller. While this approach is convenient it is not a very encapsulated solution, and makes `<month-picker>` reliant on the scope of the page it is included on.
 
 A better solution is to give the directive its own scope -- referred to as 'isolate scope' -- and pass values to and from it using attributes on the `<month-picker>` tag. This way the component is isolated from other scopes, and we have a clear method of communication between it and the page it appears on.
 
@@ -93,7 +93,7 @@ The value passed to these two properties represents the relationship between the
 
 * `@` means a value is passed from the parent scope into the isolate directive scope
 * `=` is for 2-way binding between the isolate scope of the directive and the parent scope
-* `&` is for when a value is pushed back from the directives isolate scope to its parent scope
+* `&` is for when a value is pushed back from the directives isolate scope to its parent scope, such as when a month is clicked
 * `?` indicates that a binding is optional
 
 So in our example:
