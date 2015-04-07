@@ -67,7 +67,7 @@ In a series of posts, I'd like to look at what we can do right now, with Angular
  </div>
 
 
-I'll talk through how we can create higher level components, effectively extending HTML to suit the needs of our application. The example above has the following constituant components:
+It has the following constituant components:
 
 - month-picker
 - alert-list
@@ -115,5 +115,5 @@ Which we can use within our application like this:
  </page>
  {% endhighlight %}
  
-I'll begin looking at the individual components in [part 2]({{ "/2015/03/29/web-components-using-angular-part-2.html" | prepend: site.baseurl }}), beginning with the month-picker.
+I'll start looking at the individual components in [part 2]({{ "/2015/03/29/web-components-using-angular-part-2.html" | prepend: site.baseurl }}), beginning with the month-picker.
 
