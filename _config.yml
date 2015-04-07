@@ -1,17 +1,17 @@
 # Site settings
 title: not1bit
 header-img: img/not1bit6.jpg
-email: your-email@yourdomain.com
-description: "Some stuff"
+#email: your-email@yourdomain.com
+description: "Programming in JEE, Spring, and Angular"
 baseurl: ""
 #url: "http://yourdomain.com"
-twitter_username: SBootstrap
-github_username:  davidtmiller
-facebook_username:  IronSummitMedia
+#twitter_username: SBootstrap
+#github_username:  davidtmiller
+#facebook_username:  IronSummitMedia
 
 # Build settings
 markdown: kramdown
 highlighter: pygments
 #permalink: pretty
-paginate: 5
+paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
