@@ -173,9 +173,9 @@ public class Month implements Comparable<Month> {
 }	
 {% endhighlight %}
 
+###What we gain
 Let's look at what we gain by following Eric's guidelines to identify/create Value Objects.
 
-###What we gain
 First, because our concept of 'month in a year' is encapsulated in the `Month` class, it is easily testable. If we had used a `String` to represent it, we would undoubtedly be re-testing the responses to different month `Strings` at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.
  
 Second, because a `Month` validates itself, there is less validation code elsewhere. This is really a more specific version of the previous point. But given that we no longer need to test for responses to invalid values for the month `String` anywhere else in the application, it deserves a mention. Since we can't construct an invalid `Month`, there is nothing to test for outside the `Month` itself.
@@ -253,7 +253,7 @@ public boolean equals(Object obj) {
 {% endhighlight %}
 
 ##Conclusion to Part 1
-If you're anything like me, at some point you will have thought <i>isn't a lot of this just good design -- so what's new here?</i> After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it within a class -- that's just encapsulation! And this is of course true.
+If you're anything like me, at some point you will have thought <i>isn't a lot of this just good design -- so what's new here?</i> After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it -- that's just encapsulation! And this is of course true.
 
 Evans himself has been quick to note that DDD is not a completely new approach to creating systems, but rather:
 
@@ -261,7 +261,9 @@ Evans himself has been quick to note that DDD is not a completely new approach t
 >
 > ~ <i>ibid.</i>
 
-This concludes my brief look at the design of Value Objects. In [Part 2](/value-objects-2) of this post I will look at how we can represent these types of object using JPA `Embeddables`.
+In terms of Value Objects, its not that they are a new idea. Its more about having a blueprint for identifying and coding them, and understanding the way they can simplify a design in fundamental ways. I am not suggesting 'looking for' potential Value Objects too early in the design, but there is value in identifying them when they do appear, and encapsulating the concept they represent before it proliferates through the different layers of the application. 
+
+This concludes my brief look at the design of Value Objects. In [Part 2](/value-objects-2) of this post I will look at how we can represent these types of objects to simplify the ORM in an application using JPA.
 
 <hr />
 
