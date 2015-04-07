@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Some stuff">
+
+    <title>Mapping DDD Value Objects using JPA - Part 1 - not1bit</title>
+
+    <link rel="canonical" href="/2015/02/05/ddd-value-objects-part-1.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- Pygments Github CSS -->
+    <!--<link rel="stylesheet" href="/css/syntax.css">-->
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">not1bit</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/java3.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Mapping DDD Value Objects using JPA - Part 1</h1>
+                    
+                    <span class="meta">Posted by not1bit on February 5, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>In a recent project I drew upon a number of concepts from <a href="http://dddcommunity.org/">Domain Driven Design</a>. Among them Value Objects, which Eric Evans says:</p>
+
+<blockquote>
+  <p>represent a descriptive aspect of the domain that has no conceptual identity</p>
+
+  <p>~ <i>Eric Evans 2003</i></p>
+</blockquote>
+
+<p>In terms of creating them he offers the following advice:</p>
+
+<blockquote>
+  <p>When you care only about the attributes of an element of the model, classify it as a VALUE OBJECT. Making it express the meaning of attributes it conveys and give it related functionality. Treat the VALUE OBJECT as immutable. Don’t give it any identity and avoid the design complexities necessary to maintain ENTITIES</p>
+
+  <p>~ <i>ibid.</i></p>
+</blockquote>
+
+<p>I’d like to outline what a Value Object is in this context. Then in <a href="/2015/02/10/ddd-value-objects-part-2">part 2</a> of this post I’ll show a simple approach to using them in a JPA-based application.</p>
+
+<p>By way of example I’ll use a (simplified) Value Object from my last project, <code>Month</code> - which denotes a ‘specific month in a specific year’. It could be (and at some point was) represented by a <code>String</code> with the format ‘yyyyMM’. I’ll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.</p>
+
+<h3 id="good-value-objects">‘Good’ Value Objects</h3>
+<p>Re-jigging Evans’ quote, to make a good Value Object one must:</p>
+
+<ol>
+  <li>make it express the meaning of its attribute(s)</li>
+  <li>treat it as immutable</li>
+  <li>don’t give it any identity</li>
+  <li>give it related functionality</li>
+</ol>
+
+<h3 id="make-it-express-the-meaning-of-its-attributes">1. Make it express the meaning of its attribute(s)</h3>
+<p>The Value Object we want to create is used to represent a single attribute – a ‘month in a year’. It wraps a <code>String</code> object that holds the month in the format ‘yyyyMM’. However, Evans seems to be steering us away from calling it something ending in <code>Wrapper</code>, towards “expressing the meaning of the attribute it conveys”. To this end, we could choose to express this attribute in a class named something along the lines of <code>YearMonth</code>, <code>MonthInYear</code> or <code>Month</code> <sup><a href="#notes">[1]</a></sup>:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="lineno">1</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Month</span> <span class="o">{</span>
+<span class="lineno">2</span> 	<span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">value</span><span class="o">;</span>
+<span class="lineno">3</span> 
+<span class="lineno">4</span> 	<span class="kd">public</span> <span class="nf">Month</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">5</span> 		<span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+<span class="lineno">6</span> 	<span class="o">}</span>
+<span class="lineno">7</span> <span class="o">}</span></code></pre></div>
+
+<p>I’ve gone for <code>Month</code>, and resisted appending <code>Wrapper</code> or any of its permutations. Now when we work with months the code is a little more readable – conveying the concept of the <i>attribute</i> being wrapped, rather than the wrapping. </p>
+
+<h3 id="treat-it-as-immutable">2. Treat it as immutable</h3>
+<p>There are no setters in <code>Month</code> to mutate the <code>value</code>. And we’ve declared the field itself <code>final</code>. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is <a href="http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html">a little more involved</a> than is shown here. And if we use reflection, nothing is immutable.</p>
+
+<p>Just how far should we go with this?</p>
+
+<blockquote>
+  <p>Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential.</p>
+
+  <p>~ <i>ibid.</i></p>
+</blockquote>
+
+<p>The important thing is that we <i>treat</i> Value Objects as immutable, and communicate that to future maintainers of the system through their design.</p>
+
+<h3 id="dont-give-it-any-identity">3. Don’t give it any identity</h3>
+<p>Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. </p>
+
+<p>It is common, then, to see Value Objects use all of their fields in <code>equals()</code> and <code>hashCode()</code> calculations. This is in opposition to an Entity where these methods usually compare on some form of ID.</p>
+
+<p><code>Month</code> has no database or domain identity, so no ID in the calculations. A combination of the fields are used instead (in this case the single field <code>value</code>):</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="lineno"> 1</span> <span class="nd">@Override</span>
+<span class="lineno"> 2</span> <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+<span class="lineno"> 3</span> 	<span class="kd">final</span> <span class="kt">int</span> <span class="n">prime</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span>
+<span class="lineno"> 4</span> 	<span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+<span class="lineno"> 5</span> 	<span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">((</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">value</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+<span class="lineno"> 6</span> 	<span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+<span class="lineno"> 7</span> <span class="o">}</span>
+<span class="lineno"> 8</span> 
+<span class="lineno"> 9</span> <span class="nd">@Override</span>
+<span class="lineno">10</span> <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">11</span> 	<span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">obj</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="lineno">12</span> 	<span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">13</span> 	<span class="k">if</span> <span class="o">(</span><span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">14</span> 	<span class="n">Month</span> <span class="n">other</span> <span class="o">=</span> <span class="o">(</span><span class="n">Month</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
+<span class="lineno">15</span> 	<span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">16</span> 		<span class="k">if</span> <span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">value</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">17</span> 	<span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(!</span><span class="n">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">value</span><span class="o">))</span> <span class="o">{</span>
+<span class="lineno">18</span> 		<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">19</span> 	<span class="o">}</span>
+<span class="lineno">20</span> 	<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="lineno">21</span> <span class="o">}</span></code></pre></div>
+
+<p>The fact that two different <code>Month</code> objects are equal so long as their <code>value</code> is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  </p>
+
+<h3 id="give-it-related-functionality">4. Give it related functionality</h3>
+<p>Our Value Object now becomes a magnet for any month-related functionality. We’ll start with some (over-simplified) validation, using a <code>static isValid()</code> method so that calling code can do a pre-creation validity check if it so chooses:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="lineno"> 1</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Month</span> <span class="o">{</span>
+<span class="lineno"> 2</span> 	<span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">value</span><span class="o">;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span> 	<span class="kd">public</span> <span class="nf">Month</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno"> 5</span> 		<span class="k">if</span><span class="o">(!</span><span class="n">isValid</span><span class="o">(</span><span class="n">value</span><span class="o">))</span> <span class="o">{</span>
+<span class="lineno"> 6</span> 			<span class="k">throw</span> <span class="k">new</span> <span class="nf">DomainValidationException</span><span class="o">(</span><span class="s">&quot;Not a valid month &quot;</span> <span class="o">+</span> <span class="n">value</span><span class="o">);</span>
+<span class="lineno"> 7</span> 		<span class="o">}</span>
+<span class="lineno"> 8</span> 		<span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+<span class="lineno"> 9</span> 	<span class="o">}</span>
+<span class="lineno">10</span> 
+<span class="lineno">11</span> 	
+<span class="lineno">12</span> 	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isValid</span><span class="o">(</span><span class="n">String</span> <span class="n">yearMonth</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">13</span> 		<span class="k">if</span><span class="o">(</span><span class="n">yearMonth</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="o">!</span><span class="n">isInteger</span><span class="o">(</span><span class="n">yearMonth</span><span class="o">)</span> <span class="o">||</span> <span class="n">yearMonth</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">6</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">14</span> 			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">15</span> 		<span class="o">}</span>
+<span class="lineno">16</span> 		<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="lineno">17</span> 	<span class="o">}</span>
+<span class="lineno">18</span> 	
+<span class="lineno">19</span> 	<span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isInteger</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">20</span> 		<span class="k">try</span> <span class="o">{</span>
+<span class="lineno">21</span> 			<span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+<span class="lineno">22</span> 		<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">NumberFormatException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">23</span> 			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">24</span> 		<span class="o">}</span>
+<span class="lineno">25</span> 		<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="lineno">26</span> 	<span class="o">}</span>
+<span class="lineno">27</span> 	
+<span class="lineno">28</span> 	<span class="c1">// ... code omitted for brevity ...</span>
+<span class="lineno">29</span> 	
+<span class="lineno">30</span> <span class="o">}</span></code></pre></div>
+
+<p>The <code>isValid()</code> method is where we locate our increasing understanding of what it means for a <code>Month</code> object to be valid. Through this process it becomes increasingly difficult to create an invalid <code>Month</code>. And it’s always clear in our calling code that we are dealing with months:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="lineno"> 1</span> <span class="n">String</span> <span class="n">myMonthString</span> <span class="o">=</span> <span class="s">&quot;201501&quot;</span><span class="o">;</span>
+<span class="lineno"> 2</span> <span class="k">if</span><span class="o">(</span><span class="n">Month</span><span class="o">.</span><span class="na">isValid</span><span class="o">(</span><span class="n">myMonthString</span><span class="o">))</span> <span class="o">{</span>
+<span class="lineno"> 3</span> 	<span class="k">new</span> <span class="nf">Month</span><span class="o">(</span><span class="n">myMonthString</span><span class="o">);</span>
+<span class="lineno"> 4</span> <span class="o">}</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="k">new</span> <span class="nf">Month</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span> <span class="c1">// throws Exception</span>
+<span class="lineno"> 7</span> 
+<span class="lineno"> 8</span> <span class="k">new</span> <span class="nf">Month</span><span class="o">(</span><span class="s">&quot;20150&quot;</span><span class="o">);</span> <span class="c1">// throws Exception</span>
+<span class="lineno"> 9</span> 
+<span class="lineno">10</span> <span class="k">new</span> <span class="nf">Month</span><span class="o">(</span><span class="s">&quot;abcdef&quot;</span><span class="o">);</span> <span class="c1">// throws Exception</span></code></pre></div>
+
+<p>Now, whenever the need for new month-related functionality, there is an obvious place to put it. Here we add some functionality to compare two <code>Month</code> objects:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="lineno"> 1</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Month</span> <span class="kd">implements</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="n">Month</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="lineno"> 2</span> 	
+<span class="lineno"> 3</span> 	<span class="c1">// ... code omitted for brevity ...</span>
+<span class="lineno"> 4</span> 		
+<span class="lineno"> 5</span> 	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isBefore</span><span class="o">(</span><span class="n">Month</span> <span class="n">other</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno"> 6</span> 		<span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">other</span><span class="o">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+<span class="lineno"> 7</span> 	<span class="o">}</span>
+<span class="lineno"> 8</span> 	
+<span class="lineno"> 9</span> 	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isAfter</span><span class="o">(</span><span class="n">Month</span> <span class="n">other</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">10</span> 		<span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">other</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span><span class="o">;</span>
+<span class="lineno">11</span> 	<span class="o">}</span>
+<span class="lineno">12</span> 
+<span class="lineno">13</span> 	<span class="nd">@Override</span>
+<span class="lineno">14</span> 	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="n">Month</span> <span class="n">other</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">15</span> 		<span class="k">if</span><span class="o">(</span><span class="n">other</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">16</span> 			<span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span>
+<span class="lineno">17</span> 		<span class="o">}</span>
+<span class="lineno">18</span> 		<span class="n">Integer</span> <span class="n">thisMonth</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+<span class="lineno">19</span> 		<span class="n">Integer</span> <span class="n">otherMonth</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">getMonthAsString</span><span class="o">());</span>
+<span class="lineno">20</span> 		<span class="k">if</span><span class="o">(</span><span class="n">thisMonth</span> <span class="o">&lt;</span> <span class="n">otherMonth</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">21</span> 			<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+<span class="lineno">22</span> 		<span class="o">}</span> <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">thisMonth</span> <span class="o">&gt;</span> <span class="n">otherMonth</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">23</span> 			<span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+<span class="lineno">24</span> 		<span class="o">}</span>
+<span class="lineno">25</span> 		<span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+<span class="lineno">26</span> 	<span class="o">}</span>
+<span class="lineno">27</span> 
+<span class="lineno">28</span> 	<span class="c1">// ... code omitted for brevity ...</span>
+<span class="lineno">29</span> 	
+<span class="lineno">30</span> <span class="o">}</span></code></pre></div>
+
+<h3 id="what-we-gain">What we gain</h3>
+<p>Let’s look at what we gain by following Eric’s guidelines to identify/create Value Objects.</p>
+
+<p>First, because our concept of ‘month in a year’ is encapsulated in the <code>Month</code> class, it is easily testable. If we had used a <code>String</code> to represent it, we would undoubtedly be re-testing the responses to different month <code>Strings</code> at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.</p>
+
+<p>Second, because a <code>Month</code> validates itself, there is less validation code elsewhere. This is really a more specific version of the previous point. But given that we no longer need to test for responses to invalid values for the month <code>String</code> anywhere else in the application, it deserves a mention. Since we can’t construct an invalid <code>Month</code>, there is nothing to test for outside the <code>Month</code> itself.</p>
+
+<p>Third, code that uses the <code>Month</code> class becomes more succinct and more readable. Non-developers are more likely to understand the logic than if we had stuck to the <code>String</code> representation.</p>
+
+<p>Forth, tracking the lifecycle of an Entity has a degree of overhead and complexity associated with it, even with modern ORM frameworks. If we utilise Value Objects fully we will have a simpler, more maintainable and performant system.</p>
+
+<p>There’s probably more.</p>
+
+<p>Before concluding Part 1 of this 2-part post, its worth mentioning another (perhaps obvious) feature of Value Objects.</p>
+
+<h2 id="composite-value-objects">Composite Value Objects</h2>
+
+<blockquote>
+  <p>A VALUE OBJECT can be an assemblage of other objects</p>
+
+  <p>~ <i>ibid.</i></p>
+</blockquote>
+
+<p>When you think about it, there is nothing to stop us creating Value Objects from other Value Objects.  Continuing our example with <code>Month</code>, imagine a scenario where we wanted to represent a range of months:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="lineno"> 1</span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MonthRange</span> <span class="o">{</span>
+<span class="lineno"> 2</span> 
+<span class="lineno"> 3</span> 	<span class="kd">private</span> <span class="kd">final</span> <span class="n">Month</span> <span class="n">start</span><span class="o">;</span>
+<span class="lineno"> 4</span> 	
+<span class="lineno"> 5</span> 	<span class="kd">private</span> <span class="kd">final</span> <span class="n">Month</span> <span class="n">end</span><span class="o">;</span>
+<span class="lineno"> 6</span> 	
+<span class="lineno"> 7</span> 	<span class="kd">public</span> <span class="nf">MonthRange</span><span class="o">(</span><span class="n">Month</span> <span class="n">start</span><span class="o">,</span> <span class="n">Month</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno"> 8</span> 		<span class="k">if</span><span class="o">(!</span><span class="n">isValid</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">end</span><span class="o">))</span> <span class="o">{</span>
+<span class="lineno"> 9</span> 			<span class="k">throw</span> <span class="k">new</span> <span class="nf">DomainException</span><span class="o">(</span><span class="s">&quot;Not a valid month range&quot;</span><span class="o">);</span>
+<span class="lineno">10</span> 		<span class="o">}</span>
+<span class="lineno">11</span> 		<span class="k">this</span><span class="o">.</span><span class="na">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">;</span>
+<span class="lineno">12</span> 		<span class="k">this</span><span class="o">.</span><span class="na">end</span> <span class="o">=</span> <span class="n">end</span><span class="o">;</span>
+<span class="lineno">13</span> 	<span class="o">}</span>
+<span class="lineno">14</span> 	
+<span class="lineno">15</span> 	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isValid</span><span class="o">(</span><span class="n">Month</span> <span class="n">start</span><span class="o">,</span> <span class="n">Month</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">16</span> 		<span class="k">return</span> <span class="n">start</span><span class="o">.</span><span class="na">isBefore</span><span class="o">(</span><span class="n">end</span><span class="o">);</span>
+<span class="lineno">17</span> 	<span class="o">}</span>
+<span class="lineno">18</span> 
+<span class="lineno">19</span> 	<span class="c1">// ... code omitted for brevity ...</span>
+<span class="lineno">20</span> 	
+<span class="lineno">21</span> <span class="o">}</span></code></pre></div>
+
+<p>The <code>equals()</code> and <code>hashCode()</code> of this new composite Value Object holds no reference to any identity, as we expect from a Value Object, and is instead made up of the objects constituent fields (themselves Value Objects):</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="lineno"> 1</span> <span class="nd">@Override</span>
+<span class="lineno"> 2</span> <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+<span class="lineno"> 3</span> 	<span class="kd">final</span> <span class="kt">int</span> <span class="n">prime</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span>
+<span class="lineno"> 4</span> 	<span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+<span class="lineno"> 5</span> 	<span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">((</span><span class="n">end</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">end</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+<span class="lineno"> 6</span> 	<span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">((</span><span class="n">start</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">start</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+<span class="lineno"> 7</span> 	<span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+<span class="lineno"> 8</span> <span class="o">}</span>
+<span class="lineno"> 9</span> 
+<span class="lineno">10</span> <span class="nd">@Override</span>
+<span class="lineno">11</span> <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">12</span> 	<span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">obj</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="lineno">13</span> 	<span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">14</span> 	<span class="k">if</span> <span class="o">(</span><span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">obj</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">15</span> 	<span class="n">MonthRange</span> <span class="n">other</span> <span class="o">=</span> <span class="o">(</span><span class="n">MonthRange</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
+<span class="lineno">16</span> 	<span class="k">if</span> <span class="o">(</span><span class="n">end</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">17</span> 		<span class="k">if</span> <span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">end</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+<span class="lineno">18</span> 			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">19</span> 	<span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(!</span><span class="n">end</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">end</span><span class="o">))</span>
+<span class="lineno">20</span> 		<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">21</span> 	<span class="k">if</span> <span class="o">(</span><span class="n">start</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="lineno">22</span> 		<span class="k">if</span> <span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">start</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+<span class="lineno">23</span> 			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">24</span> 	<span class="o">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(!</span><span class="n">start</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">other</span><span class="o">.</span><span class="na">start</span><span class="o">))</span>
+<span class="lineno">25</span> 		<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="lineno">26</span> 	<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="lineno">27</span> <span class="o">}</span></code></pre></div>
+
+<h2 id="conclusion-to-part-1">Conclusion to Part 1</h2>
+<p>If you’re anything like me, at some point you will have thought <i>isn’t a lot of this just good design – so what’s new here?</i> After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it – that’s just encapsulation! And this is of course true.</p>
+
+<p>Evans himself has been quick to note that DDD is not a completely new approach to creating systems, but rather:</p>
+
+<blockquote>
+  <p>… a framework for making design decisions and a technical vocabulary for discussing domain design. It is a synthesis of widely accepted best practices along with my own insights and experiences. Projects facing complex domains can use this framework to approach domain-driven design systematically.</p>
+
+  <p>~ <i>ibid.</i></p>
+</blockquote>
+
+<p>In terms of Value Objects, its not that they are a new idea. Its more about having a blueprint for identifying and coding them, and understanding the way they can help simplify a design. I am not suggesting ‘looking for’ potential Value Objects too early in the design, but there is value in identifying them when they do appear, and encapsulating the concept they represent before it proliferates through layers of the application. </p>
+
+<p>This concludes my brief look at the design of Value Objects. In <a href="/2015/02/10/ddd-value-objects-part-2">Part 2</a> of this post I will look at how we can use Value Objects to simplify the ORM in an application using JPA.</p>
+
+<hr />
+
+<h3 id="a-namenotesanotes"><a name="notes"></a>Notes</h3>
+
+<ol>
+  <li>The project in question was using Java 7. I think <code>YearMonth</code> is a good name to use for this concept, but since Java 8 has <a href="http://docs.oracle.com/javase/8/docs/api/index.html?java/time/package-summary.html">a very nice time API</a> (goodbye Joda-Time!) which, among other things, provides a <code>YearMonth</code> class, this is perhaps not so good a choice.</li>
+</ol>
+
+<h3 id="resources">Resources</h3>
+<ul>
+  <li>
+    <p><a href="http://www.domaindrivendesign.org/books/evans_2003">Domain-Driven Design: Tackling Complexity in the Heart of Software</a> – Eric Evans seminal 2003 work on Domain Driven Design.</p>
+  </li>
+  <li>
+    <p><a href="http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson">Power Use of Value Objects in DDD</a> – A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program’s architecture and make it more readable and testable.</p>
+  </li>
+</ul>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2015/02/02/using-cors-with-rest.html" data-toggle="tooltip" data-placement="top" title="Using CORS to simplify development of distributed Server and Client applications">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2015/02/10/ddd-value-objects-part-2.html" data-toggle="tooltip" data-placement="top" title="Mapping DDD Value Objects using JPA - Part 2">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+<!--                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>-->
+<!--                    
+                    <li>
+                        <a href="https://twitter.com/SBootstrap">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    -->
+<!--                    
+                    <li>
+                        <a href="https://www.facebook.com/IronSummitMedia">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    -->
+                    <li>
+                        <a href="https://github.com/tony-waters">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; not1bit 2015</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.js "></script>
+
+
+</body>
+
+</html>
