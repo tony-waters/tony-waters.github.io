@@ -16,15 +16,15 @@ The best way to understand the month-picker component is by looking at its requi
 <pre>
   Given a MonthPicker directive
     when in default mode
-      should have a months object with the 12 months
-      should create 12 buttons
-      should have labels on the buttons corresponding to the months
-      should mark a single button clicked as active
-      should return single month corresponding to selected button
+      it should have a months object with the 12 months
+      it should create 12 buttons
+      it should have labels on the buttons corresponding to the months
+      it should mark a single button clicked as active
+      it should return single month corresponding to selected button
     when in multi mode
-      should mark all buttons clicked as active
-      should toggle active buttons to inactive
-      should return months corresponding to selected buttons
+      it should mark all buttons clicked as active
+      it should toggle active buttons to inactive
+      it should return months corresponding to selected buttons
 
 </pre>
 
