@@ -215,7 +215,7 @@ public interface UserDetailsService {
 }
 {% endhighlight %}
 
-`UserDetails` contains security-related information about the user, including what they are allowed to do (`GrantedAuthority`):
+`UserDetails` contains security-related information about the user, including what they are allowed to do (represented as a `GrantedAuthority`):
 
 {% highlight java linenos %}
 public interface UserDetails extends Serializable {
@@ -229,7 +229,7 @@ public interface UserDetails extends Serializable {
 }
 {% endhighlight %}
 
-A `GrantedAuthority` is a string representation of a permission the user has, such as `PERM_READ_FOO` or `PERM_DELETE_FOO`:
+A `GrantedAuthority` is a string representation of a permission granted to the user, such as `PERM_READ_FOO` or `PERM_DELETE_FOO`:
 
 {% highlight java linenos %}
 public interface GrantedAuthority extends Serializable {

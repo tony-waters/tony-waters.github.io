@@ -70,7 +70,7 @@ create table MEMBER (
 )
 {% endhighlight %}
 
-I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is the username.
+I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is a shared username.
 
 The `Member` knows nothing of security concerns.
 
@@ -215,7 +215,7 @@ public interface UserDetailsService {
 }
 {% endhighlight %}
 
-`UserDetails` contains security-related information about the user, including what they are allowed to do (`GrantedAuthority`):
+`UserDetails` contains security-related information about the user, including what they are allowed to do (represented as a `GrantedAuthority`):
 
 {% highlight java linenos %}
 public interface UserDetails extends Serializable {
