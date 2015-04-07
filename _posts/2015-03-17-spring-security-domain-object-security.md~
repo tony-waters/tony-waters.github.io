@@ -5,7 +5,7 @@ header-img: "img/spring5.jpg"
 ---
 In my [previous post]({{ "/2015/03/11/spring-security-users-roles-permissions" | prepend: site.baseurl }}) I looked at adapting Spring Security to work with Permissions to avoid hard-coding Roles into the security configuration. In this post I want to move past generic roles and permissions to look at how we can grant or deny access to specific objects within our application.
 
-One solution to this is to use an ACL, but this can be overkill in some scenarios. I want to show two methods of introducing domain object security that do not rely on ACLs.
+One solution is to use an ACL, but this can be overkill in some scenarios. So I want to show two methods of introducing domain object security that do not rely on ACLs.
 
 [Source code](https://github.com/tony-waters/example-spring-security/tree/2-domain-object-authorisation) is available on GitHub.
 
@@ -13,7 +13,9 @@ One solution to this is to use an ACL, but this can be overkill in some scenario
 
 One approach in Spring Security is to provide a custom `PermissionEvaluator`, which:
 
->... is intended to bridge between the expression system and Spring Security’s ACL system, allowing you to specify authorization constraints on domain objects, based on abstract permissions. It has no explicit dependencies on the ACL module, **so you could swap that out for an alternative implementation if required**. ([Spring 3.2.6 Docs](http://docs.spring.io/spring-security/site/docs/3.2.6.RELEASE/reference/htmlsingle/) - my emphasis)
+>... is intended to bridge between the expression system and Spring Security’s ACL system, allowing you to specify authorization constraints on domain objects, based on abstract permissions. It has no explicit dependencies on the ACL module, **so you could swap that out for an alternative implementation if required**.
+>
+> ~ <i>[Spring 3.2.6 Docs](http://docs.spring.io/spring-security/site/docs/3.2.6.RELEASE/reference/htmlsingle/) - my emphasis</i>
 
 The `PermissionEvaluator` has the following interface:
 
@@ -38,7 +40,7 @@ void deleteMember(Long id);
 
 By default, Spring uses a `DenyAllPermissionEvaluator`, which simply denies all requests from `hasPermission`. We will replace this with our own implementation. 
 
-Lets say we wanted to restrict operations on a `Member` object to just the owner of that object. Here is a simple implementation of `PermissionEvaluator` that does this:
+Consider the common scenario where we want to restrict operations on a `Member` object to just the owner of that object. Here is a simple implementation of `PermissionEvaluator` that does this:
 
 {% highlight java linenos %}
 public class MemberPermissionEvaluator implements PermissionEvaluator {
