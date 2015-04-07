@@ -80,7 +80,7 @@ By default a directive shares its parent scope, so has access to the scope of th
 
 A better solution is to give the directive its own scope -- referred to as 'isolate scope' -- and pass values to and from it using attributes on the `<month-picker>` tag. This way the component is isolated from other scopes, and we have a clear method of communication between it and the page it appears on.
 
-To configure an isolate scope in a directives we pass it an empty scope object (`{}`). We can specify we want the `month-selected-expression` and `multi` attributes to be shared between the directive and the page by including their [camel case](http://en.wikipedia.org/wiki/CamelCase) equivalent as properties within this empty scope object:
+To configure an isolate scope we pass a directive an empty scope object (`{}`). We can specify we want the `month-selected-expression` and `multi` attributes to be shared between the directive and the page by including their [camel case](http://en.wikipedia.org/wiki/CamelCase) equivalent as properties within this empty scope object:
 
 {% highlight js linenos %}
 {
@@ -89,7 +89,7 @@ To configure an isolate scope in a directives we pass it an empty scope object (
 },
 {% endhighlight %}
 
-The value passed to these two properties represents the relationship:
+The value passed to these two properties represents the relationship between the parent/page scope and the component scope:
 
 * `@` means a value is passed from the parent scope into the isolate directive scope
 * `=` is for 2-way binding between the isolate scope of the directive and the parent scope
