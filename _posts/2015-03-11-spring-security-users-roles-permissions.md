@@ -26,7 +26,7 @@ I want to show how we can use Spring Security 3 for (unobtrusively) implementing
 Source code and tests can be found on [GitHub](https://github.com/tony-waters/example-spring-security/tree/1-permission-based-authorisation). Best understanding can be obtained by running the tests there, but here's the walk-through:
 
 ##The core domain
-To begin, we will create an entity for our core domain which represents a `Member` -- basically a registered user in the system:
+To begin, we will create an entity for our core domain to represents a `Member` -- basically a registered user in the system:
 
 {% highlight java linenos %}
 @Entity
@@ -70,7 +70,7 @@ create table MEMBER (
 )
 {% endhighlight %}
 
-I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is the username.
+I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is a shared username.
 
 The `Member` knows nothing of security concerns.
 
