@@ -60,7 +60,7 @@ Here is a sneek preview of the finished component operating in each of its two m
 
 We want to make including this component on a page as simple as possible for the 'end-user' (someone developing the site, perhaps ourselves). At a minimum we will need to inclue in this new element a way of specifying single-select or multi-select mode, and some way of getting the seleced month(s) into the scope of the controller of the rendered page.
 
-Here is how we do it:
+We do this using attributes:
 
 {% highlight html linenos %}
 <month-picker 
@@ -69,7 +69,7 @@ Here is how we do it:
 </month-picker>
 {% endhighlight %}
 
-For this to work our directive needs to be able to locate the value for `multi`, so it can change the components operation accordingly. And whatever is in `month-selected-expression` should be evaluated whenever a month is selected, in this case calling `someMethod` in the scope of the page on which it resides, passing in the month that was clicked.
+For this to work our directive needs to be able to locate the value for `multi`, so it can change the components operation accordingly. And whatever is in `month-selected-expression` should be evaluated whenever a month is selected -- in this case calling `someMethod` in the scope of the page on which it resides, passing in the month that was clicked.
 
 The secret of this working is related to directive scope.
 
@@ -80,7 +80,7 @@ By default a directive shares its parent scope, so has access to the scope of th
 
 A better solution is to give the directive its own scope -- referred to as 'isolate scope' -- and pass values to and from it using attributes on the `<month-picker>` tag. This way the component is isolated from other scopes, and we have a clear method of communication between it and the page it appears on.
 
-Configuration isolate scope in directives is done using an empty scope object (`{}`). We can specify we want the `month-selected-expression` and `multi` attributes to be shared between the directive and the page by including their [camel case](http://en.wikipedia.org/wiki/CamelCase) equivalent as properties within this empty scope object:
+To configure an isolate scope in a directives we pass it an empty scope object (`{}`). We can specify we want the `month-selected-expression` and `multi` attributes to be shared between the directive and the page by including their [camel case](http://en.wikipedia.org/wiki/CamelCase) equivalent as properties within this empty scope object:
 
 {% highlight js linenos %}
 {
