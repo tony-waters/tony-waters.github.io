@@ -119,7 +119,7 @@ To write this directive we will need:
 4. a module to keep it all in
 
 ###1. A template containing the HTML
-Nothing special about the components HTML template. It only knows about its controller, represented here by `ctrl`. We do not specify  the actual controller in this template. We will use the directive function to wire things up instead.
+Nothing special about the components HTML template. It only knows about its controller, represented here by `ctrl`. We do not specify the actual controller in this template. We will use the directive function to wire things up instead.
 
 Here is the complete HTML template used to create `<month picker>`, note no reference to scope:
 
