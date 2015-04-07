@@ -16,7 +16,7 @@ In terms of creating them he offers the following advice:
 >
 > ~ <i>ibid.</i>
 
-I'd like to outline what a Value Object is in this context. Then in [part 2]({{ "/ddd-value-objects-part-2" | prepend: site.baseurl }}) of this post I'll show a simple approach to using them in a JPA-based application.
+I'd like to outline what a Value Object is in this context. Then in [part 2]({{ "/2015/02/10/ddd-value-objects-part-2" | prepend: site.baseurl }}) of this post I'll show a simple approach to using them in a JPA-based application.
 
 By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'yyyyMM'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
