@@ -47,6 +47,7 @@ There are no setters in `Month` to mutate the `value`. And we've declared the fi
 The important thing is that we <i>treat</i> Value Objects as immutable, and communicate that to future maintainers of the system through their design:
 
 >Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential.
+>
 >- <i>(ibid.)</i>
 
 
@@ -58,28 +59,29 @@ It is common, then, to see Value Objects use all of their fields in `equals()` a
 
 `Month` has no database or domain identity, so no ID in the calculations. A combination of the fields are used instead (in this case the single field `value`):
 
+{% highlight java linenos %}
+@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((value == null) ? 0 : value.hashCode());
+	return result;
+}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		return result;
+@Override
+public boolean equals(Object obj) {
+	if (this == obj) return true;
+	if (obj == null) return false;
+	if (getClass() != obj.getClass()) return false;
+	Month other = (Month) obj;
+	if (value == null) {
+		if (other.value != null) return false;
+	} else if (!value.equals(other.value)) {
+		return false;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		Month other = (Month) obj;
-		if (value == null) {
-			if (other.value != null) return false;
-		} else if (!value.equals(other.value)) {
-			return false;
-		}
-		return true;
-	}
+	return true;
+}
+{% endhighlight %}
 
 The fact that two different `Month` objects are equal so long as their `value` is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  
 

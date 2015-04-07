@@ -7,7 +7,8 @@ header-img: "img/java3.jpg"
 In a recent project I drew upon a number of concepts from [Domain Driven Design](http://dddcommunity.org/). Among them Value Objects, which Eric Evans says:
 
 > represent a descriptive aspect of the domain that has no conceptual identity
->- <i>(Evans 2003)</i>
+>
+> - <i>(Evans 2003)</i>
 
 In terms of creating them he offers the following advice:
 
@@ -59,28 +60,29 @@ It is common, then, to see Value Objects use all of their fields in `equals()` a
 
 `Month` has no database or domain identity, so no ID in the calculations. A combination of the fields are used instead (in this case the single field `value`):
 
+{% highlight java linenos %}
+@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((value == null) ? 0 : value.hashCode());
+	return result;
+}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		return result;
+@Override
+public boolean equals(Object obj) {
+	if (this == obj) return true;
+	if (obj == null) return false;
+	if (getClass() != obj.getClass()) return false;
+	Month other = (Month) obj;
+	if (value == null) {
+		if (other.value != null) return false;
+	} else if (!value.equals(other.value)) {
+		return false;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		Month other = (Month) obj;
-		if (value == null) {
-			if (other.value != null) return false;
-		} else if (!value.equals(other.value)) {
-			return false;
-		}
-		return true;
-	}
+	return true;
+}
+{% endhighlight %}
 
 The fact that two different `Month` objects are equal so long as their `value` is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  
 
