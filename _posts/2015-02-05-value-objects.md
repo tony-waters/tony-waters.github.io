@@ -47,6 +47,7 @@ There are no setters in `Month` to mutate the `value`. And we've declared the fi
 The important thing is that we <i>treat</i> Value Objects as immutable, and communicate that to future maintainers of the system through their design:
 
 >Immutability of an attribute or object can be declared in some languages and environments and not in others. These features are helpful for communication of the design decision, but not essential.
+>
 >- <i>(ibid.)</i>
 
 
