@@ -11,8 +11,7 @@ In a recent project I drew upon a number of concepts from [Domain Driven Design]
 
 In terms of creating them he offers the following advice:
 
->When you care only about the attributes of an element of the model, classify it as a VALUE OBJECT. Making it express the meaning of attributes it conveys and give it related functionality. Treat the VALUE OBJECT as immutable. Don’t give it any identity and avoid the design complexities necessary to maintain ENTITIES
->- <i>(ibid.)</i>
+>When you care only about the attributes of an element of the model, classify it as a VALUE OBJECT. Making it express the meaning of attributes it conveys and give it related functionality. Treat the VALUE OBJECT as immutable. Don’t give it any identity and avoid the design complexities necessary to maintain ENTITIES (Evans 2003)
 
 I'd like to outline what a Value Object is in this context and show a simple approach to using them in an application that uses JPA with a relational database.
 
