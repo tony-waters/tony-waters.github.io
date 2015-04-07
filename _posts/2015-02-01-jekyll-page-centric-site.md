@@ -19,7 +19,7 @@ Here is the final folder structure containing all the files needed to create the
 
 ###The markdown
 
-Each page on the site is generated from a markdown document (with the `.md` suffix). Adding a new page to the site simply involves dropping a new markdown document into the site root and regenerating. Here is the markdown document for the welcome page `index.md`:
+Each page on the site is generated from a markdown document (with the `.md` suffix). Adding a new page to the site is as simple as dropping a new markdown document into the site root and regenerating. Here is the markdown document for the welcome page `index.md`:
 
 	---
 	title: Welcome

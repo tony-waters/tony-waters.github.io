@@ -11,7 +11,7 @@ While Jekyll excells at creating blog-centric static sites, its not so clear fro
 ![Image alt]({{ site.baseurl }}/img/2015-02-18-conference-alice.png "a page from the sample site")
 
 ###Jekyll folder structure
-Creating a new Jekyll site usually involves running `jekyll new my-site-name` to creats a ready made structure with some sample data that can be immediately viewed using `jekyll serve`. To keep it as clean as possible, I've created a minimal structure by hand instead. At minimum, Jeckyll needs a `_config.yml` file and a page to serve. I've added folers for `_layouts` and `_includes`.
+Creating a new Jekyll site can be done by running `jekyll new my-site-name`, which creates a ready made structure with some sample data that can be immediately viewed using `jekyll serve`. To keep it as clean as possible, I've created a minimal structure by hand instead. At minimum, Jeckyll needs a `_config.yml` file and a page to serve. I've added folers for `_layouts` and `_includes`.
 
 Here is the final folder structure containing all the files needed to create the site. Notice there is no mention of posts.
 
@@ -19,7 +19,7 @@ Here is the final folder structure containing all the files needed to create the
 
 ###The markdown
 
-Each page on the site is generated from a markdown document (with the `.md` suffix). Adding a new page to the site simply involves dropping a new markdown document into the site root and regenerating. Here is the markdown document for the welcome page `index.md`:
+Each page on the site is generated from a markdown document (with the `.md` suffix). Adding a new page to the site is as simple as dropping a new markdown document into the site root and regenerating. Here is the markdown document for the welcome page `index.md`:
 
 	---
 	title: Welcome
