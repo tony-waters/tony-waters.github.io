@@ -5,9 +5,7 @@ header-img: "img/spring5.jpg"
 ---
 In my [previous post]({{ "/2015/03/11/spring-security-users-roles-permissions" | prepend: site.baseurl }}) I looked at adapting Spring Security to work with Permissions to avoid hard-coding Roles into the security configuration. In this post I want to move past generic roles and permissions to look at how we can grant or deny access to specific objects within our application.
 
-To be more precise, how we can gran or deny access to a particular user (who), accessing a particular method (where), with a particular domain object as a parameter (what). One solution to this is to use an ACL, but this can be overkill in some scenarios.
-
-Spring Security is highly configurable, providing numerous hooks into its framework. Continuing with the example in my previous post, I want to show two methods of introducing domain object security that do not rely on ACLs.
+One solution to this is to use an ACL, but this can be overkill in some scenarios. So I want to show two methods of introducing domain object security that do not rely on ACLs.
 
 [Source code](https://github.com/tony-waters/example-spring-security/tree/2-domain-object-authorisation) is available on GitHub.
 
