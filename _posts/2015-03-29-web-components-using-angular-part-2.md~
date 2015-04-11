@@ -226,7 +226,7 @@ Wiring the controller to `<month-picker>` is done with the last three properties
 
 Angular 1.2 introduced `controllerAs`, which binds the scope to the controllers `this` reference and significantly simplifies controller design. The value of the `controlelrAs` in our directive definition object specifies what to call the controller when it is used in the HTML template.
 
-Finally, we specify `bindToController` as `true`. This is a new feature in 1.3 that binds the scope properties we have specified to our controller, making `multi` and `monthSelectedExpression` available as properties of the controller. If we didn't include `bindToController`, then we would not be able to Its set to change in 1.4 to something even more useful. 
+Finally, we specify `bindToController` as `true`. This is a new feature in 1.3 that binds any scope properties we have specified to our controller, making `multi` and `monthSelectedExpression` available as properties of the controller. If we didn't include `bindToController`, then we would not be able to Its set to change in 1.4 to something even more useful. 
 
 ###4. A module to keep it all in
 Here is the complete module definition for the month picker component, showing the directive and controller functions previously discussed:

@@ -2,7 +2,7 @@
 
     angular.module('monthPickerModule', [])
             .config(function ($interpolateProvider) {
-                $interpolateProvider.startSymbol('[[[').endSymbol(']]]');
+                $interpolateProvider.startSymbol('[[[').endSymbol(']]]')
             })
             .directive("monthPicker", directive)
             .controller("MonthPickerController", controller)
