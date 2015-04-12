@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Programming in JEE, Spring, and Angular">
+
+    <title>AngularJS Directives as Web Components - bit1</title>
+
+    <link rel="canonical" href="/2015/03/28/-web-components-using-angular.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- Pygments Github CSS -->
+    <!--<link rel="stylesheet" href="/css/syntax.css">-->
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">bit1</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+                <li>
+                    <a href="/about.html">about</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/angular2.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>AngularJS Directives as Web Components</h1>
+                    
+                    <span class="meta">Posted by bit1 on March 28, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<blockquote>
+  <p>… judging from mailing list, IRC questions, and so on, there’s a lot of confusion about directives … its probably my fault. I should have done a better job documenting.</p>
+
+  <p>~ <i>Misko Hevery (Angular creator)</i></p>
+</blockquote>
+
+<p>AngularJs is a powerful and flexible framework, but not so well documented in some areas. This is especially true of directives, which at first may seem like some higher level design function (which is true) not meant for day-to-day use by mere mortals (which is false). Consequently, coding directives as a fundamental development activity is seemingly not encouraged.</p>
+
+<p>Yet directives are Angulars killer feature.</p>
+
+<p>In addition, things are moving at a fast pace. Some of the features discussed here were first introduced in version 1.2 (released Nov 2013) or the current version 1.3 (released Oct 2014). Also, new features in 1.4 are set to slightly change how we do/did things in 1.3. And Angular 2 is on the horizon, which promises to work with emerging <a href="http://webcomponents.org/">Web Component</a> technologies like <a href="https://www.polymer-project.org/">Polymer</a>.</p>
+
+<p>In a series of posts, I’d like to look at what we can do right now, with Angular 1.3 directives, to create re-usable encapsulated web page components, and extend HTML to the needs of our application. I’ve created the following demo to help illustrate things. Its a fictitious system that shows message alerts for a given month:</p>
+
+<script src="/angular/js/angular.js"></script>
+
+<div ng-app="app">
+     <page ng-controller="PageController as ctrl">
+         <header>
+             <h2>Monthly Message Viewing System</h2>
+         </header>
+         <sidebar>
+             <panel heading="Month picker">
+                 <month-picker multi="[[[ ctrl.multiMode ]]]" month-selected-expression="ctrl.selectMonth(month)">
+                 </month-picker>
+             </panel>
+             <panel heading="Options">
+                 <checkbox label="multi-mode" model="ctrl.multiMode  "></checkbox>
+                 <checkbox class="text-danger" label="| danger" model="ctrl.showDanger"></checkbox>
+                 <checkbox class="text-warning" label="| warning" model="ctrl.showWarning"></checkbox>
+                 <checkbox class="text-info" label="| info" model="ctrl.showInfo"></checkbox>
+                 <hr />
+                 <span>
+                     filter: <input type="text" size="10" ng-model="ctrl.messageFilter" />
+                 </span>
+             </panel>
+         </sidebar>
+         <main>
+             <panel heading="Alerts">
+                 <alert-list months="ctrl.currentMonth" show-danger="ctrl.showDanger" show-warning="ctrl.showWarning" show-info="ctrl.showInfo" filter="ctrl.messageFilter">
+                 </alert-list>
+             </panel>
+         </main>
+         <footer>
+             <h5>MMVS Copyright 2015</h5>
+         </footer>
+     </page>
+     
+     <script src="/angular/demo2/monthPicker.js"></script>
+     <script src="/angular/demo2/page.js"></script>
+     <script src="/angular/demo2/checkbox.js"></script>
+     <script src="/angular/demo2/panel.js"></script>
+     <script src="/angular/demo2/alertList.js"></script>
+     <script src="/angular/demo2/pageController.js"></script>
+     <script src="/angular/demo2/app.module.js"></script>
+ </div>
+
+<p>It has the following constituant components:</p>
+
+<ul>
+  <li>month-picker</li>
+  <li>alert-list</li>
+  <li>checkbox</li>
+  <li>panel</li>
+  <li>page</li>
+</ul>
+
+<p>Which we can use on a web page like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="lineno"> 1</span> <span class="nt">&lt;page</span> <span class="na">ng-controller=</span><span class="s">&quot;PageController as ctrl&quot;</span><span class="nt">&gt;</span>
+<span class="lineno"> 2</span> 	<span class="nt">&lt;header&gt;</span>
+<span class="lineno"> 3</span>    	<span class="nt">&lt;h2&gt;</span>Monthly Message Viewing System<span class="nt">&lt;/h2&gt;</span>
+<span class="lineno"> 4</span> 	<span class="nt">&lt;/header&gt;</span>
+<span class="lineno"> 5</span> 	<span class="nt">&lt;sidebar&gt;</span>
+<span class="lineno"> 6</span> 		<span class="nt">&lt;panel</span> <span class="na">heading=</span><span class="s">&quot;Month picker&quot;</span><span class="nt">&gt;</span>
+<span class="lineno"> 7</span> 			<span class="nt">&lt;month-picker</span> 
+<span class="lineno"> 8</span> 				<span class="na">multi=</span><span class="s">&quot;&quot;</span> 
+<span class="lineno"> 9</span> 				<span class="na">month-selected-expression=</span><span class="s">&quot;ctrl.selectMonth(month)&quot;</span><span class="nt">&gt;</span>
+<span class="lineno">10</span> 			<span class="nt">&lt;/month-picker&gt;</span>
+<span class="lineno">11</span> 		<span class="nt">&lt;/panel&gt;</span>
+<span class="lineno">12</span> 		<span class="nt">&lt;panel</span> <span class="na">heading=</span><span class="s">&#39;Options&#39;</span><span class="nt">&gt;</span>
+<span class="lineno">13</span> 			<span class="nt">&lt;checkbox</span> <span class="na">label=</span><span class="s">&quot;multi-mode&quot;</span> <span class="na">model=</span><span class="s">&quot;ctrl.multiMode  &quot;</span><span class="nt">&gt;&lt;/checkbox&gt;</span>
+<span class="lineno">14</span> 			<span class="nt">&lt;checkbox</span> <span class="na">class=</span><span class="s">&quot;text-danger&quot;</span> <span class="na">label=</span><span class="s">&quot;| danger&quot;</span> <span class="na">model=</span><span class="s">&quot;ctrl.showDanger&quot;</span><span class="nt">&gt;&lt;/checkbox&gt;</span>
+<span class="lineno">15</span> 			<span class="nt">&lt;checkbox</span> <span class="na">class=</span><span class="s">&quot;text-warning&quot;</span> <span class="na">label=</span><span class="s">&quot;| warning&quot;</span> <span class="na">model=</span><span class="s">&quot;ctrl.showWarning&quot;</span><span class="nt">&gt;&lt;/checkbox&gt;</span>
+<span class="lineno">16</span> 			<span class="nt">&lt;checkbox</span> <span class="na">class=</span><span class="s">&quot;text-info&quot;</span> <span class="na">label=</span><span class="s">&quot;| info&quot;</span> <span class="na">model=</span><span class="s">&quot;ctrl.showInfo&quot;</span><span class="nt">&gt;&lt;/checkbox&gt;</span>
+<span class="lineno">17</span> 			<span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+<span class="lineno">18</span> 			<span class="nt">&lt;span&gt;</span>filter: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&#39;text&#39;</span> <span class="na">ng-model=</span><span class="s">&quot;ctrl.messageFilter&quot;</span><span class="nt">&gt;&lt;/input&gt;&lt;/span&gt;</span>
+<span class="lineno">19</span> 		<span class="nt">&lt;/panel&gt;</span>
+<span class="lineno">20</span> 	<span class="nt">&lt;/sidebar&gt;</span>
+<span class="lineno">21</span> 	<span class="nt">&lt;main&gt;</span>
+<span class="lineno">22</span> 		<span class="nt">&lt;panel</span> <span class="na">heading=</span><span class="s">&quot;Alerts&quot;</span><span class="nt">&gt;</span>
+<span class="lineno">23</span> 			<span class="nt">&lt;alert-list</span>
+<span class="lineno">24</span> 				<span class="na">months=</span><span class="s">&quot;ctrl.currentMonth&quot;</span>
+<span class="lineno">25</span> 				<span class="na">show-danger=</span><span class="s">&quot;ctrl.showDanger&quot;</span>
+<span class="lineno">26</span> 				<span class="na">show-warning=</span><span class="s">&quot;ctrl.showWarning&quot;</span>
+<span class="lineno">27</span> 				<span class="na">show-info=</span><span class="s">&quot;ctrl.showInfo&quot;</span>
+<span class="lineno">28</span> 				<span class="na">filter=</span><span class="s">&quot;ctrl.messageFilter&quot;</span><span class="nt">&gt;</span>
+<span class="lineno">29</span> 			<span class="nt">&lt;/alert-list&gt;</span>
+<span class="lineno">30</span> 		<span class="nt">&lt;/panel&gt;</span>
+<span class="lineno">31</span> 	<span class="nt">&lt;/main&gt;</span>
+<span class="lineno">32</span> 	<span class="nt">&lt;footer&gt;</span>
+<span class="lineno">33</span> 		<span class="nt">&lt;h5&gt;</span>MMVS Copyright 2015<span class="nt">&lt;/h5&gt;</span>
+<span class="lineno">34</span> 	<span class="nt">&lt;/footer&gt;</span>
+<span class="lineno">35</span>  <span class="nt">&lt;/page&gt;</span></code></pre></div>
+
+<p>I’ll use this as a base to look at how we code components as directives, then move on to cover transclusion, multi-transclusion, directive communication and testing. </p>
+
+<p>I’ll start looking at the individual components in <a href="/2015/03/29/web-components-using-angular-part-2.html">part 2</a>, beginning with the month-picker.</p>
+
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2015/03/17/spring-security-domain-object-security.html" data-toggle="tooltip" data-placement="top" title="Domain Object Security without ACLs using Spring Security 3.2">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2015/03/29/web-components-using-angular-part-2.html" data-toggle="tooltip" data-placement="top" title="Creating a reusable Month Picker component with directives using Angular 1.3">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+<!--                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>-->
+<!--                    -->
+<!--                    -->
+                    <li>
+                        <a href="https://github.com/tony-waters">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; bit1 2015</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.js "></script>
+
+
+</body>
+
+</html>

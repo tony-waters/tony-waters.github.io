@@ -88,7 +88,7 @@ public boolean equals(Object obj) {
 The fact that two different `Month` objects are equal so long as their `value` is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  
 
 ###4. Give it related functionality
-Our Value Object now becomes a magnet for any month-related functionality. We'll start with some (over-simplified) validation, using a `static isValid()` method so that calling code can do a pre-creation validity check if it so chooses:
+Our Value Object now becomes a magnet for any month-related functionality. We'll start with some (over-simplified) validation, using a `static isValid()` method. This way any calling code can do a pre-creation validity check if it so chooses:
 
 {% highlight java linenos %}
 public class Month {
@@ -126,10 +126,13 @@ public class Month {
 The `isValid()` method is where we locate our increasing understanding of what it means for a `Month` object to be valid. Through this process it becomes increasingly difficult to create an invalid `Month`. And it's always clear in our calling code that we are dealing with months:
 
 {% highlight java linenos %}
+// only create a month if valid
 String myMonthString = "201501";
 if(Month.isValid(myMonthString)) {
 	new Month(myMonthString);
 }
+
+// all these throw an exception
 
 new Month(null); // throws Exception
 
@@ -274,5 +277,5 @@ This concludes my brief look at the design of Value Objects. In [Part 2]({{ "/20
 ###Resources
 - [Domain-Driven Design: Tackling Complexity in the Heart of Software](http://www.domaindrivendesign.org/books/evans_2003) -- Eric Evans seminal 2003 work on Domain Driven Design.
 
-- [Power Use of Value Objects in DDD](http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson) -- A great talk from 2009 by Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program's architecture and make it more readable and testable.
+- [Power Use of Value Objects in DDD](http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson) -- A great talk from 2009 by DDD-guru Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program's architecture.
 

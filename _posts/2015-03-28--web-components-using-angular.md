@@ -4,18 +4,17 @@ title: AngularJS Directives as Web Components
 tags: [DDD, JPA]
 header-img: "img/angular2.jpg"
 ---
-
->... judging from mailing list, IRC questions, and so on ... there's a lot of confusion about directives ... its probably my fault. I should have done a better job documenting.
+>... judging from mailing list, IRC questions, and so on, there's a lot of confusion about directives ... its probably my fault. I should have done a better job documenting.
 >
-> ~ (Angular creator)
+> ~ <i>Misko Hevery (Angular creator)</i>
 
-AngularJs is a powerful and flexible framework, but badly documented in some places. It is also moving at a fast pace. Some of the features discussed here were first introduced in version 1.2 (released Nov 2013) or the current version 1.3 (released Oct 2014). Also, new features in 1.4 are set to slightly change how we do/did things in 1.3. And Angular 2 is on the horizon, and its promise of Web Components.
-
-The fluctuating changes and lack of good documentation particularly effects directives, which at first may seem like some higher level design function (which is true) not meant for day-to-day use by mere mortals (which is false). And there is not much on best practices or general high-level design patterns, so even getting to write directives as a fundamental development activity is seemingly not encouraged.
+AngularJs is a powerful and flexible framework, but not so well documented in some areas. This is especially true of directives, which at first may seem like some higher level design function (which is true) not meant for day-to-day use by mere mortals (which is false). Consequently, coding directives as a fundamental development activity is seemingly not encouraged.
 
 Yet directives are Angulars killer feature.
 
-In a series of posts, I'd like to look at what we can do right now, with Angular 1.3 directives, to create re-usable components, and extend HTML to the needs of our application. I've created the following demo to help illustrate things. Its a fictitious system that shows messages for a gived month:
+In addition, things are moving at a fast pace. Some of the features discussed here were first introduced in version 1.2 (released Nov 2013) or the current version 1.3 (released Oct 2014). Also, new features in 1.4 are set to slightly change how we do/did things in 1.3. And Angular 2 is on the horizon, which promises to work with emerging [Web Component](http://webcomponents.org/) technologies like [Polymer](https://www.polymer-project.org/).
+
+In a series of posts, I'd like to look at what we can do right now, with Angular 1.3 directives, to create re-usable encapsulated web page components, and extend HTML to the needs of our application. I've created the following demo to help illustrate things. Its a fictitious system that shows message alerts for a given month:
 
 <script src="{{site.root}}/angular/js/angular.js"></script>
  <div ng-app="app">
@@ -75,7 +74,7 @@ It has the following constituant components:
 - panel
 - page
 
-Which we can use within our application like this:
+Which we can use on a web page like this:
 
 {% highlight html linenos %}
 <page ng-controller="PageController as ctrl">
@@ -115,5 +114,8 @@ Which we can use within our application like this:
  </page>
  {% endhighlight %}
  
+I'll use this as a base to look at how we code components as directives, then move on to cover transclusion, multi-transclusion, directive communication and testing. 
+ 
 I'll start looking at the individual components in [part 2]({{ "/2015/03/29/web-components-using-angular-part-2.html" | prepend: site.baseurl }}), beginning with the month-picker.
+
 

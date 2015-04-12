@@ -7,7 +7,7 @@ In my [previous post]({{ "/2015/03/11/spring-security-users-roles-permissions" |
 
 One solution is to use an ACL, but this can be overkill in some scenarios. So I want to show two methods of introducing domain object security that do not rely on ACLs.
 
-[Source code](https://github.com/tony-waters/example-spring-security/tree/2-domain-object-authorisation) is available on GitHub.
+[Source code](https://github.com/tony-waters/example-spring-security/tree/2-domain-object-authorisation) and tests are available on GitHub.
 
 ###Domain object security using a Custom PermissionEvaluator
 

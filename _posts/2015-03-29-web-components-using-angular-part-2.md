@@ -4,7 +4,6 @@ title: Creating a reusable Month Picker component with directives using Angular 
 tags: [DDD, JPA]
 header-img: "img/angular3.jpg"
 ---
-
 In my [previous post]({{ "/2015/03/28/-web-components-using-angular.html" | prepend: site.baseurl }}) I introduced the Monthly Message System I will be using to illustrate building components using AngularJs 1.3. You can see it in action [here]({{ site.root }}/example-angular) and its source code [here](https://github.com/tony-waters/example-angular/tree/master).
 
 In this post I will focus on the 'month picker' component.
@@ -16,19 +15,16 @@ The best way to understand the month-picker component is by looking at its requi
 <pre>
   Given a MonthPicker directive
     when in default mode
-      it should have a months object with the 12 months
-      it should create 12 buttons
-      it should have labels on the buttons corresponding to the months
-      it should mark a single button clicked as active
-      it should return single month corresponding to selected button
+      it should create 12 buttons with labels representing the 12 months
+      it should mark a single button clicked as selected
+      it should return a single month corresponding to the selected button
     when in multi mode
-      it should mark all buttons clicked as active
-      it should toggle active buttons to inactive
-      it should return months corresponding to selected buttons
-
+      it should mark all buttons clicked as selected
+      it should toggle selected buttons to unselected if clicked again
+      it should return a list of months corresponding to the selected buttons
 </pre>
 
-Here is a sneek preview of the finished component operating in each of its two modes:
+Here is the finished component operating in each of its two modes:
 
 <script src="{{site.root}}/angular/js/angular.js"></script>
 <div ng-app="monthPickerModule" class="demo row">
@@ -58,7 +54,7 @@ Here is a sneek preview of the finished component operating in each of its two m
 	<script src="{{site.root}}/angular/demo2/monthPicker.js"></script>
 </div>
 
-We want to make including this component on a page as simple as possible for the 'end-user' (someone developing the site, perhaps ourselves). At a minimum we will need to inclue in this new element a way of specifying single-select or multi-select mode, and some way of getting the seleced month(s) into the scope of the controller of the rendered page.
+We want to make including this component on a page as simple as possible for the 'end-user' (someone developing the site, perhaps ourselves). We will need to include in this new element a way of specifying single-select or multi-select mode, and some way of getting the seleced month(s) into the scope of the controller of the rendered page.
 
 We do this using attributes:
 
@@ -74,9 +70,9 @@ For this to work our directive needs to be able to locate the value for `multi`,
 The secret of this working is related to directive scope.
 
 ###A note on directive scope
-Its worth understanding the relationship this `<month-picker>` tag has with its directive. 
+Its worth understanding the relationship a `<month-picker>` tag has with its directive. 
 
-By default a directive shares its parent scope, so has access to the scope of the page it is included on. We could use this for any communication between our directive and the page without any further work. For example, we could have the directive call a method in the page controller. While this approach is convenient it is not a very encapsulated solution, and makes `<month-picker>` reliant on the scope of the page it is included on.
+By default a directive shares its parent scope, so has access to the scope of the page it is included on. We could use this for any communication between our directive and the page without any further work. For example, we could have the directive call a method in the page controller. While this approach is convenient it is not a very encapsulated solution, and makes `<month-picker>` reliant on the scope of the page on which it appears.
 
 A better solution is to give the directive its own scope -- referred to as 'isolate scope' -- and pass values to and from it using attributes on the `<month-picker>` tag. This way the component is isolated from other scopes, and we have a clear method of communication between it and the page it appears on.
 
@@ -84,8 +80,8 @@ To configure an isolate scope we pass a directive an empty scope object (`{}`). 
 
 {% highlight js linenos %}
 {
-    multi: '@?',
-    monthSelectedExpression: '&'
+	multi: '@?',
+	monthSelectedExpression: '&'
 },
 {% endhighlight %}
 
@@ -100,14 +96,14 @@ So in our example:
 
 {% highlight html linenos %}
 <month-picker 
-	 multi="true"
-    month-selected-expression="someFunction(months)">
+	multi="true"
+	month-selected-expression="someFunction(months)">
 </month-picker>
 {% endhighlight %}
 
 The month-picker component is set to multi-select mode, and whenever a month is selected, the function `someFunction` is called passing in an object representing the clicked month.
 
-Having outlined our requirements and considered the intricacies of directive scope, lets look at the directive code.
+Having outlined our requirements and considered the intricacies of directive scope, lets look at how we code the directive.
 
 ###Writing the directive
 
@@ -185,7 +181,7 @@ A controller function is needed to feed our template. Angular 1.2 introduced the
 
 ###3. A directive function to configure the component
 
-The directive function is used to tie the pieces together and provide configuration of how the directive will work. The function must return a 'Directive Definition Object', basically an object with a number of properties describing how the directive works. The full list is [here](https://docs.angularjs.org/api/ng/service/$compile), but we generally just use a subset corresponding to our requirements.
+The directive function is used to tie the pieces together. The function must return a <i>Directive Definition Object</i>, basically an object with properties describing how the directive works. The full list of possible properties is [here](https://docs.angularjs.org/api/ng/service/$compile), but we generally just use a subset corresponding to our requirements.
 
 Here is the directive function we will be using for `<month-picker>`:
 
@@ -220,16 +216,16 @@ But not the less common:
 <!-- month-picker -->
 {% endhighlight %}
 
-The `replace` property is set `true`, meaning the `<month-picker>` tags will not be in the compiled DOM, but replaced entirely by our HTML template. The default is false, which would put the templates contents within `<month-picker>` tags.
+The `replace` property is set `true`, meaning the `<month-picker>` tags will not be in the compiled DOM, but replaced entirely by the HTML template. The default is false, which would put the templates contents within `<month-picker>` tags.
 
 Wiring the controller to `<month-picker>` is done with the last three properties. The `controller` property of the directive specifies which controller function to use. In this case I have included the controller function in the same file as the directive function, so it is just referenced by name.
 
-Angular 1.2 introduced `controllerAs`, which binds the scope to the controllers `this` reference and significantly simplifies controller design. The value of the `controlelrAs` in our directive definition object specifies what to call the controller when it is used in the HTML template.
+Angular 1.2 introduced `controllerAs`, which binds the scope to the controllers `this` reference and significantly simplifies controller design. The value of the `controllerAs` in our Directive Definition Object specifies what to call the controller when it is used in the HTML template.
 
-Finally, we specify `bindToController` as `true`. This is a new feature in 1.3 that binds the scope properties we have specified to our controller, making `multi` and `monthSelectedExpression` available as properties of the controller. If we didn't include `bindToController`, then we would not be able to Its set to change in 1.4 to something even more useful. 
+Finally, we specify `bindToController` as `true`. This is a new feature in 1.3 that makes the attributes specified in `scope` -- `multi` and `monthSelectedExpression` -- available as properties in the controller. Note that its set to [change in 1.4](https://github.com/angular/angular.js/issues/10420). 
 
 ###4. A module to keep it all in
-Here is the complete module definition for the month picker component, showing the directive and controller functions previously discussed:
+Here is the module definition for the month picker component, showing how the directive and controller functions previously discussed fit in:
 
 {% highlight js linenos %}
  angular.module('monthPickerModule', [])
@@ -251,5 +247,5 @@ Here is the complete module definition for the month picker component, showing t
 
 You can find the full code [here](https://github.com/tony-waters/example-angular/blob/master/monthPicker.js).
 
-I had planned to look at how we can test our new component, but I'll save that for a later post. What I'd like to do next is show how we can use directives to give a consistent structure to our pages. So I'll cover that first.
+I had planned to look at how we can test our new component, but I'll save that for a later post.
 
