@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="assets/angular.js"></script>
+        <!--<link rel="stylesheet" href="assets/bootstrap.css">-->
+        <link rel="stylesheet" href="assets/bootstrap.css">
+        <link rel="stylesheet" href="assets/app.css">
+    </head>
+    <body ng-app="app">
+        <page ng-controller="PageController as ctrl">
+            <header>
+                <h1>Monthly Message Viewing System</h1>
+            </header>
+            <sidebar>
+                <panel heading="Month picker">
+                    <month-picker 
+                        multi="[[[ctrl.multiMode]]]" 
+                        month-selected-expression="ctrl.selectMonth(month)">
+                    </month-picker>
+                </panel>
+                <panel heading='Options'>
+                    <checkbox label="multi-mode" model="ctrl.multiMode  "></checkbox>
+                    <checkbox class="text-danger" label="| danger" model="ctrl.showDanger"></checkbox>
+                    <checkbox class="text-warning" label="| warning" model="ctrl.showWarning"></checkbox>
+                    <checkbox class="text-info" label="| info" model="ctrl.showInfo"></checkbox>
+                    <hr />
+                    <span>
+                        filter message: <input type='text' ng-model="ctrl.messageFilter"></input>
+                    </span>
+                </panel>
+            </sidebar>
+            <main>
+                <panel heading="Alerts">
+                    <alert-list
+                        months="ctrl.currentMonth"
+                        show-danger="ctrl.showDanger"
+                        show-warning="ctrl.showWarning"
+                        show-info="ctrl.showInfo"
+                        filter="ctrl.messageFilter">
+                    </alert-list>
+                </panel>
+            </main>
+            <footer>
+                <h5>MMVS Copyright 2015</h5>
+            </footer>
+        </page>
+        
+        <script src="monthPicker.js"></script>
+        <script src="page.js"></script>
+        <script src="checkbox.js"></script>
+        <script src="panel.js"></script>
+        <script src="alertList.js"></script>
+        <script src="pageController.js"></script>
+        <script src="app.module.js"></script>
+    </body>
+</html>
