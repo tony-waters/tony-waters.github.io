@@ -70,9 +70,9 @@ create table MEMBER (
 )
 {% endhighlight %}
 
-I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a `Member` and the security domain is a shared username.
+I have only included this class to represent the core domain, and show how it is not aware of either the security domain nor the security implementation. The only connection between a member and the security domain is a shared username.
 
-A `Member` knows nothing of security concerns.
+The `Member` knows nothing of security concerns.
 
 ##The security domain
 We define a separate security domain where we describe the security needs of our application. A user of our system (a `Member`) has a related `Credentials` in the security domain (containing a username and password):

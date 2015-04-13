@@ -14,11 +14,13 @@
 }
 
 
-h1, .h1 {
+h1, .h1, .subheading{
  text-shadow: 2px 2px 1px #000,
              -2px -2px 1px #000,
              -2px 2px 1px #000,
               2px -2px 1px #000;
+ /*color: #00CC00;*/
+  font-weight: 400;
 }
 
 .intro-header {
@@ -35,6 +37,19 @@ h1, .h1 {
 
 .site-heading {
     padding: 100px 0 !important;
+     font-weight: 300;
+}
+
+.site-heading h1 {
+    /*color: #00A300;*/
+    /*color: #00CC00;*/
+}
+
+.subheading {
+    /*color: #00A300;*/
+    /*color: #00CC00;*/
+    /*color: #00FF00;*/
+    /*font-weight: bold !important;*/
 }
 
 .about-heading {
@@ -62,11 +77,16 @@ h1, .h1 {
 pre {
     background-color: white;
     border: 0px;
+    /*overflow: auto !important;*/
 }
 
 pre .lineno {
     color: grey;
 }
+
+/*code {
+    white-space: inherit;
+}*/
 
 // GitHub code highting
 
@@ -132,3 +152,17 @@ pre .lineno {
 .highlight .il { color: #009999 } /* Literal.Number.Integer.Long */
 
 // GitHub code highting - end
+
+// fix wrapping in code blocks
+
+.highlight pre code * {
+  white-space: nowrap;    // this sets all children inside to nowrap
+}
+
+.highlight pre {
+  overflow-x: auto;       // this sets the scrolling in x
+}
+
+.highlight pre code {
+  white-space: pre;       // forces <code> to respect <pre> formatting
+}
