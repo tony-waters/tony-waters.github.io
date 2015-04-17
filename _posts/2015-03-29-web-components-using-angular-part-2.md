@@ -26,6 +26,7 @@ The best way to understand the month-picker component is by looking at its requi
 
 Here is the finished component operating in each of its two modes:
 
+<!--[if (gt IE 8)|!(IE)]><!-->
 <script src="{{site.root}}/angular/js/angular.js"></script>
 <div ng-app="monthPickerModule" class="demo row">
 
@@ -53,6 +54,12 @@ Here is the finished component operating in each of its two modes:
 	<h4 class="col-md-offset-1">Multi Select: [[[ value2 ]]]</h4>
 	<script src="{{site.root}}/angular/demo2/monthPicker.js"></script>
 </div>
+<!--<![endif]-->
+
+<!--[if lt IE 9]><!-->
+Angular 1.3 is not supported in IE8 and below!
+<!--<![endif]-->
+
 
 We want to make including this component on a page as simple as possible for the 'end-user' (someone developing the site, perhaps ourselves). We will need to include in this new element a way of specifying single-select or multi-select mode, and some way of getting the seleced month(s) into the scope of the controller of the rendered page.
 
