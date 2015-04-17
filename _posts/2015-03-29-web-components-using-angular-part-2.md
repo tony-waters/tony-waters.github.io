@@ -56,11 +56,11 @@ Here is the finished component operating in each of its two modes:
 </div>
 <!--<![endif]-->
 
-<!--[if lt IE 9]><!-->
+<!--[if lt IE 9]>
 <div class="alert alert-warning" role="alert">
 Angular 1.3 is not supported in IE8 and below. To see this demo you need to use at least Internet Explorer 9.
 </div>
-<!--<![endif]-->
+<![endif]-->
 
 
 We want to make including this component on a page as simple as possible for the 'end-user' (someone developing the site, perhaps ourselves). We will need to include in this new element a way of specifying single-select or multi-select mode, and some way of getting the seleced month(s) into the scope of the controller of the rendered page.
