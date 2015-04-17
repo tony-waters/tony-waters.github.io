@@ -23,10 +23,28 @@ h1, .h1, .subheading{
   font-weight: 400;
 }
 
-/*.intro-header {
+.intro-header {
     height: 70vh;
-}*/
+    /*background-image: no-repeat;*/
+}
 
+.ie8 intro-header {
+  position: fixed; 
+  top: -50%; 
+  left: -50%; 
+  width: 200%; 
+  height: 200%;
+}
+.ie8 .intro-header img {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  margin: auto; 
+  min-width: 50%;
+  min-height: 50%;
+}
 
 
 .intro-header .post-heading, .intro-header {
