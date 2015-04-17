@@ -3,29 +3,37 @@ layout: default
 ---
 
 <!-- Page Header -->
-<!--[if (gt IE 8)|!(IE)]><!-->
-<header class="intro-header about-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-<!--<![endif]-->    
+<!--[if IE 8 ]>
+<header class="intro-header about-header">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="about-heading">
                     {% if page.title %}
                     <h1>{{ page.title }}</h1>
-                    <!--{% else %}-->
-                    <!--<h1 class="site-title">{{ site.title }}</h1>-->
                     {% endif %}
-                    <!--<hr class="small">-->
-                    <!--<span class="subheading">{{ page.description }}</span>-->
-                    <!--<br />-->
                 </div>
-                <!--<span class="blurb">{{ content }}</span>-->
             </div>
         </div>
     </div>
-<!--[if (gt IE 8)|!(IE)]><!-->
 </header>
-<!--<![endif]-->   
+<![endif]-->
+
+<!--[if (gt IE 8)|!(IE)]><!-->
+<header class="intro-header about-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="about-heading">
+                    {% if page.title %}
+                    <h1>{{ page.title }}</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!--<![endif]-->
 
 <!-- Main Content -->
 <div class="container">
