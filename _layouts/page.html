@@ -3,9 +3,27 @@ layout: default
 ---
 
 <!-- Page Header -->
+<!--[if IE 8 ]>
+<header class="intro-header" style="background-color: grey;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    {% if page.title %}
+                    <h1>{{ page.title }}</h1>
+                    {% else %}
+                        <h1>bit1.uk</h1>
+                    {% endif %}
+                    <span class="subheading">{{ page.description }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<![endif]-->
+
 <!--[if (gt IE 8)|!(IE)]><!-->
 <header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-<!--<![endif]-->
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -23,7 +41,6 @@ layout: default
             </div>
         </div>
     </div>
-<!--[if (gt IE 8)|!(IE)]><!-->
 </header>
 <!--<![endif]-->
 
