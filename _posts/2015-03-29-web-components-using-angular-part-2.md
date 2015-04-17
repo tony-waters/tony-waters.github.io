@@ -57,7 +57,9 @@ Here is the finished component operating in each of its two modes:
 <!--<![endif]-->
 
 <!--[if lt IE 9]><!-->
-Angular 1.3 is not supported in IE8 and below!
+<div class="alert alert-warning" role="alert">
+Angular 1.3 is not supported in IE8 and below. To see this demo you need to use at least Internet Explorer 9.
+</div>
 <!--<![endif]-->
 
 

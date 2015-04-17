@@ -3,7 +3,9 @@ layout: default
 ---
 
 <!-- Page Header -->
+<!--[if (gt IE 8)|!(IE)]><!-->
 <header class="intro-header about-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+<!--<![endif]-->    
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -21,7 +23,9 @@ layout: default
             </div>
         </div>
     </div>
+<!--[if (gt IE 8)|!(IE)]><!-->
 </header>
+<!--<![endif]-->   
 
 <!-- Main Content -->
 <div class="container">
