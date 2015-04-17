@@ -28,7 +28,7 @@ h1, .h1, .subheading{
     /*background-image: no-repeat;*/
 }
 
-.ie8 intro-header {
+.ie8 .intro-header {
   position: fixed; 
   top: -50%; 
   left: -50%; 
