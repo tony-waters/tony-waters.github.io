@@ -16,7 +16,7 @@ In a series of posts, I'd like to look at what we can do right now, with Angular
 
 <!--[if (gt IE 8)|!(IE)]><!-->
 <script src="{{site.root}}/angular/js/angular.js"></script>
- <div ng-app="app">
+ <div ng-app="app" class="demo">
      <page ng-controller="PageController as ctrl">
          <header>
              <h2>Monthly Message Viewing System</h2>
