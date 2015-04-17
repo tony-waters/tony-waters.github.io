@@ -14,6 +14,7 @@ To add to the confusion, things are moving at a fast pace in the Angular world. 
 
 In a series of posts, I'd like to look at what we can do right now, with Angular 1.3 directives, to create re-usable encapsulated web page components, and extend HTML to the needs of our application. I've created the following demo to help illustrate things. Its a fictitious system that shows message alerts for a given month (I'll leave you to make up a use for it):
 
+<!--[if (gt IE 8)|!(IE)]><!-->
 <script src="{{site.root}}/angular/js/angular.js"></script>
  <div ng-app="app">
      <page ng-controller="PageController as ctrl">
@@ -62,7 +63,13 @@ In a series of posts, I'd like to look at what we can do right now, with Angular
      <script src="{{site.root}}/angular/demo2/pageController.js"></script>
      <script src="{{site.root}}/angular/demo2/app.module.js"></script>
  </div>
+ <!--<![endif]-->
 
+<!--[if lt IE 9]><!-->
+<div class="alert alert-warning" role="alert">
+Angular 1.3 is not supported in IE8 and below. To see this demo you need to use at least Internet Explorer 9.
+</div>
+<!--<![endif]-->
 
 It has the following constituant components:
 

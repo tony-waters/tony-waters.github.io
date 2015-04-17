@@ -65,11 +65,11 @@ In a series of posts, I'd like to look at what we can do right now, with Angular
  </div>
  <!--<![endif]-->
 
-<!--[if lt IE 9]><!-->
+<!--[if lt IE 9]>
 <div class="alert alert-warning" role="alert">
 Angular 1.3 is not supported in IE8 and below. To see this demo you need to use at least Internet Explorer 9.
 </div>
-<!--<![endif]-->
+<![endif]-->
 
 It has the following constituant components:
 
