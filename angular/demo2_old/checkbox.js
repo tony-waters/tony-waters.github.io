@@ -11,7 +11,7 @@ function checkbox() {
         },
         controllerAs: 'ctrl',
         bindToController: true,
-        templateUrl: 'checkbox.html',
+        templateUrl: '/angular/demo2/checkbox.html',
         scope: {
             label: '@?',
             class: '@?',

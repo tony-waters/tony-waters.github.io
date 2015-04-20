@@ -6,7 +6,7 @@ header-img: "img/angular3.jpg"
 ---
 <!--[if lt IE 9]>
 <div class="alert alert-danger" role="alert">
-Angular 1.3 is not supported in IE8 and below. To see this demo you need to use at least Internet Explorer 9.
+Angular 1.3 is not supported in IE8 and below. To see the demo you need to use at least Internet Explorer 9.
 </div>
 <![endif]-->
 
@@ -19,15 +19,16 @@ In this post I will focus on the 'month picker' component.
 The best way to understand the month-picker component is by looking at its requirements. We will be testing with Jasmine, so here they are in a Jasmine-style BDD format:
 
 <pre>
-  Given a MonthPicker directive
+  Given a MonthPicker
     when in default mode
-      it should create 12 buttons with labels representing the 12 months
-      it should mark a single button clicked as selected
-      it should return a single month corresponding to the selected button
+      it should create 12 buttons
+      it should have labels on the buttons corresponding to the months
+      it should mark a single button clicked as active
+      it should return single month corresponding to selected button
     when in multi mode
-      it should mark all buttons clicked as selected
-      it should toggle selected buttons to unselected if clicked again
-      it should return a list of months corresponding to the selected buttons
+      it should mark all buttons clicked as active
+      it should toggle active buttons to inactive
+      it should return months corresponding to selected buttons
 </pre>
 
 Here is the finished component operating in each of its two modes:
@@ -41,7 +42,8 @@ Here is the finished component operating in each of its two modes:
 	  <div class="panel-body">
 	    <month-picker 
 	        multi="false" 
-	        month-selected-expression="value1 = month">
+	        selected-months="value1 = months"
+	        last-selected-month="lastValue1 = month">
 	    </month-picker>
 	  </div>
 	</div>
@@ -51,13 +53,18 @@ Here is the finished component operating in each of its two modes:
 	  <div class="panel-body">
 	    <month-picker 
 	        multi="true" 
-	        month-selected-expression="value2 = month">
+	        selected-months="value2 = months"
+	        last-selected-month="lastValue2 = month">
 	    </month-picker>
 	  </div>
 
 	</div>
+	<hr />
 	<h4 class="col-md-offset-1">Single Select: [[[ value1 ]]]</h4>
+	<h4 class="col-md-offset-1">Last Single Select: [[[ lastValue1 ]]]</h4>
+	<hr />
 	<h4 class="col-md-offset-1">Multi Select: [[[ value2 ]]]</h4>
+	<h4 class="col-md-offset-1">Last Multi Select: [[[ lastValue2 ]]]</h4>
 	<script src="{{site.root}}/angular/demo2/monthPicker.js"></script>
 </div>
 <!--<![endif]-->
@@ -76,11 +83,11 @@ We do this using attributes:
 {% highlight html linenos %}
 <month-picker 
 	multi="true"
-	month-selected-expression="someFunction(months)">
+	selected-months="someFunction(months)">
 </month-picker>
 {% endhighlight %}
 
-For this to work our directive needs to be able to locate the value for `multi`, so it can change the components operation accordingly. And whatever is in `month-selected-expression` should be evaluated whenever a month is selected -- in this case calling `someMethod` in the scope of the page on which it resides, passing in the month that was clicked.
+For this to work our directive needs to be able to locate the value for `multi`, so it can change the components operation accordingly. And whatever is in `selected-months` should be evaluated whenever a month is selected -- in this case calling `someMethod` in the scope of the page on which it resides, passing in the month that was clicked.
 
 The secret of this working is related to directive scope.
 
@@ -91,7 +98,7 @@ By default a directive shares its parent scope, so has access to the scope of th
 
 A better solution is to give the directive its own scope -- referred to as 'isolate scope' -- and pass values to and from it using attributes on the `<month-picker>` tag. This way the component is isolated from other scopes, and we have a clear method of communication between it and the page it appears on.
 
-To configure an isolate scope we pass a directive an empty scope object (`{}`). We can specify we want the `month-selected-expression` and `multi` attributes to be shared between the directive and the page by including their [camel case](http://en.wikipedia.org/wiki/CamelCase) equivalent as properties within this empty scope object:
+To configure an isolate scope we pass a directive an empty scope object (`{}`). We can specify we want the `selected-months` and `multi` attributes to be shared between the directive and the page by including their [camel case](http://en.wikipedia.org/wiki/CamelCase) equivalent as properties within this empty scope object:
 
 {% highlight js linenos %}
 {
@@ -112,7 +119,7 @@ So in our example:
 {% highlight html linenos %}
 <month-picker 
 	multi="true"
-	month-selected-expression="someFunction(months)">
+	selected-months="someFunction(months)">
 </month-picker>
 {% endhighlight %}
 
@@ -135,12 +142,12 @@ Nothing special about the components HTML template. It only knows about its cont
 Here is the complete HTML template used to create `<month picker>`, note no reference to scope:
 
 {% highlight html linenos %}
-<div class="month-picker">
-    <button 
+<div id="month-picker">
+    <button id="month-{{month | lowercase}}"
         class="month-button btn btn-default col-md-4" 
         ng-repeat="month in ctrl.months" 
         ng-class="{ 'active': ctrl.isSelected(month) }"
-        ng-click="ctrl.selectMonth(month)">{[{month}]}
+        ng-click="ctrl.selectMonth(month)">{{month}}
     </button>
 </div>
 {% endhighlight %}
@@ -151,34 +158,36 @@ A controller function is needed to feed our template. Angular 1.2 introduced the
 {% highlight js linenos %}
  function controller () {
      var ctrl = this;
-     
-     // api
-     
+
      ctrl.isSelected = isSelected
      ctrl.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-     ctrl.multi = false
+     ctrl.multi = 'false'
      ctrl.selected = []
+     ctrl.lastSelected = ""
      ctrl.selectMonth = selectMonth
-
-     // api methods
 
      function isSelected(month) {
          return ctrl.selected.indexOf(month) > -1
      }
 
      function selectMonth(month) {
+//            console.log("selecting: " + month)
+         
          if (isMultiMode()) {
              if (isSelected(month)) {
                  var index = ctrl.selected.indexOf(month)
                  ctrl.selected.splice(index, 1)
              } else {
                  ctrl.selected.push(month)
+                 ctrl.lastSelected = month
              }
          } else {
              ctrl.selected = []
              ctrl.selected.push(month)
+             ctrl.lastSelected = month
          }
-         monthSelectedExpressionCallback()
+         selectedMonthsCallback()
+         lastSelectedMonthCallback()
      }
 
      // private methods
@@ -187,8 +196,12 @@ A controller function is needed to feed our template. Angular 1.2 introduced the
          return ctrl.multi === 'true'
      }
 
-     function monthSelectedExpressionCallback() {
-         ctrl.monthSelectedExpression({'month': ctrl.selected})
+     function selectedMonthsCallback() {
+         ctrl.selectedMonths({'months': ctrl.selected})
+     }
+     
+     function lastSelectedMonthCallback() {
+         ctrl.lastSelectedMonth({'month': ctrl.lastSelected});
      }
  }
 {% endhighlight %}
@@ -262,5 +275,157 @@ Here is the module definition for the month picker component, showing how the di
 
 You can find the full code [here](https://github.com/tony-waters/example-angular/blob/master/monthPicker.js).
 
-I had planned to look at how we can test our new component, but I'll save that for a later post.
+###Unit testing the month picker
+We need some unit tests to ensure our Month Picker works as expected, and make sure we are informed when future changes to the code base interfere with its functioning. Remember that we looked at the requirements at the start of this post:
+
+<pre>
+  Given a MonthPicker
+    when in default mode
+      it should create 12 buttons
+      it should have labels on the buttons corresponding to the months
+      it should mark a single button clicked as active
+      it should return single month corresponding to selected button
+    when in multi mode
+      it should mark all buttons clicked as active
+      it should toggle active buttons to inactive
+      it should return months corresponding to selected buttons
+</pre>
+
+Here is the unit test file for the component, written using Jasmine. I have also used jQuery in the tests, although it is not used in the component itself:
+
+{% highlight js linenos %}
+describe('Given a MonthPicker', function () {
+    var element, scope, controller
+
+    beforeEach(module("monthPickerModule"))
+    
+    beforeEach(module('templates'))
+    
+    describe('when in default mode', function() {
+
+        beforeEach(inject(function ($rootScope, $compile, $controller) {
+            element = angular.element('<month-picker multi="false" last-selected-month="lastSelected(month)" selected-months="monthSelected(months)"></month-picker>')
+            scope = $rootScope
+            controller = $controller('MonthPickerController as ctrl', {$scope: scope})
+
+            $compile(element)(scope)
+            scope.$digest()
+
+            scope.monthSelected = function(months) {}
+            scope.lastSelected = function(month) {}
+        }))
+        
+        it('should be properly set up', function() {
+            expect(controller).toBeDefined()
+        })
+
+        it('should have a months object with the 12 months', function() {
+            expect(controller.months).toEqual(jasmine.arrayContaining(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
+        })
+
+        it('should create 12 buttons', function() {
+            var monthButtons = element.find('button.month-button')
+            expect(monthButtons.length).toBe(12)
+        })
+
+        it('should have labels on the buttons corresponding to the months', function() {
+            var monthButtons = element.find('button.month-button')
+            expect(monthButtons.length).toBe(12)
+            expect($(monthButtons[0]).html()).toMatch('^Jan.*')
+            expect($(monthButtons[1]).html()).toMatch('^Feb.*')
+            expect($(monthButtons[2]).html()).toMatch('^Mar.*')
+            expect($(monthButtons[3]).html()).toMatch('^Apr.*')
+            expect($(monthButtons[4]).html()).toMatch('^May.*')
+            expect($(monthButtons[5]).html()).toMatch('^Jun.*')
+            expect($(monthButtons[6]).html()).toMatch('^Jul.*')
+            expect($(monthButtons[7]).html()).toMatch('^Aug.*')
+            expect($(monthButtons[8]).html()).toMatch('^Sep.*')
+            expect($(monthButtons[9]).html()).toMatch('^Oct.*')
+            expect($(monthButtons[10]).html()).toMatch('^Nov.*')
+            expect($(monthButtons[11]).html()).toMatch('^Dec.*')
+        })
+
+        it('should mark a single button clicked as active', function() {
+            var monthButtons = element.find('button.month-button')
+
+            monthButtons.eq(0).click()
+            var clicked =  element.find('button.active')
+            expect(clicked.length).toBe(1)
+            expect(clicked[0]).toEqual(monthButtons[0])
+
+            monthButtons.eq(9).click()
+            clicked =  element.find('button.active')
+            expect(clicked.length).toBe(1)
+            expect(clicked[0]).toEqual(monthButtons[9])
+        })
+
+        it('should return single month corresponding to selected button', function() {
+            var monthButtons = element.find('button.month-button')
+            spyOn(scope, 'monthSelected')
+
+            monthButtons.eq(0).click()
+            expect(scope.monthSelected).toHaveBeenCalledWith(['Jan'])
+
+            monthButtons.eq(9).click()
+            expect(scope.monthSelected).toHaveBeenCalledWith(['Oct'])
+        })
+    })
+    
+    describe('when in multi mode', function() {
+        
+        beforeEach(inject(function ($rootScope, $compile, $controller) {
+            element = angular.element('<month-picker multi="true"  last-selected-month="lastSelected(month)" selected-months="monthSelected(months)"></month-picker>')
+            scope = $rootScope
+            controller = $controller('MonthPickerController as vm', {$scope: scope})
+
+            $compile(element)(scope)
+            scope.$digest()
+
+            scope.monthSelected = function(months) {}
+        }))
+        
+        it('should mark all buttons clicked as active', function() {
+            var monthButtons = element.find('button.month-button')
+
+            monthButtons.eq(0).click()
+            var clicked =  element.find('button.active')
+            expect(clicked.length).toBe(1)
+            expect(clicked[0]).toEqual(monthButtons[0])
+
+            monthButtons.eq(9).click()
+            clicked =  element.find('button.active')
+            expect(clicked.length).toBe(2)
+            expect(clicked[0]).toEqual(monthButtons[0])
+            expect(clicked[1]).toEqual(monthButtons[9])
+        })
+        
+        it('should toggle active buttons to inactive', function() {
+            var monthButtons = element.find('button.month-button')
+
+            monthButtons.eq(5).click();
+            var clicked =  element.find('button.active')
+            expect(clicked.length).toBe(1)
+            expect(clicked[0]).toEqual(monthButtons[5])
+
+
+            monthButtons.eq(5).click();
+            clicked =  element.find('button.active')
+            expect(clicked.length).toBe(0)
+        })
+
+        it('should return months corresponding to selected buttons', function() {
+            var monthButtons = element.find('button.month-button')
+            spyOn(scope, 'monthSelected')
+
+            monthButtons.eq(0).click()
+            expect(scope.monthSelected).toHaveBeenCalledWith(['Jan'])
+
+            monthButtons.eq(9).click()
+            expect(scope.monthSelected).toHaveBeenCalledWith(['Jan', 'Oct'])
+        })
+    })
+  
+})
+{% endhighlight %}
+
 

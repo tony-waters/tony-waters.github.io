@@ -14,8 +14,7 @@
             templateUrl: '/angular/demo2/monthPicker.html',
             scope: {
                 multi: '@?',
-                selectedMonths: '&',
-                lastSelectedMonth: '&'
+                monthSelectedExpression: '&'
             },
             controller: controller,
             controllerAs: 'ctrl',
@@ -30,9 +29,8 @@
         
         ctrl.isSelected = isSelected
         ctrl.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        ctrl.multi = 'false'
+        ctrl.multi = false
         ctrl.selected = []
-        ctrl.lastSelected = ""
         ctrl.selectMonth = selectMonth
 
         // api methods
@@ -42,22 +40,18 @@
         }
 
         function selectMonth(month) {
-//            console.log("selecting: " + month)
             if (isMultiMode()) {
                 if (isSelected(month)) {
                     var index = ctrl.selected.indexOf(month)
                     ctrl.selected.splice(index, 1)
                 } else {
                     ctrl.selected.push(month)
-                    ctrl.lastSelected = month
                 }
             } else {
                 ctrl.selected = []
                 ctrl.selected.push(month)
-                ctrl.lastSelected = month
             }
-            selectedMonthsCallback()
-            lastSelectedMonthCallback()
+            monthSelectedExpressionCallback()
         }
 
         // private methods
@@ -66,13 +60,8 @@
             return ctrl.multi === 'true'
         }
 
-        function selectedMonthsCallback() {
-            console.log("Selected months: " + ctrl.selected)
-            ctrl.selectedMonths({'months': ctrl.selected})
-        }
-        
-        function lastSelectedMonthCallback() {
-            ctrl.lastSelectedMonth({'month': ctrl.lastSelected});
+        function monthSelectedExpressionCallback() {
+            ctrl.monthSelectedExpression({'month': ctrl.selected})
         }
     }
 

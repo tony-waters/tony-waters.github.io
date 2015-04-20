@@ -1,3 +1,25 @@
+.demo .active {
+    background-color: #dff0d8 !important;
+}
+
+.month-button {
+    /*width: 50px;*/
+}
+
+.demo h1, .demo h2, .demo h3, .demo h4, .demo h5 {
+    /*text-align: center;*/
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.demo .errors {
+    color: red;
+}
+
+.demo .form-group label {
+    padding-left: 10px;
+}
+
 
 /*.quote-link:link, .quote-link:hover, .quote-link:visited, .quote-link:active {
     text-decoration: none;

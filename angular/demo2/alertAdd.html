@@ -1,0 +1,56 @@
+<form name="ctrl.alertForm" role="form" class="form form-vertical" ng-submit="ctrl.clickAdd()" novalidate>
+    <!--<div class="center-block">-->
+
+    <div class="form-group">
+        <label class="control-label">Month: </label>
+        <select name="selectMonth"
+                class="form-control"
+                ng-model="ctrl.currentMonth"
+                ng-options="month for month in ctrl.months"
+                required>
+        </select>
+        <div ng-show="ctrl.alertForm.$submitted || ctrl.alertForm.selectMonth.$touched" class="errors">
+            <span class="errors" ng-show="ctrl.alertForm.selectMonth.$error.required">Please select a month</span>
+        </div> 
+    </div>
+ 
+    <div class="form-group">
+        <!--<div class="input-group">-->
+        <label>Severity: </label>
+        <select name="severity"
+                class="form-control"
+                ng-model="ctrl.severity"
+                required>
+            <option>info</option>
+            <option>warning</option>
+            <option>danger</option>
+        </select>
+        <!--</div>-->
+        <div ng-show="ctrl.alertForm.$submitted || ctrl.alertForm.severity.$touched" class="errors">
+            <span ng-show="ctrl.alertForm.severity.$error.required">Please select a severity</span>
+        </div>
+    </div>
+
+    
+    <div class="form-group">
+        <label>Message: </label>
+        <!--<div>-->
+        <input name="message"
+               type="text" 
+               class="form-control" 
+               ng-model="ctrl.message" 
+               ng-minlength="3"
+               ng-maxlength="150"
+               required />
+        <div ng-show="ctrl.alertForm.$submitted || ctrl.alertForm.message.$touched" class="errors">
+            <span ng-show="ctrl.alertForm.message.$error.minlength">Message must be at least 2 characters</span>
+            <span ng-show="ctrl.alertForm.message.$error.maxlength">Message cannot be more than 150 characters</span>
+            <span ng-show="ctrl.alertForm.message.$error.required">Message cannot be empty</span>
+        </div>
+            <!--</div>-->
+    </div>
+
+
+    <button type="submit" ng-disabled="ctrl.alertForm.$invalid" class="btn btn-primary">Add</button>
+    <!--</div>-->
+</form>
