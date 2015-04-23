@@ -1,59 +1,40 @@
 angular.module('pageModule', [])
+        .directive('page', directive)
+        .config(function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[[').endSymbol(']]]')
+        })
 
-.directive("page", function() {
+function directive() {
     return {
         transclude: true,
         replace: true,
         templateUrl: '/angular/demo2/page.html',
-        link: function(scope, iElement, attributes, controller, transcludeFn) {
-            
-            //
-            // find the page elements in the template
-            //
-            var header = iElement.find('header');
-            var sidebar = iElement.find('sidebar');
-            var main = iElement.find('main');
-            var footer = iElement.find('footer');
-            
-            var headerContent;
-            var sidebarContent;
-            var mainContent;
-            var footerContent;
-            
-            //
-            // locate transcluded source
-            //
-            transcludeFn(scope, function(clone) {
-                angular.forEach(clone, function (cloneEl) {
-                    var localName = cloneEl.localName;
-                    if(localName !== null) {
-                        var contents = angular.element(cloneEl).contents();
-                        switch (localName) {
-                            case 'header':
-                                headerContent = contents;
-                                break;
-                            case 'sidebar': 
-                                sidebarContent = contents;
-                                break;
-                            case 'main':
-                                mainContent = contents;
-                                break;
-                            case 'footer':
-                                footerContent = contents;
-                                break;
-                        }
-                    }
-                });
-            });
-            
-            //
-            // transclude source into template elements
-            //
-            header.replaceWith(headerContent);
-            sidebar.replaceWith(sidebarContent);
-            main.replaceWith(mainContent);
-            footer.replaceWith(footerContent);
-            
-        }
-    };
-});
+        link: link,
+        scope: {}
+    }
+}
+
+function link(scope, iElement, attrs, ctrl, transcludeFn) {
+    transcludeFn(scope.$parent.$new(), function (clone) {
+        angular.forEach(clone, function (cloneEl) {
+            if (cloneEl.nodeType === 1) {
+                // get target id
+                console.log(cloneEl.localName)
+                var targetId = cloneEl.attributes["transclude-to"].value
+                console.log(targetId)
+                // find target element with that id
+                var targetIdString = '[transclude-id="' + targetId + '"]'
+                var target = iElement.find(targetIdString)
+                // append element to target
+                if (target.length) {
+                    target.append(cloneEl)
+                } else {
+                    cloneEl.remove()
+                    throw new Error('Target not found, specify correct transclude-to attribute')
+                }
+            } else {
+                cloneEl.remove()
+            }
+        })
+    })
+}

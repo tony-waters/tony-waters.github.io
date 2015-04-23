@@ -1,21 +1,21 @@
 (function () {
 
     angular.module('panelModule', [])
-            .directive('panel', directive)
-            .controller('PanelController', controller)
             .config(function ($interpolateProvider) {
                 $interpolateProvider.startSymbol('[[[').endSymbol(']]]')
             })
+            .directive("panel", directive)
+            .controller("PanelController", controller)
 
     function directive() {
         return {
             restrict: 'AE',
             replace: true,
-            transclude: true,
             templateUrl: '/angular/demo2/panel.html',
             scope: {
                 heading: '@'
             },
+            transclude: true,
             controller: controller,
             controllerAs: 'ctrl',
             bindToController: true,
@@ -23,7 +23,7 @@
     }
     
     function controller() {
-//        var ctrl = this;
+        var vm = this
     }
 
 })()

@@ -2,9 +2,6 @@
 
     angular.module('alertServiceModule', [])
             .service("AlertService", service)
-            .config(function ($interpolateProvider) {
-                $interpolateProvider.startSymbol('[[[').endSymbol(']]]');
-            })
     
     
     function service() {
@@ -35,16 +32,7 @@
             service.filteredAlerts = []
             for(var i=0; i<service.alerts.length; i++) {
                 var currentAlert = service.alerts[i]
-//                console.log("Current Alert: " + JSON.stringify(currentAlert))
                 if(months.indexOf(currentAlert.month) > -1) {
-//                    if((currentAlert['severity'] === 'danger' && ctrl.showDanger) || (currentAlert['severity'] === 'warning' && ctrl.showWarning) || (currentAlert['severity'] === 'info' && ctrl.showInfo)) {
-//                        if(ctrl.filter.length === 0) {
-//                            filtered.push(ctrl.currentAlerts[i]);
-//                        } else if(currentAlert['message'].indexOf(ctrl.filter) > -1) {
-//                                filtered.push(currentAlert);
-//                        }   
-//                    }
-//                    console.log("Adding alert to filtered alerts " + currentAlert)
                     service.filteredAlerts.push(currentAlert)
                 }
             }
@@ -69,11 +57,7 @@
         function hasAlerts() {
             
         }
-        
 
-        
-
-        
         function getAlertsForMonth(month) {
             return allAlerts;
         }

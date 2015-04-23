@@ -7,7 +7,7 @@
         <h4>No alerts present for the current selection</h4>
     </div>
     <div ng-repeat="alert in ctrl.filterAlerts(ctrl.months)">
-        <div id="alert-[[[$index+1]]]" class="alert" ng-class="'alert-' + alert.severity">[[[alert.month]]]~ [[[alert.message]]]</div>
+        <div id="alert-[[[$index+1]]]" class="alert" ng-class="'alert-' + alert.severity">[[[alert.month]]] ~ [[[alert.message]]]</div>
     </div>
 </div>
 

@@ -3,9 +3,6 @@
     angular.module('alertAddModule', [])
             .directive("alertAdd", directive)
             .controller("AlertAddController", controller)
-            .config(function ($interpolateProvider) {
-                $interpolateProvider.startSymbol('[[[').endSymbol(']]]');
-            })
 
     function directive() {
         return {
@@ -31,6 +28,7 @@
         ctrl.severity = ""
         
         function clickAdd() {
+            console.log("Adding (" + ctrl.month + "), severity(" + ctrl.severity + "), message(" + ctrl.message + ")")
             var newAlert = {month: ctrl.currentMonth, severity: ctrl.severity, message: ctrl.message}
             AlertService.addAlert(newAlert)
             ctrl.month = ""

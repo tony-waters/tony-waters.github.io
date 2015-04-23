@@ -1,11 +1,11 @@
 (function () {
 
     angular.module('monthPickerModule', [])
+            .config(function ($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[[').endSymbol(']]]')
+            })
             .directive("monthPicker", directive)
             .controller("MonthPickerController", controller)
-            .config(function ($interpolateProvider) {
-                $interpolateProvider.startSymbol('[[[').endSymbol(']]]');
-            })
 
     function directive() {
         return {
@@ -23,9 +23,11 @@
         }
     }
 
-    function controller() {
-        var ctrl = this
-
+    function controller () {
+        var ctrl = this;
+        
+        // api
+        
         ctrl.isSelected = isSelected
         ctrl.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         ctrl.multi = 'false'
@@ -33,13 +35,14 @@
         ctrl.lastSelected = ""
         ctrl.selectMonth = selectMonth
 
+        // api methods
+
         function isSelected(month) {
             return ctrl.selected.indexOf(month) > -1
         }
 
         function selectMonth(month) {
 //            console.log("selecting: " + month)
-            
             if (isMultiMode()) {
                 if (isSelected(month)) {
                     var index = ctrl.selected.indexOf(month)
@@ -64,11 +67,12 @@
         }
 
         function selectedMonthsCallback() {
+            console.log("Selected months: " + ctrl.selected)
             ctrl.selectedMonths({'months': ctrl.selected})
         }
         
         function lastSelectedMonthCallback() {
-            ctrl.lastSelectedMonth({'month': ctrl.lastSelected})
+            ctrl.lastSelectedMonth({'month': ctrl.lastSelected});
         }
     }
 

@@ -19,8 +19,3 @@ angular.module('pageControllerModule')
 angular.module('alertListModule')
 angular.module('alertAddModule')
 angular.module('alertServiceModule')
-
-
-
-
-

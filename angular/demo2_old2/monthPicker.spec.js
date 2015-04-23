@@ -1,4 +1,4 @@
-describe('Given a MonthPicker', function () {
+describe('given a MonthPicker directive', function () {
     var element, scope, controller
 
     beforeEach(module("monthPickerModule"))
@@ -8,15 +8,14 @@ describe('Given a MonthPicker', function () {
     describe('when in default mode', function() {
 
         beforeEach(inject(function ($rootScope, $compile, $controller) {
-            element = angular.element('<month-picker multi="false" last-selected-month="lastSelected(month)" selected-months="monthSelected(months)"></month-picker>')
+            element = angular.element('<month-picker month-selected-expression="monthSelected(month)"></month-picker>')
             scope = $rootScope
             controller = $controller('MonthPickerController as ctrl', {$scope: scope})
 
             $compile(element)(scope)
             scope.$digest()
 
-            scope.monthSelected = function(months) {}
-            scope.lastSelected = function(month) {}
+            scope.monthSelected = function(month) {}
         }))
         
         it('should be properly set up', function() {
@@ -78,14 +77,14 @@ describe('Given a MonthPicker', function () {
     describe('when in multi mode', function() {
         
         beforeEach(inject(function ($rootScope, $compile, $controller) {
-            element = angular.element('<month-picker multi="true"  last-selected-month="lastSelected(month)" selected-months="monthSelected(months)"></month-picker>')
+            element = angular.element('<month-picker multi="true" month-selected-expression="monthSelected(month)"></month-picker>')
             scope = $rootScope
             controller = $controller('MonthPickerController as vm', {$scope: scope})
 
             $compile(element)(scope)
             scope.$digest()
 
-            scope.monthSelected = function(months) {}
+            scope.monthSelected = function(month) {}
         }))
         
         it('should mark all buttons clicked as active', function() {

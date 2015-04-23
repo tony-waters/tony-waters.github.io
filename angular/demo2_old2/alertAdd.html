@@ -1,4 +1,4 @@
-<form name="ctrl.alertForm" role="form" class="form form-inline form-multiline" ng-submit="ctrl.clickAdd()" novalidate>
+<form name="ctrl.alertForm" role="form" class="form form-vertical" ng-submit="ctrl.clickAdd()" novalidate>
     <!--<div class="center-block">-->
 
     <div class="form-group">
@@ -38,7 +38,6 @@
         <input name="message"
                type="text" 
                class="form-control" 
-               size="60"
                ng-model="ctrl.message" 
                ng-minlength="3"
                ng-maxlength="150"

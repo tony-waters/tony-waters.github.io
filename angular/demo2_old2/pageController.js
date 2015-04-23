@@ -1,6 +1,8 @@
 angular.module("pageControllerModule", [])
-        
-.controller("PageController", pageController)
+            .config(function ($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[[').endSymbol(']]]')
+            })
+            .controller("PageController", pageController)
     
 function pageController() {
     var ctrl = this

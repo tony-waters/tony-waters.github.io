@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="assets/jquery.js"></script>
+        <script src="assets/angular.js"></script>
+        <link rel="stylesheet" href="assets/bootstrap.css">
+        <link rel="stylesheet" href="assets/app.css">
+    </head>
+    <body ng-app="app">
+        <!--[if lt IE 9]>
+        <div class="alert alert-danger" role="alert">
+        You appear to be using an old version of Internet Explorer (8 or lower). Angular 1.3 is not supported in IE8 and below. To see this demo you need to use at least Internet Explorer 9.
+        </div>
+        <![endif]-->
+        <page ng-controller="PageController as page">
+            
+            <div transclude-to="site-head">
+                <h1>Monthly Message System</h1>
+                <panel heading="Add Alert">
+                    <alert-add current-month="{{page.lastSelectedMonth}}"></alert-add>
+                </panel>
+            </div>
+            
+            <div  transclude-to="site-menu">
+                <panel heading="Month picker">
+                    <month-picker 
+                        multi="{{page.multiMode}}"
+                        selected-months="page.setSelectedMonths(months)"
+                        last-selected-month="page.setLastSelectedMonth(month)">
+                    </month-picker>
+                    <input type="checkbox" ng-model="page.multiMode" /> multi mode
+                </panel>
+            </div>
+            
+            <div transclude-to="site-body">
+                <panel heading="Alerts">
+                    <alert-list months="page.selectedMonths"></alert-list>
+                </panel>
+            </div>
+
+        </page>
+        
+        <script src="monthPicker.js"></script>
+        <script src="page.js"></script>
+        <script src="panel.js"></script>
+        <script src="alertList.js"></script>
+        <script src="alertAdd.js"></script>
+        <script src="pageController.js"></script>
+        <script src="alertService.js"></script>
+        <script src="app.module.js"></script>
+    </body>
+</html>

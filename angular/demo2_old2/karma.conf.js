@@ -27,7 +27,7 @@ module.exports = function (config) {
             'assets/bootstrap.js',
             'assets/angular-mocks.js',
             'monthPicker.js',
-            'monthPicker.spec.js',
+//            'monthPicker.spec.js',
             'monthPicker.html',
             'alertService.js',
             'alertService.spec.js',

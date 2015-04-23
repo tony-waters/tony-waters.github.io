@@ -1,11 +1,11 @@
 (function () {
 
     angular.module('alertListModule', [])
+            .config(function ($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[[').endSymbol(']]]')
+            })
             .directive("alertList", directive)
             .controller("AlertListController", controller)
-            .config(function ($interpolateProvider) {
-                $interpolateProvider.startSymbol('[[[').endSymbol(']]]');
-            })
 
     function directive() {
         return {
@@ -16,7 +16,8 @@
             bindToController: true,
             templateUrl: '/angular/demo2/alertList.html',
             scope: {
-                months: '='
+                months: '=',
+                filter: '=?'
             }
         }
     }
@@ -42,6 +43,7 @@
         }
 
         function hasMonths() {
+            console.log("months: " + ctrl.months.length)
             return ctrl.months.length > 0
         }
 
