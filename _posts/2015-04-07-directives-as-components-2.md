@@ -125,7 +125,7 @@ The function is called once for each directive element added to a page. So in `i
 Parameters to the <i>link function</i> provides us with access to the various facets of the directive instance we may wish to manipulate, specifically:
 
 1. its scope
-2. the compiled and linked instance of the directive element derived from the components HTML template -- wrapped either as a jQuery or jqLite object [1]
+2. the compiled and linked instance of the directive element derived from the components HTML template -- wrapped either as a jQuery or jqLite object<sup>[[1]](#notes)</sup>
 3. the attributes on the element instance
 4. its controller (if it has one)
 5. the <i>transclude function</i> (if `transclude: true` was set in the DDO)
@@ -362,9 +362,9 @@ There is more to say on building component directives from sub-directives, parti
 
 The complete source for the sample application used in this and the previous post can be found on [GitHub](https://github.com/tony-waters/example-angular). The code for the new `panel` component is in a [separate branch](https://github.com/tony-waters/example-angular/tree/better-panel). 
 
-###Notes
+###<a name="notes"></a>Notes
 
-1. if jQuery is available when Angular loads, then this will be wrapped as a jQuery object. Otherwise it uses the built-in [jqLite]() to wrap it instead
+1. if jQuery is available when Angular loads, then this will be wrapped as a jQuery object. Otherwise it uses the built-in [jqLite](https://docs.angularjs.org/api/ng/function/angular.element) to wrap it instead
 
 {% highlight html linenos %}
 {% raw %}
