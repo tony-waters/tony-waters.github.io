@@ -348,6 +348,6 @@ Here ends this basic description of how the `month-picker` component directive w
 
 In this post I have outlined how to use AngularJs to create basic component directives by combining an HTML template, a controller function, and a directive function, and wrapping them up into a module. This approach allows us to create encapsulated, re-usable components that live within their own isolated scope.
 
-When creating components there are many use cases where we want to be able to have content within component directive tags and do something with that content. For this we need to understand Angulars transclusion mechanism, which I will look at in the next post.
+When creating components there are many use cases where we want to be able to have content within component directive tags and do something with that content. For this we need to understand Angulars transclsion mechanism, which I will look at in the next post.
 
 [Source code](https://github.com/tony-waters/example-angular/tree/master) is available on GitHub.
