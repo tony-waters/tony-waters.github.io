@@ -362,7 +362,7 @@ There is more to say on building component directives from sub-directives, parti
 
 The complete source for the sample application used in this and the previous post can be found on [GitHub](https://github.com/tony-waters/example-angular). The code for the new `panel` component is in a [separate branch](https://github.com/tony-waters/example-angular/tree/better-panel). 
 
-##<a name="notes"></a>Notes
+###<a name="notes"></a>Notes
 
 1. if jQuery is available when Angular loads, then this will be wrapped as a jQuery object. Otherwise it uses the built-in [jqLite](https://docs.angularjs.org/api/ng/function/angular.element) to wrap it instead
 
