@@ -9,7 +9,7 @@ description: "Programming stuff; using Java EE, Spring, and AngularJS"
 
 <p>I have server-side and client-side skills, including a good understanding of JavaScript, HTML, and CSS. As such I don't mind if my Objects are <i>java.lang</i> or <i>JSON</i> based. I also really like using AngularJS.</p>
 
-<p>I have worked with big database systems like Oracle, and run my tests in RAM on tiny ones like H2. I am also familiar with ORM technologies and happy using JPA and SQL</p>
+<p>I have worked with big database systems like Oracle, and run my tests in RAM on tiny ones like H2. I like to develop in Java, so prefer JPA to SQL. But I'm good to sit round a table with a DBA and discuss the transition.</p>
 
 <p>Following best practices is important to me, and I prefer to stick to standards where practicable. I have used TDD for some time, and the related Java technologies (JUnit, DbUnit, Mockito, Hamcrest, Fest/AssertJ), and recently introduced BDD into my practices (Jasmine, Cucumber). I have worked in teams where the ethos has been agile-oriented, following continuous integration and working iteratively and incrementally with the Product Owner.
 

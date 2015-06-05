@@ -90,7 +90,7 @@ create table FOO (
 ###Overiding JPA Attributes in Value Objects
 If we wanted to use the same Value Object in two places in the same Entity, this would give us two columns with the same name, which would be invalid. Neither would this work if we wanted a different column name depending on the Entity the Value Object is embedded into. 
 
-JPA provides the `@AttributeOverride` annotation for this purpose. As the name suggests, it is used to override the mapping of an Entity field, to allow for a different configuration in the database table:
+JPA provides the `@AttributesOverride` annotation for this purpose. As the name suggests, it is used to override the mapping of an Entity field, to allow for a different configuration in the database table:
 
 {% highlight java linenos %}
 @Embedded
