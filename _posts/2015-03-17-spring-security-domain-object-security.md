@@ -185,11 +185,11 @@ Be aware that these expressions have changed a little over time, for example in 
 
 The source is available on [GitHub](https://github.com/tony-waters/example-spring-security/tree/2-domain-object-authorisation). It contains all the examples here including some basic tests. 
 <hr />
-##<a name="notes"></a>Notes
+## <a name="notes"></a>Notes
 1. Examples of how to do this can be seen [here](http://blog.solidcraft.eu/2011/03/spring-security-by-example-securing.html), [here](http://www.disasterarea.co.uk/blog/protecting-service-methods-with-spring-security-annotations/), and [here](http://www.borislam.com/2012/08/writing-your-spring-security-expression.html).
 
 2. This feature is not available in Spring Security 3.0 (See [here](http://forum.spring.io/forum/spring-projects/security/100708-spel-and-spring-security-3-accessing-bean-reference-in-preauthorize) for discussion and a workaround). It is available 3.1 but you must leave out the `@` symbol. It works as shown in 3.2.
 
 <hr />
-##Resources
+## Resources
 - [Spring Expression Language Reference](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html)
