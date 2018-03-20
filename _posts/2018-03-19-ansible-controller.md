@@ -10,7 +10,7 @@ In this blog I want to go over how we can achieve this.
 
 Full code is available [here].
 
-##The Ansible job
+## The Ansible job
 To keep things simple, this job just ping's a list of servers/VMs defined in 'group_vars':
 
 {% highlight html linenos %}
@@ -74,10 +74,12 @@ CMD ["ping.yml"]
 {% endraw %}
 {% endhighlight %}
 
+I have used both 'ENTRYPOINT' and 'CMD' in the Dockerfile so we can choose the ansible playbook at runtime (and not need to create a separate Docker image). If no runtime playbook is specified, we default to 'ping.yml'.
 
-##Jenkins
+## Jenkins
 We will use Jenkins as a GUI for those unfamiliar with the command line.
 We will the 'ready-made' Jenkins I created previously - 'bit1/insta-jenkins' (code here).
+It allows us to pre-seed Jenkins with jobs using JobDSL (link).
 And set the 'jobs.groovy' file to contain a job that runs the Ansible ping check.
 
 {% highlight html linenos %}
@@ -108,11 +110,11 @@ pipelineJob('pingchecks') {
 
 You may notice that I've set this job to automatically run every 2 minutes. Make this a manual job if it suits. Any number of jobs can be added here.
 
-##Nginx
+## Nginx
 The final component is Nginx. We want Nginx to serve the JSON files created by the Ansible ping checks.
 I've gone for the most basic Nginx Docker image.
 
-##Putting it all together
+## Putting it all together
 I'm using docker-compose to avoid long docker build / run comands.
 We want the JSON documents produced by Ansible to be available to Nginx.
 This is done using a named volume ('app-data').

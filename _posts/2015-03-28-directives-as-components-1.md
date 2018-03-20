@@ -37,7 +37,7 @@ Or simply:
 {% endraw %}
 {% endhighlight %}
 
-###Component-based vs view-based architecture
+### Component-based vs view-based architecture
 
 In Angular, if you're not using a component-based architecture, then you're probably using a template or view-based architecture. In this scenario an HTML fragment or 'partial' is linked to a controller using `ng-controller`, and included in different parts of a site with `ng-include`:
 
@@ -56,7 +56,7 @@ This may work fine while the application, and the nesting of views, is small. Bu
 
 Angular 'component directives' solve this problem by isolating the script and HTML that constitute a component from interference by surrounding scopes, and providing a structured means of data exchange between these scopes. 
 
-###Anatomy of a component directive
+### Anatomy of a component directive
 
 An Angular component directive typically consists of:
 
@@ -127,7 +127,7 @@ function controller() {
 
 You may have noticed that some of the properties referenced in the above controller function don't appear to exist (for example `ctrl.multi`). The reason for this will become clear shortly, when we look at directive scope. First, lets see how we use the directive function to wire the HTML template and the controller function together.
 
-###Directive Definition Object (DDO)
+### Directive Definition Object (DDO)
 
 We use the directive function to return a Directive Definition Object (DDO). This object contains configuration information for the component. The full list of possible properties is [here](), but we generally just use a subset corresponding to our requirements.
 
@@ -179,7 +179,7 @@ This gives us a component directive, linking an HTML template with a controller 
 
 As it stands, using a directive to connect the controller and the HTML template is not much different from using `ng-controller` and an HTML 'partial'. Although we have a nicer way of including the functionality in our page, the component is still exposed to its surrounding scope and brittle to changes. So lets do something about that.
 
-##Wiring up the scope
+## Wiring up the scope
 
 By default a directive shares its <i>outside</i> or <i>parent</i> scope, so has access to the scope of wherever it is included in a page. This can be changed in the DDO to provide a directive with its own scope, that does not prototypically inherit from its parent -- called <i>isolate scope</i>. Giving directives isolate scope allows the parts that make up a component to be encapsulated from outside interference, and consequently, more robust and re-usable.
 
@@ -200,7 +200,7 @@ function directive() {
 
 The directive is now isolated from its parent scope. This is great for encapsulation. However, `month-picker` needs some way of communicating when a month is selected, and it needs some way of being told whether to operate in single or multi-select mode. While we usually want a component directive to have isolate scope, it is also useful if it can take input from its outside scope, and provide output to it.
 
-###Communicating with a directive
+### Communicating with a directive
 
 Angular directives with isolate scope can selectively bind to properties derived from its parent scope through its tag attributes. It does this by passing passing a property into the isolate scope object in the format:
 
@@ -240,7 +240,7 @@ scope: {
 
 So here the attribute `some-attribute` maps to a property called `someAttribute` in the directives isolate scope. Attribute and element names appearing in a directive tag are automatically 'normalised' into their camel case equivalents when used within a directive, so `some-attribute` is converted to `someAttribute`.
 
-###Types of isolate scope bindings 
+### Types of isolate scope bindings 
 
 There are three ways a component directive can bind to an attribute. The binding symbol signifies which of them to use -- either `@`, `=`, or `&`.
 
@@ -344,7 +344,7 @@ function controller() {
 
 Here ends this basic description of how the `month-picker` component directive works. You will see from the source code of the sample application that the `alert-list` and `alert-add` component directives work in an almost identical way.
 
-###Conclusion
+### Conclusion
 
 In this post I have outlined how to use AngularJS to create basic component directives by combining an HTML template, a controller function, and a directive function, and wrapping them up into a module. This approach allows us to create encapsulated, re-usable components that live within their own isolated scope.
 

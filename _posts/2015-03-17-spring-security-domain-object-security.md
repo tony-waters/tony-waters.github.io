@@ -9,7 +9,7 @@ One solution is to use an <i>Access Control List</i> or ACL, but this can be ove
 
 [Source code](https://github.com/tony-waters/example-spring-security/tree/2-domain-object-authorisation) and tests are available on GitHub.
 
-###Domain object security using a Custom PermissionEvaluator
+### Domain object security using a Custom PermissionEvaluator
 
 One approach in Spring Security is to provide a custom `PermissionEvaluator`, which:
 
@@ -82,7 +82,7 @@ Since Spring Security uses a single `PermissionEvaluator`, should we require sim
 
 An alternative is to use Spring's Expression Language.
 
-###Domain Object security using Spring Expression Language
+### Domain Object security using Spring Expression Language
 Because the string passed into `@PreAuthorize` and `@PostAuthorize` annotations is parsed as a Spring Expression Langauge (SpEL) expression, we can write something like this:
 
 {% highlight java linenos %}
@@ -180,7 +180,7 @@ public boolean isOwner(Member targetDomainObject, UserDetails principal) {
 
 Other nice things about this approach when compared to using a custom `PermissionEvaluator` include the lack of superfluous code, the cleaner design (we can choose to implement it as we wish), the use of `Member` explicitly rather than generic `Objects` and the corresponding automatic casting.
 
-###And finally ...
+### And finally ...
 Be aware that these expressions have changed a little over time, for example in earlier versions of Spring Security you would write the expression without the `@` symbol (see Note 2 below).
 
 The source is available on [GitHub](https://github.com/tony-waters/example-spring-security/tree/2-domain-object-authorisation). It contains all the examples here including some basic tests. 

@@ -25,7 +25,7 @@ I want to show how we can use Spring Security 3 for (unobtrusively) implementing
 
 Source code and tests can be found on [GitHub](https://github.com/tony-waters/example-spring-security/tree/1-permission-based-authorisation). Best understanding can be obtained by running the tests there, but here's the walk-through:
 
-##The core domain
+## The core domain
 To begin, we will create an entity for our core domain to represents a `Member` -- basically a registered user in the system:
 
 {% highlight java linenos %}
@@ -74,7 +74,7 @@ I have only included this class to represent the core domain, and show how it is
 
 A `Member` knows nothing of security concerns.
 
-##The security domain
+## The security domain
 We define a separate security domain where we describe the security needs of our application. A user of our system (a `Member`) has a related `Credentials` in the security domain (containing a username and password):
 
 {% highlight java linenos %}
@@ -204,7 +204,7 @@ create table ROLE_PERMISSION (
 
 Having created our security domain classes, lets look at how we would implement this using 'out-of-the-box' Spring Security.
 
-##Spring Security -- UserDetailsService, UserDetails, and GrantedAuthority 
+## Spring Security -- UserDetailsService, UserDetails, and GrantedAuthority 
 In order to slot into the Spring Security infrastructure we will be working with three Spring interfaces from the `org.springframework.security.core` package.
 
 First, `UserDetailsService`, which is the entry point in this code for Spring Security. It will load the `UserDetails` associated with the provided username:
@@ -239,7 +239,7 @@ public interface GrantedAuthority extends Serializable {
 
 To use Spring Security we will implement a version of `UserDetails` and `UserDetailsService` that works with our security domain classes.
 
-##Implementing the security domain classes using Spring Security
+## Implementing the security domain classes using Spring Security
 `CredentialsAdapter` is used to integrate our security domain with Spring Security. It adapts a `Credentials` object so it may be treated as a `UserDetails` object:
 
 {% highlight java linenos %}
@@ -315,7 +315,7 @@ Fortunately, the root class for dealing with Spring Security expression evaluati
 boolean readFoo();
 {% endhighlight %}
 
-###Conclusion
+### Conclusion
 While Spring Security doesn't appear to support it 'out-of-the-box', it is easily adapted to work in an environment where:
 
 1. Authorisation is based on Permissions, not Roles

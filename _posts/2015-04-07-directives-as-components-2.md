@@ -13,7 +13,7 @@ There are use cases where we want to in some way process the HTML content that a
 
 As in the previous post, I'll use the [sample application]({{site.root}}/example-angular) and [source code](https://github.com/tony-waters/example-angular/tree/master) for illustration. Here transclusion operates in two component directives -- `panel` and `page`. I'll begin by considering how Angulars built-in transclusion works in the `panel` component directive.
 
-##Built-in transclusion
+## Built-in transclusion
 
 The `panel` component in the sample application uses Angulars built-in transclusion mechanism to format content as a 'panel' -- basically a bordered box with a header:
 
@@ -102,13 +102,13 @@ Its important to understand that transcluded content will continue to be linked 
 
 Here the `panel` component is used to wrap several other components, without interfering with the scope provided by `PageController` through the `page` variable. If the scope of the transcluded content within a `panel` was not preserved, then `month-picker`, `alert-list` and `alert-add` would no longer work as expected.
 
-##Custom transclusion
+## Custom transclusion
 
 Angulars built-in transclusion is a course-grained mechanism. It takes *everything* between a component directives tags, and appends it *wherever* it finds an `ng-transclude` attribute in its directives HTML template. This is fine for many use cases. Particularly those moving arbitrary HTML from one place to another, like the `panel` component just considered.
 
 If this is not enough, we can write our own transclusion functionality and gain complete control over the transcluded content. Since transclusion involves DOM manipulation we must be careful not to interfere with Angulars own DOM manipulation processes -- compile and link. Fortunately, Angular provides us with a function where it is safe to manipulate the DOM (among other things) called the <i>link function</i>. There's a lot to the <i>link function</i>. The focus here is on how it will help us perform custom transclusion.
 
-###The <i>link</i>, <i>transclude</i>, and <i>clone attach</i> functions
+### The <i>link</i>, <i>transclude</i>, and <i>clone attach</i> functions
 
 Angular provides the <i>link function</i> as a safe place to perform DOM manipulation. We access it by passing a function into the DDOs `link` property with the following signature:
 
@@ -146,7 +146,7 @@ Best practice is to perform all DOM manipulation within a '<i>clone attach funct
 
 In order to understand custom transclusion, lets look at how we would write our own transclusion functionality to mimic Angulars built-in mechanism described previously.
 
-###Mimicing `ng-transclude` with custom transclusion
+### Mimicing `ng-transclude` with custom transclusion
 
 In the `panel` <i>link function</i> below, a target element is found within the directive element (basically the HTML template) by searching for an `ng-transclude` attribute. The <i>transclude function</i> is then called with a custom <i>clone attach function</i>, which simply empties the previously found target of any existing content, and attaches the newly cloned (transcluded) content instead:
 
@@ -183,7 +183,7 @@ If we did not empty the target content, we would have two lots of transcluded co
 
 Its a contrived example, as we are repeating the functionality of Angulars built-in transclusion. Where possible its better to use the built-in version. One use case for writing our own transclusion functionality is if we want to transclude different sections of content to different places within our HTML template. This is what the `page` component directive does, so lets look at that next.
 
-###Custom transclusion in the `page` component
+### Custom transclusion in the `page` component
 
 The `page` component provides a method of forcing a pre-defined page structure onto developers of our site. The idea is that developers using the `page` directive mark their content with a `layout` attribute. The marked content is then transcluded into the `page` directives HTML template, at a location determined by the `layout` tag. This makes it easier to keep a consistent site layout when pages are being worked on by different developers. Here is the sample site with the different sections highlighted in red:
 
@@ -271,7 +271,7 @@ If an element within the clone does not match an `id` in the `page` components H
 
 Given the additional overhead when using custom transclusion -- both in terms of coding the <i>clone attach function</i> and being responsible for the lifecycle of the scope of the transcluded content -- it is generally a good thing if we can avoid it and stick to Angulars built-in mechanism. While avoiding custom transclusion may not always be possible, there are scenarios where further modularising a component directive can make using built-in transclusion an option.
 
-###Avoiding custom transclusion with sub-components
+### Avoiding custom transclusion with sub-components
 
 Angulars built-in transclusion through the `ng-transclude` attribute is not as limiting as it may first appear. Returning to our `panel` component. Recall that it used built-in transclusion to create the body of the panel, while the heading was passed in through an attribute:
 
@@ -354,7 +354,7 @@ The end result is the same as before:
 The difference is that we can now put arbitrary HTML in the panel header. By dividing the `panel` component directive into smaller components we have managed to fulfil the requirement without needing custom transclusion.
 
 
-###Conclusion
+### Conclusion
 
 In this second post on component directives in AngularJs 1.3 I have looked at how we <i>transclude</i> the content between a component directives tags and append it to the DOM. We have seen that Angular provides a built-in transclusion mechanism, and when this is not enough, allow us to manually control the transclusion process. Finally, I looked at how dividing a component directive into sub-components can sometimes provides a means of avoiding custom transclusion.  
 
@@ -362,7 +362,7 @@ There is more to say on building component directives from sub-directives, parti
 
 The complete source for the sample application used in this and the previous post can be found on [GitHub](https://github.com/tony-waters/example-angular). The code for the new `panel` component is in a [separate branch](https://github.com/tony-waters/example-angular/tree/better-panel). 
 
-##<a name="notes"></a>Notes
+## <a name="notes"></a>Notes
 
 1. if jQuery is available when Angular loads, then this will be wrapped as a jQuery object. Otherwise it uses the built-in [jqLite](https://docs.angularjs.org/api/ng/function/angular.element) to wrap it instead
 

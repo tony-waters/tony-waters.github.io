@@ -20,7 +20,7 @@ I'd like to outline what a Value Object is in this context. Then in [part 2]({{ 
 
 By way of example I'll use a (simplified) Value Object from my last project, `Month` - which denotes a 'specific month in a specific year'. It could be (and at some point was) represented by a `String` with the format 'yyyyMM'. I'll try and show that representing it as a Value Object brings many advantages, including cleaner code, in-situ validation, and serving as a place to put increasing functionality as the project progresses.
 
-###'Good' Value Objects
+### 'Good' Value Objects
 Re-jigging Evans' quote, to make a good Value Object one must:
 
 1. make it express the meaning of its attribute(s)
@@ -28,7 +28,7 @@ Re-jigging Evans' quote, to make a good Value Object one must:
 3. don’t give it any identity
 4. give it related functionality
 
-###1. Make it express the meaning of its attribute(s)
+### 1. Make it express the meaning of its attribute(s)
 The Value Object we want to create is used to represent a single attribute -- a 'month in a year'. It wraps a `String` object that holds the month in the format 'yyyyMM'. However, Evans seems to be steering us away from calling it something ending in `Wrapper`, towards "expressing the meaning of the attribute it conveys". To this end, we could choose to express this attribute in a class named something along the lines of `YearMonth`, `MonthInYear` or `Month` <sup>[[1]](#notes)</sup>:
 
 {% highlight java linenos %}
@@ -43,7 +43,7 @@ public class Month {
 
 I've gone for `Month`, and resisted appending `Wrapper` or any of its permutations. Now when we work with months the code is a little more readable -- conveying the concept of the <i>attribute</i> being wrapped, rather than the wrapping. 
 	
-###2. Treat it as immutable
+### 2. Treat it as immutable
 There are no setters in `Month` to mutate the `value`. And we've declared the field itself `final`. This covers most usage scenarios for immutability. Of course, creating a robust immutable object in Java is [a little more involved](http://docs.oracle.com/javase/tutorial/essential/concurrency/imstrat.html) than is shown here. And if we use reflection, nothing is immutable.
 
 Just how far should we go with this?
@@ -54,7 +54,7 @@ Just how far should we go with this?
 
 The important thing is that we <i>treat</i> Value Objects as immutable, and communicate that to future maintainers of the system through their design.
 
-###3. Don’t give it any identity
+### 3. Don’t give it any identity
 Value Objects have no identity apart from the combination of their field values. Thus two Value Objects with the same field values can be considered as the same object from the perspective of the application. 
 
 It is common, then, to see Value Objects use all of their fields in `equals()` and `hashCode()` calculations. This is in opposition to an Entity where these methods usually compare on some form of ID.
@@ -87,7 +87,7 @@ public boolean equals(Object obj) {
 
 The fact that two different `Month` objects are equal so long as their `value` is the same should alert us to the fact this is indeed a Value Object. We should be able to exchange one Value Object for another without code that uses these objects caring.  
 
-###4. Give it related functionality
+### 4. Give it related functionality
 Our Value Object now becomes a magnet for any month-related functionality. We'll start with some (over-simplified) validation, using a `static isValid()` method. This way any calling code can do a pre-creation validity check if it so chooses:
 
 {% highlight java linenos %}
@@ -176,7 +176,7 @@ public class Month implements Comparable<Month> {
 }	
 {% endhighlight %}
 
-###What we gain
+### What we gain
 Let's look at what we gain by following Eric's guidelines to identify/create Value Objects.
 
 First, because our concept of 'month in a year' is encapsulated in the `Month` class, it is easily testable. If we had used a `String` to represent it, we would undoubtedly be re-testing the responses to different month `Strings` at various layers of the application, some of which may require a container. Although some of this testing may still be necessary, repetition is greatly reduced.
@@ -191,7 +191,7 @@ There's probably more.
 
 Before concluding Part 1 of this 2-part post, its worth mentioning another (perhaps obvious) feature of Value Objects.
 
-##Composite Value Objects
+## Composite Value Objects
 
 >A VALUE OBJECT can be an assemblage of other objects
 >
@@ -255,7 +255,7 @@ public boolean equals(Object obj) {
 } 
 {% endhighlight %}
 
-##Conclusion to Part 1
+## Conclusion to Part 1
 If you're anything like me, at some point you will have thought <i>isn't a lot of this just good design -- so what's new here?</i> After all, giving classes meaningful names is just good practice. As is co-locating data and the methods that relate to it -- that's just encapsulation! And this is of course true.
 
 Evans himself has been quick to note that DDD is not a completely new approach to creating systems, but rather:
@@ -270,11 +270,11 @@ This concludes my brief look at the design of Value Objects. In [Part 2]({{ "/20
 
 <hr />
 
-###<a name="notes"></a>Notes
+### <a name="notes"></a>Notes
 
 1. The project in question was using Java 7. I think `YearMonth` is a good name to use for this concept, but since Java 8 has [a very nice time API](http://docs.oracle.com/javase/8/docs/api/index.html?java/time/package-summary.html) (goodbye Joda-Time!) which, among other things, provides a `YearMonth` class, this is perhaps not so good a choice.
 
-###Resources
+### Resources
 - [Domain-Driven Design: Tackling Complexity in the Heart of Software](http://www.domaindrivendesign.org/books/evans_2003) -- Eric Evans seminal 2003 work on Domain Driven Design.
 
 - [Power Use of Value Objects in DDD](http://www.infoq.com/presentations/Value-Objects-Dan-Bergh-Johnsson) -- A great talk from 2009 by DDD-guru Dan Bergh Johnsson. He works through a detailed example of using Value Objects to simplify a program's architecture.

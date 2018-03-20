@@ -10,14 +10,14 @@ While Jekyll excells at creating blog-centric static sites, its not so clear fro
 
 ![Image alt]({{ site.baseurl }}/img/2015-02-18-conference-alice.png "a page from the sample site")
 
-###Jekyll folder structure
+### Jekyll folder structure
 Creating a new Jekyll site can be done by running `jekyll new my-site-name`, which creates a ready made structure with some sample data that can be immediately viewed using `jekyll serve`. To keep it as clean as possible, I've created a minimal structure by hand instead. At minimum, Jeckyll needs a `_config.yml` file and a page to serve. I've added folers for `_layouts` and `_includes`.
 
 Here is the final folder structure containing all the files needed to create the site. Notice there is no mention of posts.
 
 ![Image alt]({{ site.baseurl }}/img/2015-02-18-folders.png "the folder structure")
 
-###The markdown
+### The markdown
 
 Each page on the site is generated from a markdown document (with the `.md` suffix). Adding a new page to the site is as simple as dropping a new markdown document into the site root and regenerating. Here is the markdown document for the welcome page `index.md`:
 
@@ -36,7 +36,7 @@ Each page on the site is generated from a markdown document (with the `.md` suff
 
 The main part of the document is the content itself, specified in markdown. At the top of the document we have some meta-data in the form of YAML Front Matter stating each pages `title`, which `layout` template to use, and a custom `menu-order` variable which we use to sort the navigation. I've decided to go up in 10s because it gives us room to add new pages later without having to edit existing markdown documents.
 
-###The template
+### The template
 Because this page has specified `layout: default` Jekyll knows to look in the `_layouts` folder for `default.html` and create the page using this template. `default.html` is used by all of our pages. It defines the page structure using HTML, Liquid includes, and some CSS classes to make it a little prettier:
 
 	{% raw %}
@@ -83,7 +83,7 @@ Because this page has specified `layout: default` Jekyll knows to look in the `_
 	</html>
 	{% endraw %}
 
-###The dynamic page menu
+### The dynamic page menu
 To keep this modular I've included the header, footer and sidebar in separate html files in the `_includes` folder. Jekyll knows to look there for any included files. `sidebar.html` contains the dynamically generated menu:
 
 	<div class="sidebar" id="sidebar">
@@ -105,7 +105,7 @@ Jekyll contains a list of all the pages it knows about in a `site.pages` variabl
 
 We can now add other pages to the site, remove, and edit pages via manipulation of the  markdown documents.
 
-###Why this is good
+### Why this is good
  The benefit of this approach is:
  
 - updating the site now soley revolves around creating new markdown documents and editing existing ones. Should a speaker change, or a new speaker join, we just change the markdown documents, re-generate, and push to GitHub
@@ -117,5 +117,5 @@ We can now add other pages to the site, remove, and edit pages via manipulation 
 	- no usernames and passwords
 	- the list goes on ...
 
-###Summary
+### Summary
 Jekyll provides a simple/powerful way of generating static sites from markdown documents. The nature of markdown means that it is both secure, and easy for non-developers to use. Combined with Github Pages, its a very convenient way to get a website workflow up and running quickly and for free. 

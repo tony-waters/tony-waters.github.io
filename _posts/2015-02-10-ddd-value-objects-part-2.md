@@ -12,7 +12,7 @@ In my [previous post]({{ "/2015/02/05/ddd-value-objects-part-1.html" | prepend: 
 
 In this example I'm using H2 as the database and Hibernate as the JPA provider. It has also been tested with EclipseLink. [Source code](https://github.com/tony-waters/example-value-objects) is available on GitHub. 
 
-###Mapping a Value Object in JPA using @Embeddable
+### Mapping a Value Object in JPA using @Embeddable
 The JPA Specification recognises that not everything is an Entity:
 
 >An entity may use other fine-grained classes to represent entity state. Instances of these classes, unlike entity instances, do not have persistent identity of their own. Instead, they exist only as part of the state of the entity to which they belong
@@ -87,7 +87,7 @@ create table FOO (
 )
 {% endhighlight %}
 
-###Overiding JPA Attributes in Value Objects
+### Overiding JPA Attributes in Value Objects
 If we wanted to use the same Value Object in two places in the same Entity, this would give us two columns with the same name, which would be invalid. Neither would this work if we wanted a different column name depending on the Entity the Value Object is embedded into. 
 
 JPA provides the `@AttributeOverride` annotation for this purpose. As the name suggests, it is used to override the mapping of an Entity field, to allow for a different configuration in the database table:
@@ -117,7 +117,7 @@ create table FOO (
 
 The presence of `AttributeOverride` means an Entity can specify its own configuration for any `Embeddable` classes it uses. Which makes `Embeddables` re-usable across any number of Entities.
 
-###Overiding JPA Attributes in Composite Value Objects
+### Overiding JPA Attributes in Composite Value Objects
 In [part 1]({{ "/2015/02/05/ddd-value-objects-part-1" | prepend: site.baseurl }}) of this post I gave the  example of `MonthRange` as a composite Value Object. Here is what it looks like as an `Embeddable`:
 
 {% highlight java linenos %}
@@ -197,7 +197,7 @@ create table FOO (
 )
 {% endhighlight %}
 
-###Collections of Embeddables
+### Collections of Embeddables
 >A persistent field or property of an entity or embeddable class may correspond to a collection of a basic type or embeddable class 
 >
 > ~ JSR 338 (Java Persistence API 2.1)
@@ -245,7 +245,7 @@ An important restriction on collections of `Embeddable` classes is that:
 
 Which means we cannot nest a collection of `Embeddables` within another collection of `Embeddables`. While this restriction may seem like an 'edge case', it can sometimes force us to use an Entity in place of a Value Object.
 
-###Conclusion
+### Conclusion
 In Part 1 of this post I looked at the Domain Driven Design concept of Value Objects and outlined a way of creating such an object by following Eric Evans' advice. In this follow-up post I have tried to show how `Embeddables` provide an obvious means of mapping Value Objects to a relational database when using JPA.
 
 I've also tried to show how producing these mappings is not always such a 'clean' process. Compromises have to be made between the tenents of DDD and the platform used for its implementation.
