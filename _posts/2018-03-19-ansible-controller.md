@@ -108,7 +108,7 @@ pipelineJob('pingchecks') {
 {% endraw %}
 {% endhighlight %}
 
-You may notice that I've set this job to automatically run every 2 minutes. Make this a manual job if it suits. Any number of jobs can be added here.
+You may notice that I've set this job to automatically run every 2 minutes. Make this a manual job if it suits. Any number of jobs can be added here - just copy and paste the 'pipelineJob' code.
 
 ## Nginx
 The final component is Nginx. We want Nginx to serve the JSON files created by the Ansible ping checks.
