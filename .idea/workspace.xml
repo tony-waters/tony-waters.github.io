@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42974946-98e8-427d-a336-561a4d839486" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2018-03-19-ansible-controller.md" beforeDir="false" afterPath="$PROJECT_DIR$/in_progress/2018-03-19-ansible-controller.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/about.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/in_progress/2018-03-19-ansible-controller.md" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -34,7 +32,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="about.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="about.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/about.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="441">
@@ -43,16 +41,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="2018-03-19-ansible-controller.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/in_progress/2018-03-19-ansible-controller.md">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="23" column="76" selection-start-line="23" selection-start-column="76" selection-end-line="23" selection-end-column="76" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="2019-01-12-insta-nexus.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="2019-01-12-insta-nexus.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/_posts/2019-01-12-insta-nexus.md">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="378">
@@ -153,6 +142,9 @@
     <property name="ignore_missing_gitignore" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\tony.waters\src-github\tony-waters.github.io\in_progress" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\tony.waters\src2\tony-waters.github.io\_posts" />
     </key>
@@ -389,20 +381,6 @@
     <entry file="file://$PROJECT_DIR$/_posts/2015-02-10-ddd-value-objects-part-2.md" />
     <entry file="file://$PROJECT_DIR$/_posts/2015-03-11-spring-security-users-roles-permissions.md" />
     <entry file="file://$PROJECT_DIR$/_posts/2015-03-28-directives-as-components-1.md" />
-    <entry file="file://$PROJECT_DIR$/about.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/in_progress/2018-03-19-ansible-controller.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="23" column="76" selection-start-line="23" selection-start-column="76" selection-end-line="23" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_layouts/about.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -420,6 +398,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="18" column="50" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/in_progress/2018-03-19-ansible-controller.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="18" column="29" lean-forward="true" selection-end-line="168" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/about.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
         </state>
       </provider>
     </entry>
