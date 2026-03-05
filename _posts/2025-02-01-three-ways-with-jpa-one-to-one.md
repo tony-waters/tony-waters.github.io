@@ -1,43 +1,82 @@
 ---
-description: "Programming and DevOps; using Ansible, Docker, Java, Spring, and AngularJS"
+description: "5 variants on a JPA @OneToOne relationship"
 layout: post
 ---
 
-Of all the JPA relationships  ...
-JPA @OneToOne relationships can be mapped in a surprising number of ways/variants.
+JPA @OneToOne relationships can be mapped in a surprising number of ways. 
+In this guide we will explore 5 variants using a simple Customer–Profile
+relationship as an example.
 
-I have outlined 5 such variants [here - github repo].
+[Customer ──1:1── Profile diagram]
 
-There is no one best variant because it all depends on project requirements.
-Fortunately, JPA gives us a variety of ...
+You can find the variants [here].
 
-At the JPA Entity level we deal with the Object to Relational mapping.
-So we inevitably deal with both Relational Database-level factors,
-and Java Object-level factors.
+At the object level the model is straightforward: a Customer has a Profile.
 
-In order to map our Customer/Profile relationship, 
-and understand the differences between these 5 examples,
- it can be useful to think of Customer and Profile in terms of: 
+<pre>
+public class Customer {
+    ...
+    private Profile profile;
+    ...
+}
+</pre>
 
-(1) the Owning side of the relationship: is Customer or Profile looking after the FK in the DB?
-(2) the Parent side of the relationship: is Profile and instance variable in Customer, or vice versa?
+However, when we map this model using JPA we must consider both domain/object-model concerns
+and relational database concerns. 
+These two perspectives do not always align perfectly, 
+and the mapping choices we make often involve trade-offs between them.
 
-The Parent side of the relationship is usually (but doent have to be) ...
+From a domain/object-modelling perspective, 
+we can view Customer and Profile as existing in a parent–child relationship. 
+In this design the Customer acts as the parent (or aggregate root) 
+and Profile is a dependent child. 
+The lifecycle of Profile is therefore controlled by Customer.
 
-(3) the side in control of the lifecycle.
+In object-oriented terms it is natural for lifecycle operations to be initiated 
+through the parent entity:
 
-With that in mind, lets look at variant A.
+<pre>
+public Profile createProfile();
+public void removeProfile();
+</pre>
 
-## Variant A: uses FK and unique
+This approach keeps domain invariants in one place 
+and prevents external code from manipulating the child entity directly.
 
-Customer is Owner
-Customer is Parent
-Customer controls lifecycle
+From a database perspective, the key concept is the owning side of the relationship. 
+In JPA, the owning side is simply the entity that holds the foreign key column.
+
+Importantly, the owning side does not have to correspond to the parent or child
+in the domain model. 
+The placement of the foreign key is usually determined by factors such as database design, 
+existing schema constraints, or performance considerations.
+
+For this reason there are several valid ways to map the same Customer–Profile relationship
+in JPA, even though the domain model remains unchanged or similar. 
+In the sections that follow we will examine a number of these alternatives 
+and discuss the implications of each approach.
+
+Variant	Relationship	FK Location	Bidirectional	Uses @MapsId
+A	FK + unique	Customer	Yes	No
+B	FK + unique	Profile	Yes	No
+C	Shared PK	Profile	Yes	Yes
+D	FK + unique	Customer	No	No
+E	Shared PK	Profile	No	Yes
+
+The five variants below differ only in how the database relationship is mapped.
+The domain model — a Customer with a Profile — remains essentially the same.
+
+## Variant A: Foreign Key in Customer
+
+One important distinction is between the owning side of the relationship (a database concept)
+and the parent entity in the domain model (a lifecycle concept).
+These are often the same entity, but they do not have to be.
+
+In Variant A Customer is Owner.
 
 ### Customer is Owner
 
-'Owner' is from a Database-Centric perspective. 
-The Customer entity is the Owner because it controls the JOIN column in the Database@
+The Customer entity is the Owner because it controls the JOIN column in the Database:
 
 <pre>
     @JoinColumn( // '@JoinColumn / @JoinTable' is on the Owning Side
@@ -59,10 +98,6 @@ This makes Profile the 'not Owner' or 'Inverse' side of the relationship:
 
 It produces this table structure:
 
-[DB tables]
-
-or ...
-
 <pre>
 Hibernate: 
     create table customera (
@@ -82,8 +117,8 @@ Hibernate:
 We can clearly see that the Owning side is the Customer table, 
 as it contains the FK for the Profile.
 
-It is also worth noting that in order to enforce a one-to-one relationship
-in the Database, we must also make customerA.profile_id unique in the customer_a table.
+Because relational databases do not have a native “one-to-one” constraint, 
+the foreign key column must also be unique to prevent multiple rows referencing the same parent.
 This can be seen in the DDL above.
 It is enforced in JPA by:
 
@@ -98,16 +133,13 @@ It is enforced in JPA by:
 ### Customer is Parent
 
 
-## Variant B: uses FK and unique
+## Variant B: Foreign Key in Profile
 
 Profile is Owner
-Customer is Parent
-Customer controls lifecycle
-
 
 ### Profile is Owner
 
-For Variant-B the Profile holds the JOIN column:
+For Variant-B the Profile is the Owner and holds the JOIN column:
 
 <pre>
     @OneToOne(optional = false) // avoid the eager fetching
@@ -197,11 +229,9 @@ it does not prevent Customer being the Parent:
 
 [wxplain @MapsId]
 
-## Variant C: uses @MapsId
+## Variant C: Shared Primary Key (@MapsId)
 
 Profile is Owner
-Customer is the Parent
-Customer controls lifecycle
 
 ### Profile is the Owner
 
@@ -214,7 +244,7 @@ Also note the @MapsId annotation and that @Id has bo generator.
     private Long id; // no @GeneratedValue — comes from Customer via @MapsId
 
     // Owning side
-    @OneToOne(optional = false) // TODO: avoid the eager fetching?
+    @OneToOne(optional = false)
     @MapsId
     @JoinColumn(
             name = "customer_id",
@@ -368,3 +398,217 @@ Hibernate:
         primary key (customer_id)
     )
 </pre>
+
+## Conclusion
+
+As we have seen, the same domain relationship can be mapped in several different ways in JPA.
+The best choice depends on factors such as database structure, lifecycle control, 
+and how the entities are accessed in the application.
+Understanding the distinction between owning side, foreign key placement, 
+and domain lifecycle control makes these choices much clearer.
+
+## Which variant should you use?
+
+As we have seen, there are several valid ways to map a one-to-one relationship in JPA.
+All five variants represent the same domain concept — a Customer with a Profile — 
+but they differ in how the relationship is represented in the database and in the entity model.
+
+The best choice depends on your domain requirements, database structure, 
+and how the entities are used in your application.
+
+## Variant A — Foreign key in Customer
+
+This is often the simplest and most intuitive mapping.
+
+The parent (Customer) holds the foreign key to the child (Profile), 
+which aligns well with the domain model where the parent controls the lifecycle of the child.
+
+This variant is a good default when:
+
+- Customer is clearly the aggregate root
+- Profile is optional
+- you want straightforward mapping and queries
+
+## Variant B — Foreign key in Profile
+
+Here the foreign key moves to the child table.
+
+This can be useful when:
+
+- the child entity logically belongs to the parent but
+- the database design prefers the FK to be stored on the child side
+
+This pattern also appears when integrating with an existing schema 
+where the relationship is already defined this way.
+
+Importantly, even though the database owning side is Profile, 
+the domain parent can still be Customer.
+
+## Variant C — Shared primary key (@MapsId)
+
+This variant creates a strong one-to-one dependency by sharing the same primary key 
+between the two tables.
+
+Profile cannot exist without Customer.
+
+This approach is useful when:
+
+- the child entity is tightly coupled to the parent
+- the relationship is mandatory
+- you want the database schema to enforce that dependency
+
+It is a very clean model for dependent entities.
+
+## Variant D — Unidirectional Customer → Profile
+
+This variant removes the back reference from Profile to Customer.
+
+The database structure is similar to Variant A, but the object model 
+becomes simpler because only the parent knows about the relationship.
+
+This is often desirable when:
+
+- the child entity does not need to navigate back to the parent
+- you want to keep the entity model minimal
+
+Unidirectional mappings can also reduce accidental coupling in the domain model.
+
+## Variant E — Unidirectional Profile → Customer with @MapsId
+
+This is the inverse of Variant D: the child references the parent, 
+but the parent does not reference the child.
+
+This style is sometimes used when:
+
+- the relationship is conceptually owned by the child
+- the parent should not expose the relationship in its API
+- the child is loaded independently
+
+It is less common for aggregate-style models, but it can be useful in some designs.
+
+## A practical rule of thumb
+
+In many domain-driven designs, a Customer clearly acts as the aggregate root, 
+and Profile is a dependent part of that aggregate.
+
+For that reason, many applications naturally gravitate toward:
+
+- Variant A (FK in the parent), or
+- Variant C (@MapsId with a shared primary key)
+
+These options align well with the idea that the parent controls the lifecycle of the child.
+
+However, the other variants remain useful when working with existing schemas, 
+different navigation requirements, or alternative modelling preferences.
+
+Understanding the different mapping strategies makes it easier to adapt your JPA model 
+to the needs of your application.
+
+## Common pitfalls with @OneToOne in JPA
+
+Although @OneToOne relationships appear simple, 
+they can behave in unexpected ways if some important details are overlooked.
+
+1. One-to-one is not enforced automatically in the database
+
+In relational databases there is no native “one-to-one” constraint. 
+A typical implementation is simply a foreign key, 
+which by itself only guarantees a many-to-one relationship.
+
+To enforce a true one-to-one relationship the foreign key column must also be unique.
+
+For example:
+
+@JoinColumn(
+name = "profile_id",
+unique = true
+)
+private Profile profile;
+
+This results in a schema similar to:
+
+profile_id bigint unique
+
+Without the unique constraint the database would allow multiple rows 
+to reference the same profile.
+
+2. @OneToOne defaults to eager fetching
+
+According to the JPA specification, @OneToOne relationships are eager by default:
+
+@OneToOne(fetch = FetchType.EAGER)
+
+This can lead to unexpected queries or unnecessary joins when loading entities.
+
+Some developers prefer to explicitly specify:
+
+@OneToOne(fetch = FetchType.LAZY)
+
+However, lazy loading for @OneToOne is provider dependent and may require bytecode 
+enhancement or additional configuration in some environments.
+
+3. The owning side is not the same as the parent
+
+It is easy to assume that the owning side of the relationship 
+should also be the parent in the domain model, but this is not required.
+
+The owning side is simply the entity that holds the foreign key column.
+
+For example:
+
+@OneToOne
+@JoinColumn(name = "customer_id")
+private Customer customer;
+
+Here Profile is the owning side, but the domain model may still treat Customer
+as the parent that controls the lifecycle.
+
+Keeping this distinction clear helps avoid confusion when designing entity relationships.
+
+4. @MapsId changes how identifiers are generated
+
+When using @MapsId, the child entity does not generate its own identifier.
+
+Instead, it reuses the identifier of the parent entity.
+
+@Id
+private Long id;
+
+@OneToOne
+@MapsId
+@JoinColumn(name = "customer_id")
+private Customer customer;
+
+In this model the child’s primary key is also the foreign key.
+
+This can simplify the schema and strongly enforce the dependency between 
+the two entities, but it also means the child cannot be persisted independently.
+
+5. Bidirectional relationships must be kept in sync
+
+When a relationship is bidirectional, both sides of the association 
+must be kept consistent in the entity model.
+
+For example:
+
+customer.setProfile(profile);
+profile.setCustomer(customer);
+
+If only one side is updated, the in-memory model may become inconsistent 
+until the persistence context is flushed.
+
+For this reason many designs provide helper methods on the parent entity 
+to manage the relationship.
+
+## Summary
+
+JPA provides several ways to map a @OneToOne relationship, 
+each with slightly different trade-offs.
+
+Understanding how the owning side, foreign keys, lifecycle control, 
+and identifier strategies interact makes it much easier to choose the right mapping 
+for a given situation.
+
+The five variants explored in this guide demonstrate how the same domain relationship 
+can be expressed in multiple ways at the persistence level.
+
