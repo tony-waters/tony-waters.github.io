@@ -30,7 +30,7 @@ From a domain/object-modelling perspective,
 we can view Customer and Profile as existing in a parent–child relationship. 
 In this design the Customer acts as the parent (or aggregate root) 
 and Profile is a dependent child. 
-The lifecycle of Profile is therefore controlled by Customer.
+The lifecycle of Profile is tied to Customer.
 
 In object-oriented terms it is natural for lifecycle operations to be initiated 
 through the parent entity:
@@ -53,10 +53,28 @@ existing schema constraints, or performance considerations.
 
 For this reason there are several valid ways to map the same Customer–Profile relationship
 in JPA, even though the domain model remains unchanged or similar. 
-In the sections that follow we will examine a number of these alternatives 
+In the sections that follow we will examine 5 of these alternatives 
 and discuss the implications of each approach.
 
 ## Variants covered in this guide:
+
+The 3 main methods of mapping a bidirectional @OneToOne relationship are
+1. using a foreign Key and Unique constraint
+2. using a Shared Primary Key
+3. using a JOIN table
+
+The last option creates an additional (arguably unnecessary) table
+so is likely only used if working with a legacy system.
+This leaves us 4 main ways of representing a @OneToOne bidirectional relationship between
+Customer and Profile.
+If we include unidirectional relationships as well, that makes 6 permutations:
+
+- Variant A - Customer is Owner | bidirectional | Foreign Key and unique constraint
+- Variant B - Profile is Owner | bidirectional | Foreign Key and unique constraint
+- Variant C - Customer is Owner | bidirectional | Shared Primary Key
+- Variant D - Profile is Owner | bidirectional | Shared Primary Key
+- Variant E - Customer is Owner | unidirectional
+- Variant F - Profile is Owner | unidirectional
 
 - Variant A — FK in Customer
 - Variant B — FK in Profile
@@ -71,8 +89,14 @@ C	Shared PK	Profile	Yes	Yes
 D	FK + unique	Customer	No	No
 E	Shared PK	Profile	No	Yes
 
-The five variants below differ only in how the database relationship is mapped.
-The domain model — a Customer with a Profile — remains essentially the same.
+The five variants below differ in how the database relationship is mapped.
+The domain model — a Customer with a Profile — remains mostly the same.
+The only exception is the last variant, E.
+Here Customer does not know about Profile.
+
+## Understanding Lazy Loading in @OneToOne relationships
+
+
 
 ## Variant A: Foreign Key in Customer
 
@@ -184,8 +208,8 @@ Hibernate:
 Now the Owning side is the Profile table,
 as it contains the FK for the Customer.
 
-And again, to enforce a one-to-one relationship
-in the Database, we must also make customerB.profile_id unique in the customer_b table.
+And again, to enforce a one-to-one relationship in the Database, 
+we must also make customerB.profile_id unique in the customer_b table.
 This can be seen in the DDL above.
 It is enforced in JPA by:
 
