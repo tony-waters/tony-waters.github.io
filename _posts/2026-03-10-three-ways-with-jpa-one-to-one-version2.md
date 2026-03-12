@@ -106,7 +106,7 @@ and cascade rules.
 This structure closely mirrors typical relational design where a dependent entity
 references its parent. 
 Because of this, it is often the most natural and widely used 
-> one-to-one mapping in real applications.
+one-to-one mapping in real applications.
 
 Schema
 customer_b
@@ -121,6 +121,7 @@ Mapping
 
 Child owns the relationship:
 
+``` java
 @OneToOne(optional = false)
 @JoinColumn(
 name = "customer_id",
@@ -128,15 +129,19 @@ nullable = false,
 unique = true
 )
 private CustomerB customer;
+```
 
 Parent contains the inverse side:
 
+``` java
 @OneToOne(
 mappedBy = "customer",
 cascade = CascadeType.ALL,
 orphanRemoval = true
 )
 private ProfileB profile;
+```
+
 Behaviour
 
 Saving the parent cascades to the child.
@@ -154,6 +159,15 @@ profile.customer_id → customer.id
 For many domains this feels like the most intuitive relational design.
 
 ## Variant C — Bidirectional Shared Primary Key (@MapsId)
+
+> Variant C uses a shared primary key relationship, 
+where the child entity’s primary key is also a foreign key to the parent.
+This is implemented using the `@MapsId` annotation, 
+meaning the child’s identity is derived directly from the parent’s identifier.
+This pattern represents strong composition: the child cannot exist
+independently and always shares the same identifier as the parent.
+It is commonly used for tightly coupled domain objects such as configuration 
+or detail records.
 
 Variant C introduces shared identity.
 
@@ -210,6 +224,15 @@ Order → OrderAudit
 
 ## Variant D — Unidirectional with Foreign Key in Parent
 
+> Variant D is a unidirectional relationship where the parent stores the foreign key 
+and the child has no back-reference.
+Only the parent entity can navigate to the child. 
+The child does not know which parent references it.
+This produces a simpler object model because there is no bidirectional relationship 
+to keep synchronized. 
+Lifecycle operations are controlled entirely by the parent 
+through cascade and orphan removal.
+
 Variant D removes the back-reference.
 
 Only the parent navigates to the child.
@@ -246,6 +269,13 @@ Removing the profile deletes the child row.
 
 ## Variant E — Unidirectional with Foreign Key in Child
 
+> Variant E is a unidirectional relationship where the child stores 
+the foreign key and references the parent, but the parent does not reference the child.
+This means navigation only exists from the child to the parent.
+Because the parent has no knowledge of the child, 
+the relationship is typically managed at the service or application layer, 
+which must ensure that entities are persisted and deleted in the correct order.
+
 Variant E keeps the foreign key in the child table but removes parent navigation.
 
 Schema
@@ -279,6 +309,15 @@ Customer saved
 Profile created referencing customer
 
 ## Variant F — Unidirectional Shared Primary Key
+
+> Variant F combines a shared primary key relationship with a unidirectional association.
+The child entity uses the parent’s identifier as its primary key 
+through `@MapsId`, but the parent does not hold a reference to the child.
+This produces a very strict dependency: 
+the child cannot exist without the parent, 
+but the parent does not need to know about the child in the object model.
+It is useful for modelling strongly dependent entities 
+where navigation from parent to child is unnecessary.
 
 Variant F combines shared identity with a unidirectional relationship.
 
