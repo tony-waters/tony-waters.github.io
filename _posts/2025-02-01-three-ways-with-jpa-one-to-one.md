@@ -4,7 +4,7 @@ layout: post
 ---
 
 JPA @OneToOne relationships can be mapped in a surprising number of ways. 
-In this guide we will explore 5 variants using a simple Customer–Profile
+I want to explore 6 variants using a simple Customer–Profile
 relationship as an example.
 
 [Customer ──1:1── Profile diagram]
@@ -12,6 +12,7 @@ relationship as an example.
 You can find the variants [here].
 
 At the object level the model is straightforward: a Customer has a Profile.
+Commonly expressed like this:
 
 <pre>
 public class Customer {
@@ -21,7 +22,7 @@ public class Customer {
 }
 </pre>
 
-However, when we map this model using JPA we must consider both domain/object-model concerns
+When we map this model using JPA we must consider both domain/object-model concerns
 and relational database concerns. 
 These two perspectives do not always align perfectly, 
 and the mapping choices we make often involve trade-offs between them.
@@ -40,7 +41,7 @@ public Profile createProfile();
 public void removeProfile();
 </pre>
 
-This approach keeps domain invariants in one place 
+This keeps domain invariants in one place 
 and prevents external code from manipulating the child entity directly.
 
 From a database perspective, the key concept is the owning side of the relationship. 
@@ -49,7 +50,7 @@ In JPA, the owning side is simply the entity that holds the foreign key column.
 Importantly, the owning side does not have to correspond to the parent or child
 in the domain model. 
 The placement of the foreign key is usually determined by factors such as database design, 
-existing schema constraints, or performance considerations.
+existing schema constraints, and performance considerations.
 
 For this reason there are several valid ways to map the same Customer–Profile relationship
 in JPA, even though the domain model remains unchanged or similar. 
@@ -82,12 +83,19 @@ If we include unidirectional relationships as well, that makes 6 permutations:
 - Variant D — Unidirectional Customer → Profile
 - Variant E — Unidirectional Profile → Customer
 
-Variant	Relationship	FK Location	Bidirectional	Uses @MapsId
-A	FK + unique	Customer	Yes	No
-B	FK + unique	Profile	Yes	No
-C	Shared PK	Profile	Yes	Yes
-D	FK + unique	Customer	No	No
-E	Shared PK	Profile	No	Yes
+                     Direction
+               ┌───────────────┬───────────────┐
+               │ Bidirectional │ Unidirectional│
+┌──────────────┼───────────────┼───────────────┤
+│ FK in Parent │   Variant A   │   Variant D   │
+│ FK in Child  │   Variant B   │   Variant E   │
+│ Shared PK    │   Variant C   │   Variant F   │
+└──────────────┴───────────────┴───────────────┘
+
+Variants A-D are Parent-managed aggregate style.
+Variants E and F are Service-managed.
+Note that in Unidirectional variants E and F lifecycle management
+is moved from the Customer entity to the Service layer.
 
 The five variants below differ in how the database relationship is mapped.
 The domain model — a Customer with a Profile — remains mostly the same.
@@ -508,6 +516,11 @@ Hibernate:
         primary key (customer_id)
     )
 </pre>
+
+## VariantF — unidirectional shared primary key (@MapsId), service-managed
+
+Unidirectional shared-primary-key mapping, 
+with lifecycle managed in the service layer rather than in the parent entity.
 
 ## Which variant should you use?
 
