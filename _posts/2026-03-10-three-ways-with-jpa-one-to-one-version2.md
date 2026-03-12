@@ -10,7 +10,6 @@ For a seemingly straightforward JPA annotation,
 I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings 
 using a simple Customer–Profile relationship:
 
-
 [Customer ──1:1── Profile diagram]
 
 In practice, mapping `@OneToOne` relationships can be considered in relation to
@@ -19,6 +18,36 @@ three decisions:
 - Where the foreign key lives (`Parent` or `Child`)
 - Whether the `Child` shares the `Parent` primary key
 - Whether the relationship is `Bidirectional` or `Unidirectional`
+
+### Where the foreign key lives
+
+There are two options here.
+Either the foreign key lives in the Parent (Customer) or in the Child (Profile).
+The side the foreign key lives in is called the 'Owning side'
+as it 'owns' the relationship from the database perspective.
+While the other side of the relationship is called the 'Inverse side'
+and (in a Bidirectional relationship) uses 'mappedBy' to point to the Owning side.
+
+Here is an example of the Parent (Customer) being the Owning side (holding the foreign key):
+
+[example]
+
+Similarly, if the Child (Profile) is the Owning side it contains the foreign key / join column:
+
+[example]
+
+Variants xxx are examples of the foreign key living in the Parent.
+Variants xxx show the foreign key living in the Child.
+
+Note that locating the foreign key in the Child is usually more natural
+as the Child depends on the Parent.
+Though this is not a requirement.
+
+### Whether the `Child` shares the `Parent` primary key
+
+### Whether the relationship is `Bidirectional` or `Unidirectional`
+
+## The 6 variants
 
 This produces 6 variants:
 
@@ -34,8 +63,8 @@ This produces 6 variants:
 This article walks through these six `@OneToOne` mapping patterns,
 showing how they differ and offering suggestions on when to use each.
 
-If you just want a practical default, and want to skip the details,
-[Variant B](#variantB) is probably a good option.
+(If you just want a practical default, and want to skip the details,
+[Variant B](#variantB) is probably a good option.)
 
 All examples come from a 
 [working repository](https://github.com/tony-waters/spring-jpa-one-to-one)
@@ -53,14 +82,11 @@ but the database link is stored on the parent row.
 It can work well when the parent logically "contains" the child, 
 although storing the foreign key in the parent is less common in relational modelling.
 
-
 In this variant:
 
-the parent table stores the foreign key
-
-both entities reference each other
-
-lifecycle is controlled by the parent
+- the parent table stores the foreign key
+- both entities reference each other
+- lifecycle is controlled by the parent
 
 Schema
 customer_a
@@ -142,7 +168,7 @@ orphanRemoval = true
 private ProfileB profile;
 ```
 
-Behaviour
+### Behaviour
 
 Saving the parent cascades to the child.
 
@@ -358,25 +384,25 @@ F	Unidirectional	Shared PK	Yes	Child	Child only	Caller-managed
 
 ## Common Mistakes with One-to-One Relationships
 
-### 1. Not understanding the owning side
+### 1. Not understanding the `Owning side`
 
 Only the side with @JoinColumn controls the foreign key.
 
 Changing the inverse side alone does not update the database.
 
-### 2. Forgetting the unique constraint
+### 2. Forgetting the `unique` constraint
 
 A one-to-one relationship must be enforced at the database level.
 
 Without a unique constraint, the relationship becomes one-to-many.
 
-### Misusing shared primary keys
+### 3. Misusing shared primary keys
 
 @MapsId tightly couples the child identity to the parent.
 
 Use it only when the child truly depends on the parent.
 
-### Treating entities as simple data containers
+### 4. Treating entities as simple data containers
 
 Entities should enforce domain invariants.
 
@@ -389,6 +415,10 @@ throw new IllegalStateException("Customer already has a Profile");
 this.profile = new Profile(marketingOptIn);
 return profile;
 }
+
+### 5. Assuming Lazy Loading works
+
+lazyLoading_inverseSide_stillTriggersJoinQuery() 
 
 ## Repository
 
@@ -418,7 +448,8 @@ Understanding these design choices makes one-to-one relationships in JPA far mor
 In many applications, Variant B (bidirectional with FK in the child) provides
 the most natural model.
 
-Shared primary keys (@MapsId) are powerful but should be reserved for tightly coupled relationships.
+Shared primary keys (@MapsId) are powerful but should be reserved for tightly 
+coupled relationships.
 
 ## <a name="notes"></a>Notes
 1. I purposefully do not include using a JOIN table here. 
