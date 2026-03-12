@@ -1,47 +1,26 @@
-# Six Ways to Map One-to-One Relationships in Spring Boot JPA
+---
+layout: post
+title: Six Ways to Map One-to-One Relationships in Spring Boot JPA
+tags: [JPA, @OneToOne]
+header-img: "img/jekyll2.jpg"
+---
 
-One-to-one relationships in JPA look simple at first glance. 
-The annotation itself is straightforward:
+For a seemingly straightforward JPA annotation,
+`@OneToOne` relationships can be mapped in a surprising number of ways.
+I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings 
+using a simple Customer–Profile relationship:
 
-<sup>[[1]](#notes)</sup>
 
-``` java
-@OneToOne
-private Profile profile;
-```
+[Customer ──1:1── Profile diagram]
 
-But the real design decisions are not in the annotation. 
-They are in the database structure and ownership model behind it.
+In practice, mapping `@OneToOne` relationships can be considered in relation to
+three decisions:
 
-In practice, there are several structurally different ways
-to model a one-to-one relationship. Each leads to slightly different behaviour in:
+- Where the foreign key lives (`Parent` or `Child`)
+- Whether the `Child` shares the `Parent` primary key
+- Whether the relationship is `Bidirectional` or `Unidirectional`
 
-- database schema
-- entity lifecycle
-- cascade rules
-- deletion behaviour
-- navigation between entities
-
-Many tutorials show only one approach. In real systems you will encounter several.
-
-This article walks through six common one-to-one mapping patterns in Spring Boot JPA,
-showing how they differ and when to use each.
-
-All examples come from a working repository with @DataJpaTest tests
-verifying both entity behaviour and database schema.
-
-Repository:
-https://github.com/tony-waters/spring-jpa-one-to-one
-
-## The Six Variants
-
-Every one-to-one relationship is defined by three structural decisions:
-
-- Where the foreign key lives
-- Whether the relationship is bidirectional or unidirectional
-- Whether the child shares the parent’s primary key
-
-Combining these produces six common patterns.
+This produces 6 variants:
 
                      Direction
                ┌───────────────┬───────────────┐
@@ -52,86 +31,28 @@ Combining these produces six common patterns.
 │ Shared PK    │   Variant C   │   Variant F   │
 └──────────────┴───────────────┴───────────────┘
 
-Each variant has slightly different behaviour and trade-offs.
+This article walks through these six `@OneToOne` mapping patterns,
+showing how they differ and offering suggestions on when to use each.
 
-## Quick Recommendation
+If you just want a practical default, and want to skip the details,
+[Variant B](#variantB) is probably a good option.
 
-If you just want a practical default:
-
-Use Variant B — Bidirectional relationship with the foreign key in the child.
-
-This pattern usually feels the most natural because:
-
-- the child references the parent
-- the schema reflects the dependency
-- navigation works in both directions
-- lifecycle management is straightforward
-
-Shared primary keys (@MapsId) are useful when the child must share the parent's identity.
-
-Unidirectional relationships are useful when navigation is only needed in one direction.
-
-The rest of this article explains how each variant works.
-
-## The Three Structural Decisions
-
-Before looking at code, it helps to understand the structural choices 
-that define each mapping.
-
-### 1. Where the Foreign Key Lives
-
-The foreign key can exist in either table.
-
-Foreign key in the parent
-
-customer
----------
-id
-profile_id (FK)
-
-Foreign key in the child
-
-profile
----------
-id
-customer_id (FK)
-
-In relational modelling, the child table usually references the parent.
-
-2. Unidirectional vs Bidirectional
-
-A one-to-one relationship can be:
-
-Unidirectional
-
-Customer → Profile
-
-or
-
-Bidirectional
-
-Customer ↔ Profile
-
-Bidirectional relationships allow navigation from either side but require helper methods 
-to keep both sides synchronized.
-
-3. Shared Primary Key (@MapsId)
-
-Instead of generating its own identifier, the child can reuse the parent’s identifier.
-
-customer
----------
-id
-
-profile
----------
-customer_id (PK + FK)
-
-This creates a shared primary key relationship, implemented using @MapsId.
-
-This pattern tightly couples the child to the parent.
+All examples come from a 
+[working repository](https://github.com/tony-waters/spring-jpa-one-to-one)
+with tests verifying both entity behaviour and database schema.
 
 ## Variant A — Bidirectional with Foreign Key in Parent
+
+> Variant A is a bidirectional one-to-one relationship where the foreign key 
+is stored in the parent table.
+The parent entity owns the relationship and controls the lifecycle of the child
+using cascading and orphan removal.
+This design allows navigation in both directions 
+(Customer → Profile and Profile → Customer), 
+but the database link is stored on the parent row.
+It can work well when the parent logically "contains" the child, 
+although storing the foreign key in the parent is less common in relational modelling.
+
 
 In this variant:
 
@@ -175,9 +96,17 @@ Removing the profile deletes the child row due to orphan removal.
 
 Deleting the parent cascades the delete.
 
-## Variant B — Bidirectional with Foreign Key in Child
+## <a name="variantB"></a>Variant B — Bidirectional with Foreign Key in Child
 
-Variant B keeps bidirectional navigation but moves the foreign key to the child table.
+> Variant B is a bidirectional one-to-one relationship where the foreign key
+is stored in the child table.
+The child owns the relationship at the database level, 
+but the parent typically manages lifecycle operations through helper methods
+and cascade rules.
+This structure closely mirrors typical relational design where a dependent entity
+references its parent. 
+Because of this, it is often the most natural and widely used 
+> one-to-one mapping in real applications.
 
 Schema
 customer_b
@@ -453,7 +382,9 @@ the most natural model.
 Shared primary keys (@MapsId) are powerful but should be reserved for tightly coupled relationships.
 
 ## <a name="notes"></a>Notes
-1. Examples of how to do this can be seen [here](http://blog.solidcraft.eu/2011/03/spring-security-by-example-securing.html), [here](http://www.disasterarea.co.uk/blog/protecting-service-methods-with-spring-security-annotations/), and [here](http://www.borislam.com/2012/08/writing-your-spring-security-expression.html).
+1. I purposefully do not include using a JOIN table here. 
+While this is a legitimate way of representing a one-to-one relationship
+it is generally only used in a legacy system   
 
 2. This feature is not available in Spring Security 3.0 (See [here](http://forum.spring.io/forum/spring-projects/security/100708-spel-and-spring-security-3-accessing-bean-reference-in-preauthorize) for discussion and a workaround). It is available 3.1 but you must leave out the `@` symbol. It works as shown in 3.2.
 
