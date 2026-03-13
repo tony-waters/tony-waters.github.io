@@ -12,13 +12,12 @@ but they can introduce subtle performance issues if they are not used carefully.
 
 In particular:
 
-lazy loading may not behave as expected
-
-joins may appear unexpectedly
-
-N+1 queries can still occur
+- lazy loading may not behave as expected
+= joins may appear unexpectedly
+- N+1 queries can still occur
 
 Understanding how Hibernate loads one-to-one associations helps avoid surprises.
+In this post I want to look at this and some potential solutions.
 
 1. Unexpected Eager Loading
 
@@ -76,7 +75,9 @@ List<Customer> findAllWithProfile();
 
 This loads both entities in a single query.
 
-4. Using DTO Projections
+## Solutions
+
+### Using DTO Projections
 
 In many cases it is better to load exactly the data needed using DTO projections.
 
@@ -91,7 +92,9 @@ List<CustomerView> findCustomerViews();
 
 This avoids unnecessary entity loading.
 
-Practical Advice
+### Using Entity Graphs
+
+## Practical Advice
 
 When working with one-to-one relationships:
 
