@@ -5,7 +5,17 @@ tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---
 
-## A Common JPA Pitfall: @OneToOne(fetch = LAZY) Often Doesn't Work
+This is Part 1 of a series of 5 posts about JPA one-to-one relationships.
+
+- @OneToOne(fetch = LAZY) Often Doesn't Work
+- fundamental-decisions-when-creating-jpa-one-to-one-relationships
+- performance-considerations-for-jpa-one-to-one-relationships
+- common-mistakes-with-jpa-one-to-one-relationships
+- 6-ways-to-map-a-jpa-one-to-one-relationship
+
+These examples are drawn from a single repository you can find [here]()
+
+<hr />
 
 Developers often expect that setting FetchType.LAZY will prevent the 
 related entity from being loaded immediately.
@@ -92,4 +102,11 @@ verify behaviour with SQL logging and tests
 
 In many cases, explicit queries or DTO projections are better 
 for controlling fetch behaviour.
+
+## explicit queries
+
+## DTO projections
+
+## Entity Graphs
+
 
