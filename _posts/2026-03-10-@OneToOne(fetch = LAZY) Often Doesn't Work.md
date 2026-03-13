@@ -1,3 +1,10 @@
+---
+layout: post
+title: A Common JPA Pitfall - @OneToOne(fetch = LAZY) Often Doesn't Work
+tags: [JPA, @OneToOne]
+header-img: "img/jekyll2.jpg"
+---
+
 ## A Common JPA Pitfall: @OneToOne(fetch = LAZY) Often Doesn't Work
 
 Developers often expect that setting FetchType.LAZY will prevent the 
@@ -5,8 +12,10 @@ related entity from being loaded immediately.
 
 For example:
 
+``` java
 @OneToOne(fetch = FetchType.LAZY)
 private Profile profile;
+```
 
 However, in many cases Hibernate will still load the related entity eagerly.
 

@@ -86,7 +86,8 @@ Variants xxx are examples of using a shared primary key.
 Bidirectional is convenient for navigation
 But it requires lifecycle helpers to keep both sides consistent
 
-Bidirectional relationships allow navigation from either side, but they require helper methods to keep both sides of the relationship synchronized.
+Bidirectional relationships allow navigation from either side, 
+but they require helper methods to keep both sides of the relationship synchronized.
 
 Unidirectional mappings are simpler, but less expressive.
 
