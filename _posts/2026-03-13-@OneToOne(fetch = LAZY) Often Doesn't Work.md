@@ -5,9 +5,10 @@ tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---
 
-This is Part 1 of a series of 5 posts about JPA one-to-one relationships.
+This is Part 1 of a series of 6 posts about JPA one-to-one relationships.
 
 - @OneToOne(fetch = LAZY) Often Doesn't Work
+- alternatives to relying on lazy loading with JPA one-to-one relationships  
 - fundamental-decisions-when-creating-jpa-one-to-one-relationships
 - performance-considerations-for-jpa-one-to-one-relationships
 - common-mistakes-with-jpa-one-to-one-relationships
