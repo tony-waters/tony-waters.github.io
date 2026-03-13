@@ -1,6 +1,6 @@
 ---
-layout: post
 title: Performance considerations for JPA one-to-one relationships
+layout: post
 tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---

@@ -1,6 +1,6 @@
 ---
-layout: post
 title: Common mistakes with JPA one-to-one relationships
+layout: post
 tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---

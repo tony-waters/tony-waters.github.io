@@ -1,6 +1,6 @@
 ---
-layout: post
 title: Alternatives to Entity-based loading of lazy relationships
+layout: post
 tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---

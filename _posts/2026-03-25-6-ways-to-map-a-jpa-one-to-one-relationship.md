@@ -1,6 +1,6 @@
 ---
-layout: post
 title: Six Ways to Map One-to-One Relationships in Spring Boot JPA
+layout: post
 tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---

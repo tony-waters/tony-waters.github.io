@@ -1,6 +1,6 @@
 ---
-layout: post
 title: A Common JPA Pitfall - @OneToOne(fetch = LAZY) Often Doesn't Work
+layout: post
 tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---
