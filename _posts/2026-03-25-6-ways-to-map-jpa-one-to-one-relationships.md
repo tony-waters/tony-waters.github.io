@@ -481,7 +481,7 @@ Saving both entities results in shared identity:
 customer_f.id = 1
 profile_f.customer_id = 1
 
-### Which Variant Should You Use?
+## Which Variant Should You Use?
 
 After exploring all six variants, the obvious question is:
 
@@ -532,7 +532,7 @@ Both sides of the relationship must be kept consistent, which usually requires h
 
 If navigation from the child is not needed, a unidirectional mapping (Variants D, E, or F) is often simpler.
 
-## Which variat should you use?
+## Which variant should you use?
 
 Which Variant Should You Use?
 
