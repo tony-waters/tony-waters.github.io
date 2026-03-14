@@ -5,91 +5,162 @@ tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---
 
-This is Part 1 of a series of 6 posts about JPA one-to-one relationships.
+> The parent-side @OneToOne association requires bytecode enhancement 
+> so that the association can be loaded lazily. 
+> Otherwise, the parent-side association is always fetched 
+> even if the association is marked with FetchType.LAZY.
+> 
+> [Hibernate Docs](https://docs.hibernate.org/orm/current/userguide/html_single/#best-practices-mapping-associations)
 
-- @OneToOne(fetch = LAZY) Often Doesn't Work
-- alternatives to relying on lazy loading with JPA one-to-one relationships  
-- fundamental-decisions-when-creating-jpa-one-to-one-relationships
-- performance-considerations-for-jpa-one-to-one-relationships
-- common-mistakes-with-jpa-one-to-one-relationships
-- 6-ways-to-map-a-jpa-one-to-one-relationship
 
-These examples are drawn from a single repository you can find [here]()
+Developers often expect that setting FetchType.LAZY on a Parent
+entity will prevent the related Child entity from being loaded immediately.
+But as the above quote suggests, 
+this is not always the case.
+If the Parent is the Inverse side of a one-to-one relationship,
+the Child entity is fetched eagerly regardless of the `FetchType.LAZY` annotation.
 
-<hr />
+This behaviour can be surprising.
 
-Developers often expect that setting FetchType.LAZY will prevent the 
-related entity from being loaded immediately.
-
-For example:
+Lets demonstrate this using the following Parent class `Customer`:
 
 ``` java
-@OneToOne(fetch = FetchType.LAZY)
-private Profile profile;
+public class CustomerB {
+...
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            mappedBy = "customer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private ProfileB profile;
+...
+}
 ```
 
-However, in many cases Hibernate will still load the related entity eagerly.
+... and its associated Child class `Profile`:
 
-This behaviour surprises many developers.
+``` java
+public class ProfileB {
+...
+    @OneToOne(
+            optional = false
+    )
+    @JoinColumn(
+            name = "customer_id",
+            nullable = false,
+            unique = true
+    )
+    private CustomerB customer;
+...
+}
+```
 
-### Why This Happens
+If we run a simple test:
+
+``` java
+Customer loaded = customerRepository.findById(1L).orElseThrow();
+```
+
+And look at the SELECT this produces:
+
+``` sql
+select
+    p.id,
+    p.customer_id,
+    c.id
+from
+    profile_b p
+join
+    customer c
+        on c.id=p.customer_id 
+where
+    p.customer_id=?
+```
+
+We can see that it produces a JOIN rather than lazily load the Profile.
 
 The problem comes from how Hibernate implements lazy loading.
-
 Hibernate normally uses proxies to defer loading an entity until it is accessed.
-
-For example:
-
-Customer → Proxy(Profile)
-
-When the proxy is accessed, Hibernate performs a SQL query to load the real entity.
-
-This works well for:
-
-@ManyToOne
-@OneToMany
-
-But one-to-one relationships are harder to proxy.
-
-If the association is not on the owning side, 
-Hibernate often cannot determine whether a row exists without executing a query.
-
-For example:
-
-Customer
-↳ profile (mappedBy)
-
-Hibernate must check whether a profile row exists before creating a proxy.
-
-That check requires a query.
-
-So Hibernate simply loads the entity immediately.
-
-### When Lazy Loading Does Work
+If the association is not on the owning side,
+it often cannot determine whether a row exists without executing a query,
+so simply loads the entity immediately.
 
 Lazy loading works reliably when the association is on the owning side with a foreign key.
-
-Example:
-
-@OneToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "customer_id")
-private Customer customer;
-
 Here the foreign key already tells Hibernate whether a related entity exists.
-
 So a proxy can be created safely.
 
-### Hibernate Bytecode Enhancement
+### Solution 1 - Bytecode enhancement
+
+As the introductory quote suggests we can use Bytecode Enhancement:
+
+> The parent-side @OneToOne association **requires bytecode enhancement**
+> so that the association can be loaded lazily.
+>
+> [Hibernate Docs](https://docs.hibernate.org/orm/current/userguide/html_single/#best-practices-mapping-associations)
 
 Hibernate can support true lazy loading for more one-to-one cases using bytecode enhancement.
-
 This allows Hibernate to intercept field access and load the entity on demand.
-
-However, this requires additional build configuration and is not enabled 
+However, this requires additional build configuration and is not enabled
 by default in many projects.
 
-For that reason, many developers treat one-to-one relationships as effectively eager 
-unless they are on the owning side.
+Once this is enabled (in Maven or Gradle) we can tell Hibernate to use it:
+
+...
+
+
+### Solution 2 - make the Parent the Owning side
+
+Another option is to make the Parent (Customer) side the Owning side:
+
+``` java
+public class Customer {
+...
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(
+            name = "profile_id",
+            unique = true
+    )
+    private ProfileA profile;
+...
+}
+
+public class Profile {
+...
+    @OneToOne(
+            mappedBy = "profile"
+    )
+    private Customer customer;
+...
+}
+```
+
+Things now work as expected:
+
+``` sql
+    select
+        c.id,
+        c.profile_id 
+    from
+        customer c 
+    where
+        c.id=?
+```
+
+While this setup is less of a natural fit
+as Profile is dependent on Customer and it would be more common to have Profile
+as the Owning side. it is still a legitimate schema.
+
+### Solution 3 - use DTO Projections
+
+
+### Solution 4 - Entity Graphs
+
+
 
 ### Practical Advice
 
@@ -101,13 +172,9 @@ understand which side owns the relationship
 
 verify behaviour with SQL logging and tests
 
-In many cases, explicit queries or DTO projections are better 
+In many cases, explicit queries, DTO projections, or entity graphs are better 
 for controlling fetch behaviour.
+I will look at this in a future post.
 
-## explicit queries
-
-## DTO projections
-
-## Entity Graphs
 
 
