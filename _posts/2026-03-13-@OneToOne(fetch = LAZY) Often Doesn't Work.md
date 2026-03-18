@@ -83,8 +83,13 @@ We can see that it produces a JOIN rather than lazily load the Profile.
 The problem comes from how Hibernate implements lazy loading.
 Hibernate normally uses proxies to defer loading an entity until it is accessed.
 If the association is not on the owning side,
-it often cannot determine whether a row exists without executing a query,
+Hibernate often cannot determine whether a row exists without executing a query,
 so simply loads the entity immediately.
+
+So although CustomerB.profile is declared with FetchType.LAZY, 
+in this Hibernate setup the inverse-side one-to-one association 
+was observed to initialize eagerly. 
+This is a common limitation of one-to-one lazy loading on the inverse side.
 
 Lazy loading works reliably when the association is on the owning side with a foreign key.
 Here the foreign key already tells Hibernate whether a related entity exists.
@@ -155,10 +160,14 @@ While this setup is less of a natural fit
 as Profile is dependent on Customer and it would be more common to have Profile
 as the Owning side. it is still a legitimate schema.
 
-### Solution 3 - use DTO Projections
+### Solution 3 - move the find to the CustomerRepository
+
+Instead of relying on entity-based ...
+
+#### DTO projections
 
 
-### Solution 4 - Entity Graphs
+#### Entity Graphs
 
 
 
