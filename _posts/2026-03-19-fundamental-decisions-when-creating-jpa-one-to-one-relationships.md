@@ -8,13 +8,49 @@ header-img: "img/jekyll2.jpg"
 In practice, mapping `@OneToOne` relationships can be considered in relation to
 some fundamental decisions:
 
-- Where the foreign key lives (`Parent` or `Child`)
+It can be useful to consider JPA `@OneToOne` mappings in this context:
+
+- Where the entity lifecycle is managed
+- Where the foreign key lives (`Parent`<sup>[[1]](#notes)</sup> or `Child`<sup>[[1]](#notes)</sup>)
 - Whether the `Child` shares the `Parent` primary key
 - Whether the relationship is `Bidirectional` or `Unidirectional`
-- Where the entity lifecycle is managed
 
-It is helpful to understand these decisions before looking at the actual variants
-considered here.
+It may be helpful to understand these decisions before looking at the actual variants
+considered [here]().
+
+### Where the entity lifecycle is managed
+
+The term Ownership is potentially confusing here.
+Take this simple entity:
+
+``` java
+class Customer {
+    private Address address;
+}
+```
+
+From an Object perspective, this is usually a Paremnnt/Child relationship:
+
+``` java
+class Parent {
+    private Child child;
+}
+```
+
+
+From an Object perspective this is generally easier to comprehend 
+when the xxx is the Parent and xxx is the Child.
+managed from the Parent:
+
+[example]
+
+managed from the caller (typically the Service layer):
+
+[example]
+
+Variants xxx are examples of Parent-managed lifecyle.
+Variants xxx show entities whose relationship must be managed by the caller
+(typically the Service layer).
 
 ### Where the foreign key lives
 
@@ -22,7 +58,7 @@ There are two options here because the foreign key can live in either table - bo
 valid schemas but imply slightly different lifecycle behaviour.
 Either the foreign key lives in the Parent (Customer) or in the Child (Profile).
 The side the foreign key lives in is called the 'Owning side'
-as it 'owns' the relationship from the database perspective.
+as it 'owns' the relationship from the Database perspective.
 While the other side of the relationship is called the 'Inverse side'
 and (in a Bidirectional relationship) uses 'mappedBy' to point to the Owning side.
 
@@ -46,9 +82,11 @@ Making the Parent (Customer) the Inverse side:
 Variants xxx are examples of the foreign key living in the Parent.
 Variants xxx show the foreign key living in the Child.
 
-Note that locating the foreign key in the Child is arguably a more natural fit
+Note that from a Database perspective 
+locating the foreign key in the Child is arguably a more natural fit
 as the Child depends on the Parent.
 Though this is by no means a requirement.
+And arguably less so for a one-to-one relationship.
 
 ### Whether the `Child` shares the `Parent` primary key
 
@@ -77,7 +115,9 @@ Variants xxx are examples of using a shared primary key.
 ### Whether the relationship is `Bidirectional` or `Unidirectional`
 
 Bidirectional is convenient for navigation
-But it requires lifecycle helpers to keep both sides consistent
+But it requires lifecycle helpers to keep both sides consistent.
+This can include:
+...
 
 Bidirectional relationships allow navigation from either side,
 but they require helper methods to keep both sides of the relationship synchronized.
@@ -94,17 +134,7 @@ simpler domain model
 
 avoid bidirectional synchronization
 
-### Where the lifecycle is managed
 
-DDD
-managed from the Parent:
+### <a name="notes"></a>Notes
 
-[example]
-
-managed from the caller (typically the Service layer):
-
-[example]
-
-Variants xxx are examples of Parent-managed lifecyle.
-Variants xxx show entities whose relationship must be managed by the caller
-(typically the Service layer).
+1. Parent/Child refers to the Object relationship ...
