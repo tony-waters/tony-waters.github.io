@@ -8,14 +8,22 @@ header-img: "img/jekyll2.jpg"
 For a seemingly straightforward JPA annotation,
 `@OneToOne` relationships can be mapped in a surprising number of ways.
 I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings 
-using a simple Customer–Profile relationship:
+using a simple Customer–Profile relationship existing in a simple
+Parent-Child setup.
 
 [Customer ──1:1── Profile diagram]
 
+## Decisions in JPA @OneToOne relationship design
 
-## The 6 variants
+The @OneToOne annotation hides several structural decisions.
 
-This produces 6 variants:
+The most important questions are:
+
+- where the foreign key should live
+- whether navigation should be bidirectional
+- whether the child should share the parent’s identity
+
+These decisions can be expressed in the following 6 variants:
 
                      Direction
                ┌───────────────┬───────────────┐
@@ -26,19 +34,8 @@ This produces 6 variants:
 │ Shared PK    │   Variant C   │   Variant F   │
 └──────────────┴───────────────┴───────────────┘
 
-Variant	Direction	FK Location	Shared PK	Owning Side	Navigation	Lifecycle
-A	Bidirectional	Parent	No	Parent	Both	Parent-managed
-B	Bidirectional	Child	No	Child	Both	Parent-managed
-C	Bidirectional	Shared PK	Yes	Child	Both	Parent-managed
-D	Unidirectional	Parent	No	Parent	Parent only	Parent-managed
-E	Unidirectional	Child	No	Child	Child only	Caller-managed
-F	Unidirectional	Shared PK	Yes	Child	Child only	Caller-managed
-
 Let's walk through these six `@OneToOne` mapping patterns,
 showing how they differ and offering suggestions on when to use each.
-
-(If you just want a practical default, and want to skip the bigger picture,
-[Variant B](#variantB) is often a good default option.)
 
 All examples come from a 
 [working repository](https://github.com/tony-waters/spring-jpa-one-to-one)
@@ -99,6 +96,13 @@ customerRepository.save(customer);
 
 Both rows are inserted.
 
+##### Cascade delete
+
+Deleting the customer deletes the profile.
+
+DELETE customer
+→ profile automatically removed
+
 ##### Orphan removal
 
 Removing the profile from the parent deletes the child row.
@@ -108,14 +112,10 @@ customerRepository.save(customer);
 
 The profile row disappears from the database.
 
-##### Cascade delete
+###### see tests: 
 
-Deleting the customer deletes the profile.
-
-DELETE customer
-→ profile automatically removed
-
-This makes Variant A suitable when the profile lifecycle is completely controlled by the customer.
+This makes Variant A suitable when the profile lifecycle is completely controlled 
+by the customer.
 
 #### When would you use this pattern?
 
