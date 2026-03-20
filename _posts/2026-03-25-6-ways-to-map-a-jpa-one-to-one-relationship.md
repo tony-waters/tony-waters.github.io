@@ -17,7 +17,8 @@ Parent-Child setup.
 
 The @OneToOne annotation hides several structural decisions.
 
-The most important questions are:
+Assuming a simple Parent/Child relationship 
+the most important questions are:
 
 - where the foreign key should live
 - whether navigation should be bidirectional
