@@ -8,8 +8,6 @@ header-img: "img/jekyll2.jpg"
 In practice, mapping `@OneToOne` relationships can be considered in relation to
 some fundamental decisions:
 
-It can be useful to consider JPA `@OneToOne` mappings in this context:
-
 - Where the entity lifecycle is managed
 - Where the foreign key lives (`Parent`<sup>[[1]](#notes)</sup> or `Child`<sup>[[1]](#notes)</sup>)
 - Whether the `Child` shares the `Parent` primary key

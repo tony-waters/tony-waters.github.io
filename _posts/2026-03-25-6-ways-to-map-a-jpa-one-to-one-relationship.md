@@ -5,26 +5,19 @@ tags: [JPA, @OneToOne]
 header-img: "img/jekyll2.jpg"
 ---
 
-For a seemingly straightforward JPA annotation,
-`@OneToOne` relationships can be mapped in a surprising number of ways.
-I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings 
-using a simple Customer–Profile relationship existing in a simple
-Parent-Child setup.
+For a seemingly straightforward JPA annotation, `@OneToOne` relationships can be mapped in a surprising number of ways. I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings using a simple Customer–Profile relationship existing in a simple Parent-Child setup.
 
 [Customer ──1:1── Profile diagram]
 
-## Decisions in JPA @OneToOne relationship design
+## Design space
 
-The @OneToOne annotation hides several structural decisions.
-
-Assuming a simple Parent/Child relationship 
-the most important questions are:
+The @OneToOne annotation hides several structural decisions:
 
 - where the foreign key should live
 - whether navigation should be bidirectional
 - whether the child should share the parent’s identity
 
-These decisions can be expressed in the following 6 variants:
+These combine into 6 distinct variants:
 
                      Direction
                ┌───────────────┬───────────────┐
@@ -35,99 +28,148 @@ These decisions can be expressed in the following 6 variants:
 │ Shared PK    │   Variant C   │   Variant F   │
 └──────────────┴───────────────┴───────────────┘
 
-Let's walk through these six `@OneToOne` mapping patterns,
-showing how they differ and offering suggestions on when to use each.
+These variants come from a [working repository](https://github.com/tony-waters/spring-jpa-one-to-one) with tests verifying entity behaviour, database schema, and lazy loading observations.
 
-All examples come from a 
-[working repository](https://github.com/tony-waters/spring-jpa-one-to-one)
-with tests verifying both entity behaviour and database schema.
+Note that for most of the variants the Parent (Customer) controls the lifecycle. From an Object perspective this usually makes more sense in a Parent/Child scenario because of composition<sup>[[2]](#notes)</sup>.
 
 ## Variant A — Bidirectional with Foreign Key in Parent
 
-sections:
-    Entity mapping
-    Database schema
-    Behaviour
+[ER diagram]
 
-Variant A is a bidirectional one-to-one relationship where the foreign key 
-is stored in the parent table.
-The parent entity owns the relationship and controls the lifecycle of the child
-using cascading and orphan removal.
-This design allows navigation in both directions 
-(Customer → Profile and Profile → Customer), 
-but the database link is stored on the parent row.
+In [this variant](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantA):
 
-In this variant:
+The Parent looks like this:
 
-- the parent table stores the foreign key
-- both entities reference each other
-- lifecycle is controlled by the parent
+``` java
+public class CustomerA {
 
-So the Parent looks like this:
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
 
-[example]
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(
+            name = "profile_id",
+            unique = true
+    )
+    private ProfileA profile;
+    ...
+}
+```
 
-And the Child:
+The presence of `@JoinColumn` indicates `CustomerA` is the 'owning side' of this relationship from a Relational perspective. So the foreign key goes in this table. As the 'owning side' it has to be updated in order to persist in the Database. If you only update the 'inverse side' noting happens in the Database. Its best to maintain the object graph and always do something like this:
 
-[example]
+``` java
+customer.setProfile(profile);
+profile.setCustomer(customer);
+```
 
-This produces the following DDL:
+From an Object perspective a `Customer` 'owns' its `Profile`. Consequently, `cascade` and `orphanRemoval` live here too. This means:
 
-[example]
+- persist Customer → persists Profile
+- remove reference → deletes Profile
+- delete Customer → deletes Profile
 
-Because the relationship is bidirectional, 
-the parent provides helper methods to keep both sides consistent.
+Which is effectively composition<sup>[[2]](#notes)</sup> at the Object level.
 
-[example]
+Also of interest is `FetchType.LAZY`. This should ensure that `Profile` is only read from the Database when needed. This does not always work as one may imagine. If the Parent is the Inverse side of a one-to-one relationship,
+the Child entity is fetched eagerly regardless of the `FetchType.LAZY` annotation. But since this is the 'owning side' and not the 'inverse side' we would expect it to work here as planned (which the tests demonstrate). You can contrast this with Variants B/C where lazy loading fails despite the attribute existing.
 
-These helpers ensure that the object graph and the database state remain aligned.
+Finally, it is worth noting, that `unique = true` is not optional here if we wish to ensure a one-to-one relationship. Stopping more than one `Profile` referencing the same `Customer` cannot easily happen in Object-Oriented Java and has to be implemented at the Database level. In this case it adds a 'UNIQUE' identifier to the column in the DDL. You can see that here in the issued SQL:
 
-#### Behaviour
+``` sql
+create table customer_a (
+    id bigint not null,
+    profile_id bigint unique,
+    display_name varchar(80) not null,
+    primary key (id)
+)
+```
 
-The repository tests demonstrate several important behaviours.
+On the other side of the relationship the Child (`Profile`) has a `mappedBy` to mark it as the 'inverse side' of the relationship and provide bidirectionality:
 
-##### Cascade persist
+``` java
+public class ProfileA {
 
-Saving the parent automatically saves the profile.
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
 
-CustomerA customer = new CustomerA("Alice");
-customer.createProfile(true);
+    @OneToOne(
+            mappedBy = "profile"
+    )
+    private CustomerA customer;
 
-customerRepository.save(customer);
+    private boolean marketingOptIn = false;
+    ...
+}
+```
 
-Both rows are inserted.
+This allows navigation back to the `Customer` using its instance variable `profile`. And because it is the 'inverse side' holds no foreign key, and cannot be relied upon to save its associated `Customer` when saved itself.
+It produces the following SQL:
 
-##### Cascade delete
+``` sql
+create table profile_a (
+    marketing_opt_in boolean not null,
+    id bigint not null,
+    primary key (id)
+)
+```
 
-Deleting the customer deletes the profile.
+Like most of the variants, in `Variant A` the parent provides helper methods to keep both sides consistent - ensuring the object graph and the database state remain aligned.
 
-DELETE customer
-→ profile automatically removed
+``` java
+public class CustomerA {
+    ...
+    public ProfileA createProfile(boolean marketingOptIn) {
+        if (this.profile != null) {
+            throw new IllegalStateException("Customer already has a Profile");
+        }
+        ProfileA profile = new ProfileA(marketingOptIn);
+        profile.setCustomerInternal(this);
+        this.profile = profile;
+        return profile;
+    }
 
-##### Orphan removal
+    public void removeProfile() {
+        if (this.profile == null) {
+            throw new IllegalStateException("Customer has no Profile to remove");
+        }
+        ProfileA old =  this.profile;
+        this.profile = null;
+        old.clearCustomerInternal();
+    }
+    ...
+}
+```
 
-Removing the profile from the parent deletes the child row.
+`Profile` is only called to change its own internal values:
 
-customer.removeProfile();
-customerRepository.save(customer);
+``` java
+public class ProfileA {
+    ...
+    void setCustomerInternal(CustomerA customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("Profile must have a Customer");
+        }
+        if (this.customer != null && this.customer != customer) {
+            throw new IllegalStateException("Profile cannot be moved to another Customer");
+        }
+        this.customer = customer;
+    }
 
-The profile row disappears from the database.
+    void clearCustomerInternal() {
+        this.customer = null;
+    }
+    ...
+}
+```
 
-###### see tests: 
-
-This makes Variant A suitable when the profile lifecycle is completely controlled 
-by the customer.
-
-#### When would you use this pattern?
-
-Variant A works well when:
-
-- the parent clearly owns the child
-- the relationship is always managed through the parent
-- bidirectional navigation is useful
-
-However, placing the foreign key in the parent table can sometimes feel 
-slightly unnatural if the child is conceptually dependent on the parent.
+Placing the foreign key in the parent table can sometimes feel slightly unnatural if the child is conceptually dependent on the parent. 
 
 For that reason, many developers prefer the next variant.
 
@@ -644,9 +686,9 @@ coupled relationships.
 While this is a legitimate way of representing a one-to-one relationship
 it is generally only used in a legacy system   
 
-2. This feature is not available in Spring Security 3.0 (See [here](http://forum.spring.io/forum/spring-projects/security/100708-spel-and-spring-security-3-accessing-bean-reference-in-preauthorize) for discussion and a workaround). It is available 3.1 but you must leave out the `@` symbol. It works as shown in 3.2.
+2. if you dont know what composition is look here (See [here](https://stackoverflow.com/questions/11881552/implementation-difference-between-aggregation-and-composition-in-java) for discussion and a workaround). It is available 3.1 but you must leave out the `@` symbol. It works as shown in 3.2.
 
 <hr />
 ## Resources
-- [Spring Expression Language Reference](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html)
+- [Some Resource](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html)
 
