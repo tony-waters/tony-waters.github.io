@@ -18,7 +18,9 @@ The `@OneToOne` annotation hides several structural decisions:
 - Whether identity is shared (`@MapsId`)
 - Who controls lifecycle (entity vs caller)
 
-These combine into 6 distinct variants:
+[explain why leaving last item out of table]
+
+Ignoring the last item for now, the first 3 combine into 6 distinct variants:
 
                      Direction
                ┌───────────────┬───────────────┐
@@ -30,6 +32,8 @@ These combine into 6 distinct variants:
 └──────────────┴───────────────┴───────────────┘
 
 These variants come from a [working repository](https://github.com/tony-waters/spring-jpa-one-to-one) with tests verifying entity behaviour, database schema, and lazy loading observations.
+
+## But what about the last item?
 
 Note that for most of the variants the Parent (`Customer`) controls the lifecycle. From an Object perspective this usually makes more sense in a Parent/Child scenario because of composition<sup>[[2]](#notes)</sup>.
 
@@ -188,7 +192,7 @@ Here are all the Variants with links to the GitHub repo folder where they are lo
 
 ## Summary of Variants B–F
 
-Rather than repeating the full walkthrough, the remaining variants can be understood as variations on the same core ideas demonstrated in Variant A.
+Rather than repeating the full walkthrough, the remaining variants can be understood as variations on the same core ideas demonstrated in Variant A. They are better understood through reference to the actual repositories. Brlow is a summary of each Variant with links to its classes and tests.
 
 ---
 
@@ -266,6 +270,9 @@ I also wanted to record some of the observed Hibernate behaviour in this setup (
 - VariantC_ProfileLazyLoadingObservationTest
 - VariantD_ProfileLazyLoadingObservationTest
 - VariantF_SharedPkHibernateObservationTest
+
+## Which variant should I use?
+
 
 ## Repository
 The repository contains full implementations, tests, and schema assertions for each variant:
