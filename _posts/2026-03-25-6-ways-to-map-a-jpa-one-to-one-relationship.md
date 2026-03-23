@@ -271,6 +271,13 @@ I also wanted to record some of the observed Hibernate behaviour in this setup (
 - VariantD_ProfileLazyLoadingObservationTest
 - VariantF_SharedPkHibernateObservationTest
 
+## Common Pitfalls
+
+- Updating only the inverse side does nothing
+- Forgetting `UNIQUE` → not actually one-to-one
+- Assuming `FetchType.LAZY` always works
+- Confusing owning side with domain ownership
+
 ## Which variant should I use?
 
 
