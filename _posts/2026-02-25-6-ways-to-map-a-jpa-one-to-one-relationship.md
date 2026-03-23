@@ -6,8 +6,6 @@ header-img: "img/spring5.jpg"
 
 For a seemingly straightforward JPA annotation, `@OneToOne` relationships can be mapped in a surprising number of ways. I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings using a simple Customer–Profile relationship existing in a simple Parent-Child setup.
 
-[Customer ──1:1── Profile diagram]
-
 ## Tech stack
 
 - Java 21
@@ -17,16 +15,19 @@ For a seemingly straightforward JPA annotation, `@OneToOne` relationships can be
 - H2 (test database)
 - AssertJ
 
+## Source
+
+These variants come from a [working repository](https://github.com/tony-waters/spring-jpa-one-to-one) with tests verifying entity behaviour, database schema, and lazy loading observations.
+
 ## Design space
 
-The `@OneToOne` annotation hides several structural decisions:
+The `@OneToOne` annotation hides three structural decisions:
 
 - Where the foreign key lives (parent vs child)
 - Whether navigation is bidirectional
 - Whether identity is shared (`@MapsId`)
-- Who controls lifecycle (entity vs caller)
 
-I have combined these into 6 distinct variants (Caller controlled lifecycle in bold):
+I have combined these into 6 distinct variants:
 
 <table class="table table-bordered text-center align-middle one-to-one-table">
   <thead class="table-light">
@@ -85,17 +86,16 @@ I have combined these into 6 distinct variants (Caller controlled lifecycle in b
   </tbody>
 </table>
 
-These variants come from a [working repository](https://github.com/tony-waters/spring-jpa-one-to-one) with tests verifying entity behaviour, database schema, and lazy loading observations.
 
-Note that for most of the variants the Parent (`Customer`) controls the lifecycle. From an Object perspective this usually makes more sense in a Parent/Child scenario because of composition<sup>[[2]](#notes)</sup>.
+Note that for most of the variants the Parent (`Customer`) controls the lifecycle. From an Object composition<sup>[[2]](#notes)</sup> perspective this usually makes more sense in a Parent/Child scenario. This is dealing with ORM at the entity level, and Variants A to D all do this. 
+
+Variants E and F are unidirectional from the Child side. This precludes lifecycle control from `Customer` to `Profile` and pushes lifecycle management up a level. To the Caller. In the case of many applications this is a Service layer.
+
+Let's look at the first Variant in detail, then summarise the other Variants.
 
 ## Variant A — Bidirectional with Foreign Key in Parent
 
-[ER diagram]
-
-In [this variant](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantA):
-
-The Parent looks like this:
+In [this variant](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantA) the Parent looks like this:
 
 ``` java
 public class CustomerA {
@@ -307,12 +307,12 @@ For full implementations, tests, and edge cases, see the repository:
 
 The included tests have evolved as I added to and refactored the [source repo](). Each Variant includes persistence behaviour and schema state tests:
 
-- VariantA_BidirectionalFkInParentTest
-- VariantB_BidirectionalFkInChildTest
-- VariantC_BidirectionalSharedPkMapsIdTest
-- VariantD_UnidirectionalFkInParentTest
-- VariantE_UnidirectionalFkInChildExplicitLifecycleTest
-- VariantF_UnidirectionalSharedPkExplicitLifecycleTest
+- [VariantA_BidirectionalFkInParentTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantA/VariantA_BidirectionalFkInParentTest.java)
+- [VariantB_BidirectionalFkInChildTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantB/VariantB_BidirectionalFkInChildTest.java)
+- [VariantC_BidirectionalSharedPkMapsIdTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantC/VariantC_BidirectionalSharedPkMapsIdTest.java)
+- [VariantD_UnidirectionalFkInParentTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantD/VariantD_UnidirectionalFkInParentTest.java)
+- [VariantE_UnidirectionalFkInChildExplicitLifecycleTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantE/VariantE_UnidirectionalFkInChildExplicitLifecycleTest.java)
+- [VariantF_UnidirectionalSharedPkExplicitLifecycleTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantF/VariantF_UnidirectionalSharedPkExplicitLifecycleTest.java)
 
 ... and entity contract tests where appropriate:
 
