@@ -227,7 +227,7 @@ public class ProfileA {
 }
 ```
 
-Placing the foreign key in the Parent table can sometimes feel slightly unnatural from a Relational Database perspective if the Child is conceptually dependent on the parent. One advantage of Variant A is that making the Parent the 'owning side' Loading of `Profile` works out of the box in this setup.
+Placing the foreign key in the Parent table can sometimes feel slightly unnatural from a Relational Database perspective if the Child is conceptually dependent on the parent. One advantage of Variant A is that making the Parent the 'owning side' means Lazy Loading of `Profile` works out of the box in this setup.
 
 ## All the Variants
 
@@ -298,13 +298,13 @@ Similar Object mode to last Variant (E) so same summary applies.
 
 I wish I had a simple answer to this. Primarily I think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is.
 
-For the strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out.
-
-Because I want a strong domain model for `Customer`/`Profile` pushing the lifecycle to the Service layer has no appeal. So Variants E and F are not appealing.
+For the strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Because I want a strong domain model for `Customer`/`Profile` pushing the lifecycle to the Service layer has no appeal. So Variants E and F are not appealing.
 
 Another consideration is Lazy Loading. At the moment Eagerly loading `Profile` is no big deal. But as `Profile` grew it could become more of a problem. Without changing the current setup this situation makes Variants B and C less attractive because the Parent is on the 'inverse side'. In reality there are other options here. We could add selectors to the Customer Repository for example. Also, we could use Bytecode Enhancement.
 
 This leaves Variants A and D. Both of which make less conceptual sense from a Relational perspective. If I take this as the choice, then the only question is whether I want a bidirectional or unidirectional relationship.
+
+The important point here is that there is no one choice for any scenario. Understanding the tradeoffs should provide some direction.
 
 ---
 
@@ -339,10 +339,10 @@ I also wanted to record some of the observed Hibernate behaviour in this setup (
 
 ## Common Pitfalls
 
-Just a few things I try to keep in mind:
+Just a few things I try to avoid:
 
-- Updating only the inverse side does nothing
-- Forgetting `UNIQUE` → not actually one-to-one
+- Updating only the inverse side
+- Forgetting `UNIQUE`
 - Assuming `FetchType.LAZY` always works
 - Confusing owning side with domain ownership
 
