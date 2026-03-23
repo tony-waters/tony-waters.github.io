@@ -29,13 +29,11 @@ The `@OneToOne` annotation hides several structural decisions:
 I have combined these into 6 distinct variants (Caller controlled lifecycle in bold):
 
                      Direction
-               ┌───────────────┬───────────────┐
-               │ Bidirectional │ Unidirectional│
-┌──────────────┼───────────────┼───────────────┤
-│ FK in Parent │   Variant A   │   Variant D   │
-│ FK in Child  │   Variant B   │   *Variant E*   │
-│ Shared PK    │   Variant C   │   *Variant F*   │
-└──────────────┴───────────────┴───────────────┘
+|                | **Bidirectional** | **Unidirectional** |
+|----------------|------------------|--------------------|
+| **FK in Parent** | Variant A        | Variant D          |
+| **FK in Child**  | Variant B        | *Variant E*        |
+| **Shared PK**    | Variant C        | *Variant F*        |
 
 These variants come from a [working repository](https://github.com/tony-waters/spring-jpa-one-to-one) with tests verifying entity behaviour, database schema, and lazy loading observations.
 
