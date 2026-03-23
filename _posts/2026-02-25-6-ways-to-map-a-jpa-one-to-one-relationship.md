@@ -57,13 +57,13 @@ I have combined these into 6 distinct variants (Caller controlled lifecycle in b
       <td>
         <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantB"
            target="_blank" rel="noopener" class="fw-bold">
-          Variant B ⭐
+          Variant B
         </a>
       </td>
       <td>
         <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantE"
            target="_blank" rel="noopener">
-          <em>Variant E</em>
+          <i>Variant E</i>
         </a>
       </td>
     </tr>
@@ -78,7 +78,7 @@ I have combined these into 6 distinct variants (Caller controlled lifecycle in b
       <td>
         <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantF"
            target="_blank" rel="noopener" class="fw-bold">
-          <em>Variant F ⭐</em>
+          <i>Variant F</i>
         </a>
       </td>
     </tr>
