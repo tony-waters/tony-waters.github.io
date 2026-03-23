@@ -185,18 +185,18 @@ Placing the foreign key in the Parent table can sometimes feel slightly unnatura
 
 Here are all the Variants with links to the GitHub repo folder where they are located:
 
-| Variant   | Direction       | FK Location | Shared PK | Owning Side | Navigation       | Typical Lifecycle |
-|----------|----------------|-------------|-----------|-------------|------------------|-------------------|
-| Variant A| Bidirectional  | Parent      | No        | Parent      | Both directions  | Parent-managed    |
-| Variant B| Bidirectional  | Child       | No        | Child       | Both directions  | Parent-managed    |
-| Variant C| Bidirectional  | Shared PK   | Yes       | Child       | Both directions  | Parent-managed    |
-| Variant D| Unidirectional | Parent      | No        | Parent      | Parent only      | Parent-managed    |
-| Variant E| Unidirectional | Child       | No        | Child       | Child only       | Caller-managed    |
-| Variant F| Unidirectional | Shared PK   | Yes       | Child       | Child only       | Caller-managed    |
+| Variant                                                                                                               | Direction       | FK Location | Shared PK | Owning Side | Navigation       | Typical Lifecycle |
+|-----------------------------------------------------------------------------------------------------------------------|----------------|-------------|-----------|-------------|------------------|-------------------|
+| [Variant A](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantA) | Bidirectional  | Parent      | No        | Parent      | Both directions  | Parent-managed    |
+| [Variant B](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantB) | Bidirectional  | Child       | No        | Child       | Both directions  | Parent-managed    |
+| [Variant C](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantC) | Bidirectional  | Shared PK   | Yes       | Child       | Both directions  | Parent-managed    |
+| [Variant D](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantD) | Unidirectional | Parent      | No        | Parent      | Parent only      | Parent-managed    |
+| [Variant E](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantE) | Unidirectional | Child       | No        | Child       | Child only       | Caller-managed    |
+| [Variant F](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantF) | Unidirectional | Shared PK   | Yes       | Child       | Child only       | Caller-managed    |
 
 ## Summary of Variants B–F
 
-Rather than repeating the full walkthrough, the remaining variants can be understood as variations on the same core ideas demonstrated in Variant A. They are better understood through reference to the actual repositories. Brlow is a summary of each Variant with links to its classes and tests.
+Rather than repeating the full walkthrough, the remaining variants can be understood as variations on the same core ideas demonstrated in Variant A. They are better understood through reference to the actual repositories. Below is a summary of each Variant with links to its classes and tests.
 
 ---
 
@@ -206,7 +206,7 @@ Rather than repeating the full walkthrough, the remaining variants can be unders
 - Child becomes the owning side
 - Parent becomes inverse (`mappedBy`)
 
-Most natural relational model. The parent *feels* like it owns the relationship, but the child controls persistence. One drawback in this setup is Lazy Loading of the `Profile` does not work (see LazyLoading Tests).
+Most natural relational model. The parent *feels* like it owns the relationship, but the child controls persistence. One drawback in this setup is Lazy Loading of the `Profile` does not work 'out of the box' (see LazyLoading Tests).
 
 ---
 
@@ -215,7 +215,7 @@ Most natural relational model. The parent *feels* like it owns the relationship,
 - `Profile.id == Customer.id`
 - No separate foreign key column
 
-Models true composition at the database level since Child cannot exist independently and cannot be reassigned. Also feel a little simpler to understand at the Object level, and one less field to worry about. One drawback in this setup is Lazy Loading of the `Profile` does not work (see LazyLoading Tests).
+Models true composition at the database level since Child cannot exist independently and cannot be reassigned. Also feel a little simpler to understand at the Object level, and one less field to worry about. One drawback in this setup is Lazy Loading of the `Profile` does not work 'out of the box' (see LazyLoading Tests).
 
 ---
 
@@ -242,7 +242,7 @@ Not a lot of Object modelling here in terms of the strong composition we want fo
 - Combines `@MapsId` with unidirectional design
 - No cascade, no bidirectional links
 
-Similar Object mode to last Variant (E) so same summary applies. 
+Similar Object mode to last Variant (E) so same summary applies.
 
 ---
 
