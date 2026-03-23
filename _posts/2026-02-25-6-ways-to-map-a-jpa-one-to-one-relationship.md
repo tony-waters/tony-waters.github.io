@@ -1,12 +1,21 @@
 ---
 title: Six Ways to Map One-to-One Relationships in Spring Boot JPA
 layout: post
-header-img: "img/jekyll2.jpg"
+header-img: "img/spring5.jpg"
 ---
 
 For a seemingly straightforward JPA annotation, `@OneToOne` relationships can be mapped in a surprising number of ways. I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings using a simple Customer–Profile relationship existing in a simple Parent-Child setup.
 
 [Customer ──1:1── Profile diagram]
+
+## Tech stack
+
+- Java 21
+- Spring Boot 4.x
+- Spring Data JPA
+- Hibernate 7
+- H2 (test database)
+- AssertJ
 
 ## Design space
 
@@ -17,26 +26,22 @@ The `@OneToOne` annotation hides several structural decisions:
 - Whether identity is shared (`@MapsId`)
 - Who controls lifecycle (entity vs caller)
 
-[explain why leaving last item out of table]
-
-Ignoring the last item for now, the first 3 combine into 6 distinct variants:
+I have combined these into 6 distinct variants (Caller controlled lifecycle in bold):
 
                      Direction
                ┌───────────────┬───────────────┐
                │ Bidirectional │ Unidirectional│
 ┌──────────────┼───────────────┼───────────────┤
 │ FK in Parent │   Variant A   │   Variant D   │
-│ FK in Child  │   Variant B   │   Variant E   │
-│ Shared PK    │   Variant C   │   Variant F   │
+│ FK in Child  │   Variant B   │   *Variant E*   │
+│ Shared PK    │   Variant C   │   *Variant F*   │
 └──────────────┴───────────────┴───────────────┘
 
 These variants come from a [working repository](https://github.com/tony-waters/spring-jpa-one-to-one) with tests verifying entity behaviour, database schema, and lazy loading observations.
 
-## But what about the last item?
-
 Note that for most of the variants the Parent (`Customer`) controls the lifecycle. From an Object perspective this usually makes more sense in a Parent/Child scenario because of composition<sup>[[2]](#notes)</sup>.
 
-## For Example: Variant A — Bidirectional with Foreign Key in Parent
+## Variant A — Bidirectional with Foreign Key in Parent
 
 [ER diagram]
 
@@ -81,7 +86,7 @@ From an Object perspective a `Customer` 'owns' its `Profile`. Consequently, `cas
 Which is effectively composition<sup>[[2]](#notes)</sup> at the Object level.
 
 Also of interest is `FetchType.LAZY`. This should ensure that `Profile` is only read from the Database when needed. This does not always work as one may imagine. If the Parent is the Inverse side of a one-to-one relationship,
-the Child entity is fetched eagerly regardless of the `FetchType.LAZY` annotation. But since this is the 'owning side' and not the 'inverse side' we would expect it to work here as planned (which the tests demonstrate). You can contrast this with Variants B/C where lazy loading fails despite the attribute existing.
+the Child entity is fetched eagerly regardless of the `FetchType.LAZY` annotation. But since this is the 'owning side' and not the 'inverse side' we would expect it to work here as planned (which the tests demonstrate). You can contrast this with Variants B/C where lazy loading fails despite being marked `FetchType.LAZY`.
 
 Finally, it is worth noting, that `unique = true` is not optional here if we wish to ensure a one-to-one relationship. Preventing multiple `Profile` instances referencing the same `Customer` is not enforced by the object model alone.  
 Without a database constraint, nothing stops duplicate relationships being persisted. `unique = true` adds a 'UNIQUE' identifier to the column in the DDL. You can see that here in the issued SQL:
@@ -174,7 +179,7 @@ public class ProfileA {
 }
 ```
 
-Placing the foreign key in the parent table can sometimes feel slightly unnatural if the child is conceptually dependent on the parent.
+Placing the foreign key in the Parent table can sometimes feel slightly unnatural from a Relational Database perspective if the Child is conceptually dependent on the parent. One advantage of Variant A is that making the Parent the 'owning side' Loading of `Profile` works out of the box in this setup.
 
 ## All the Variants
 
@@ -201,7 +206,7 @@ Rather than repeating the full walkthrough, the remaining variants can be unders
 - Child becomes the owning side
 - Parent becomes inverse (`mappedBy`)
 
-Most natural relational model. The parent *feels* like it owns the relationship, but the child controls persistence.
+Most natural relational model. The parent *feels* like it owns the relationship, but the child controls persistence. One drawback in this setup is Lazy Loading of the `Profile` does not work (see LazyLoading Tests).
 
 ---
 
@@ -210,7 +215,7 @@ Most natural relational model. The parent *feels* like it owns the relationship,
 - `Profile.id == Customer.id`
 - No separate foreign key column
 
-Models true composition at the database level since Child cannot exist independently and Cannot be reassigned
+Models true composition at the database level since Child cannot exist independently and cannot be reassigned. Also feel a little simpler to understand at the Object level, and one less field to worry about. One drawback in this setup is Lazy Loading of the `Profile` does not work (see LazyLoading Tests).
 
 ---
 
@@ -219,7 +224,7 @@ Models true composition at the database level since Child cannot exist independe
 - Same schema as Variant A
 - No back-reference from Profile → Customer
 
-👉 Simplifies the object model by removing bidirectional complexity.
+Simplifies the object model by removing bidirectional complexity. As with Variant A, placing the foreign key in `Customer` feels less conceptually common from a Relational Database perspective.
 
 ---
 
@@ -228,7 +233,7 @@ Models true composition at the database level since Child cannot exist independe
 - Same schema as Variant B
 - No cascade or helper methods
 
-👉 Lifecycle is controlled entirely in the service layer
+Not a lot of Object modelling here in terms of the strong composition we want for our `Customer`-`Profile` domain. Could work for a different concept. Lifecycle is controlled entirely in the service layer. We will have to deal with our actual domain requirements there instead.
 
 ---
 
@@ -237,7 +242,13 @@ Models true composition at the database level since Child cannot exist independe
 - Combines `@MapsId` with unidirectional design
 - No cascade, no bidirectional links
 
-👉 Most explicit and constrained model.
+Similar Object mode to last Variant (E) so same summary applies. 
+
+---
+
+## Which variant should I use?
+
+[TBC]
 
 ---
 
@@ -276,9 +287,6 @@ I also wanted to record some of the observed Hibernate behaviour in this setup (
 - Forgetting `UNIQUE` → not actually one-to-one
 - Assuming `FetchType.LAZY` always works
 - Confusing owning side with domain ownership
-
-## Which variant should I use?
-
 
 ## Repository
 The repository contains full implementations, tests, and schema assertions for each variant:
