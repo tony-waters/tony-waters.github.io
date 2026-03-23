@@ -231,7 +231,7 @@ Placing the foreign key in the Parent table can sometimes feel slightly unnatura
 
 ## All the Variants
 
-Here are all the Variants with links to the GitHub repo folder where they are located:
+Here are all the (clickable) Variants with links to the GitHub repo folder where they are located:
 
 | Variant                                                                                                               | Direction       | FK Location | Shared PK | Owning Side | Navigation       | Typical Lifecycle |
 |-----------------------------------------------------------------------------------------------------------------------|----------------|-------------|-----------|-------------|------------------|-------------------|
@@ -298,13 +298,13 @@ Similar Object mode to last Variant (E) so same summary applies.
 
 I wish I had a simple answer to this. Primarily I think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is.
 
-For the strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Because I want a strong domain model for `Customer`/`Profile` pushing the lifecycle to the Service layer has no appeal. So Variants E and F are not appealing.
+For our strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Because I want a strong domain model for `Customer`/`Profile` pushing the lifecycle to the Service layer is counterproductive. So Variants E and F are not appealing.
 
-Another consideration is Lazy Loading. At the moment Eagerly loading `Profile` is no big deal. But as `Profile` grew it could become more of a problem. Without changing the current setup this situation makes Variants B and C less attractive because the Parent is on the 'inverse side'. In reality there are other options here. We could add selectors to the Customer Repository for example. Also, we could use Bytecode Enhancement.
+Another consideration is Lazy Loading. At the moment Eagerly loading `Profile` is no big deal. But as `Profile` grew this could become more of a problem. Without changing the current setup this situation makes Variants B and C less attractive because the Parent is on the 'inverse side'. Notably, there are other options here. We could add selectors to the Customer Repository for example. Also, we could use Bytecode Enhancement.
 
 This leaves Variants A and D. Both of which make less conceptual sense from a Relational perspective. If I take this as the choice, then the only question is whether I want a bidirectional or unidirectional relationship.
 
-The important point here is that there is no one choice for any scenario. Understanding the tradeoffs should provide some direction.
+The important point here is that there is no one Variant for any scenario. Understanding the tradeoffs should provide some direction.
 
 ---
 
@@ -353,13 +353,12 @@ The repository contains full implementations, tests, and schema assertions for e
 
 
 ## <a name="notes"></a>Notes
-1. I purposefully do not include using a JOIN table here.
-   While this is a legitimate way of representing a one-to-one relationship
-   it is generally only used for legacy systems
+1. I purposefully do not include using a JOIN table here. While this is a legitimate way of representing a one-to-one relationship it is generally only used for legacy systems.
 
-2. if you dont know what composition is look here (See [here](https://stackoverflow.com/questions/11881552/implementation-difference-between-aggregation-and-composition-in-java))
+2. For what 'composition' means in an Object/Java context look here (See [here](https://stackoverflow.com/questions/11881552/implementation-difference-between-aggregation-and-composition-in-java)).
 
-<hr />
+---
+
 ## Resources
 - [Some Resource](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html)
 
