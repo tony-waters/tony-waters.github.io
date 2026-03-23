@@ -39,18 +39,48 @@ I have combined these into 6 distinct variants (Caller controlled lifecycle in b
   <tbody>
     <tr>
       <th class="text-start">FK in Parent</th>
-      <td>Variant A</td>
-      <td>Variant D</td>
+      <td>
+        <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantA"
+           target="_blank" rel="noopener">
+          Variant A
+        </a>
+      </td>
+      <td>
+        <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantD"
+           target="_blank" rel="noopener">
+          Variant D
+        </a>
+      </td>
     </tr>
     <tr>
       <th class="text-start">FK in Child</th>
-      <td>Variant B</td>
-      <td><em>Variant E</em></td>
+      <td>
+        <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantB"
+           target="_blank" rel="noopener" class="fw-bold">
+          Variant B ⭐
+        </a>
+      </td>
+      <td>
+        <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantE"
+           target="_blank" rel="noopener">
+          <em>Variant E</em>
+        </a>
+      </td>
     </tr>
     <tr>
       <th class="text-start">Shared PK</th>
-      <td>Variant C</td>
-      <td><em>Variant F</em></td>
+      <td>
+        <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantC"
+           target="_blank" rel="noopener">
+          Variant C
+        </a>
+      </td>
+      <td>
+        <a href="https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantF"
+           target="_blank" rel="noopener" class="fw-bold">
+          <em>Variant F ⭐</em>
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
