@@ -244,7 +244,7 @@ Here are all the (clickable) Variants with links to the GitHub repo folder where
 
 ## Summary of Variants B–F
 
-Rather than repeating the full walkthrough, the remaining variants can be understood as variations on the same core ideas demonstrated in Variant A. They are better understood through reference to the actual repositories. Below is a summary of each Variant with links to its classes and tests.
+Rather than repeating the full walkthrough, the remaining variants can be understood as variations on the same core ideas demonstrated in Variant A. They are better understood through reference to the actual repositories. Below is a summary of Variants B to F:
 
 ---
 
@@ -294,26 +294,9 @@ Similar Object mode to last Variant (E) so same summary applies.
 
 ---
 
-## Which variant should I use?
-
-I wish I had a simple answer to this. Primarily I think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is.
-
-For our strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Because I want a strong domain model for `Customer`/`Profile` pushing the lifecycle to the Service layer is counterproductive. So Variants E and F are not appealing.
-
-Another consideration is Lazy Loading. At the moment Eagerly loading `Profile` is no big deal. But as `Profile` grew this could become more of a problem. Without changing the current setup this situation makes Variants B and C less attractive because the Parent is on the 'inverse side'. Notably, there are other options here. We could add selectors to the Customer Repository for example. Also, we could use Bytecode Enhancement.
-
-This leaves Variants A and D. Both of which make less conceptual sense from a Relational perspective. If I take this as the choice, then the only question is whether I want a bidirectional or unidirectional relationship.
-
-The important point here is that there is no one Variant for any scenario. Understanding the tradeoffs should provide some direction.
-
----
-
-For full implementations, tests, and edge cases, see the repository:
-👉 https://github.com/tony-waters/spring-jpa-one-to-one
-
 ## Tests
 
-The included tests have evolved as I added to and refactored the [source repo](). Each Variant includes persistence behaviour and schema state tests:
+The included (clickable) tests have evolved as I added to and refactored the [source repo](). Each Variant includes persistence behaviour and schema state tests:
 
 - [VariantA_BidirectionalFkInParentTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantA/VariantA_BidirectionalFkInParentTest.java)
 - [VariantB_BidirectionalFkInChildTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantB/VariantB_BidirectionalFkInChildTest.java)
@@ -337,6 +320,22 @@ I also wanted to record some of the observed Hibernate behaviour in this setup (
 - [VariantD_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantD_ProfileLazyLoadingObservationTest.java)
 - [VariantF_SharedPkHibernateObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantF_SharedPkHibernateObservationTest.java)
 
+---
+
+## Which variant should I use?
+
+I wish I had a simple answer to this. Primarily I think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is.
+
+For our strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Because I want a strong domain model for `Customer`/`Profile` pushing the lifecycle to the Service layer is counterproductive. So Variants E and F are not appealing.
+
+Another consideration is Lazy Loading. At the moment Eagerly loading `Profile` is no big deal. But as `Profile` grew this could become more of a problem. Without changing the current setup this situation makes Variants B and C less attractive because the Parent is on the 'inverse side'. Notably, there are other options here. We could add selectors to the Customer Repository for example. Also, we could use Bytecode Enhancement.
+
+This leaves Variants A and D. Both of which make less conceptual sense from a Relational perspective. If I take this as the choice, then the only question is whether I want a bidirectional or unidirectional relationship.
+
+The important point here is that there is no one Variant for any scenario. Understanding the tradeoffs should provide some direction.
+
+---
+
 ## Common Pitfalls
 
 Just a few things I try to avoid:
@@ -346,11 +345,14 @@ Just a few things I try to avoid:
 - Assuming `FetchType.LAZY` always works
 - Confusing owning side with domain ownership
 
+---
+
 ## Repository
 The repository contains full implementations, tests, and schema assertions for each variant:
 
 👉 https://github.com/tony-waters/spring-jpa-one-to-one
 
+---
 
 ## <a name="notes"></a>Notes
 1. I purposefully do not include using a JOIN table here. While this is a legitimate way of representing a one-to-one relationship it is generally only used for legacy systems.
