@@ -316,20 +316,22 @@ The included tests have evolved as I added to and refactored the [source repo]()
 
 ... and entity contract tests where appropriate:
 
-- VariantA_EntityContractTest
-- VariantB_EntityContractTest
-- VariantC_EntityContractTest
-- VariantD_EntityContractTest
+- [VariantA_EntityContractTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantA/VariantA_EntityContractTest.java)
+- [VariantB_EntityContractTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantB/VariantB_EntityContractTest.java)
+- [VariantC_EntityContractTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantC/VariantC_EntityContractTest.java)
+- [VariantD_EntityContractTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/variantD/VariantD_EntityContractTest.java)
 
 I also wanted to record some of the observed Hibernate behaviour in this setup (I found some of it surprising):
 
-- VariantA_ProfileLazyLoadingObservationTest
-- VariantB_ProfileLazyLoadingObservationTest
-- VariantC_ProfileLazyLoadingObservationTest
-- VariantD_ProfileLazyLoadingObservationTest
-- VariantF_SharedPkHibernateObservationTest
+- [VariantA_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantA_ProfileLazyLoadingObservationTest.java)
+- [VariantB_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantB_ProfileLazyLoadingObservationTest.java)
+- [VariantC_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantC_ProfileLazyLoadingObservationTest.java)
+- [VariantD_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantD_ProfileLazyLoadingObservationTest.java)
+- [VariantF_SharedPkHibernateObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantF_SharedPkHibernateObservationTest.java)
 
 ## Common Pitfalls
+
+Just a few things I try to keep in mind:
 
 - Updating only the inverse side does nothing
 - Forgetting `UNIQUE` → not actually one-to-one
