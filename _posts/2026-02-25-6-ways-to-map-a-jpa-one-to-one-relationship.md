@@ -27,7 +27,7 @@ The `@OneToOne` annotation hides three structural decisions:
 - Whether navigation is bidirectional
 - Whether identity is shared (`@MapsId`)
 
-I have combined these into 6 distinct variants:
+I have combined these into 6 distinct (clickable) variants:
 
 <table class="table table-bordered text-center align-middle one-to-one-table">
   <thead class="table-light">
@@ -296,13 +296,15 @@ Similar Object mode to last Variant (E) so same summary applies.
 
 ## Which variant should I use?
 
-I wish I had a simple answer to this. Primarily I think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models.
+I wish I had a simple answer to this. Primarily I think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is.
 
 For the strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out.
 
 Because I want a strong domain model for `Customer`/`Profile` pushing the lifecycle to the Service layer has no appeal. So Variants E and F are not appealing.
 
 Another consideration is Lazy Loading. At the moment Eagerly loading `Profile` is no big deal. But as `Profile` grew it could become more of a problem. Without changing the current setup this situation makes Variants B and C less attractive because the Parent is on the 'inverse side'. In reality there are other options here. We could add selectors to the Customer Repository for example. Also, we could use Bytecode Enhancement.
+
+This leaves Variants A and D. Both of which make less conceptual sense from a Relational perspective. If I take this as the choice, then the only question is whether I want a bidirectional or unidirectional relationship.
 
 ---
 
