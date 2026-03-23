@@ -211,7 +211,7 @@ Most natural relational model. The parent *feels* like it owns the relationship,
 - `Profile.id == Customer.id`
 - No separate foreign key column
 
-Models **true composition at the database level** since Child cannot exist independently and Cannot be reassigned
+Models true composition at the database level since Child cannot exist independently and Cannot be reassigned
 
 ---
 
@@ -229,7 +229,7 @@ Models **true composition at the database level** since Child cannot exist indep
 - Same schema as Variant B
 - No cascade or helper methods
 
-👉 Lifecycle is controlled **entirely in the service layer**
+👉 Lifecycle is controlled entirely in the service layer
 
 ---
 
