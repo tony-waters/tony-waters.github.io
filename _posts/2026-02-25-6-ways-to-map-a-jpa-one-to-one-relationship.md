@@ -89,7 +89,7 @@ I have combined these into 6 distinct (clickable) variants:
 
 Note that for most of the variants the Parent (`Customer`) controls the lifecycle. From an Object composition<sup>[[2]](#notes)</sup> perspective this usually makes sense in a Parent/Child scenario. This is dealing with ORM at the entity level, and Variants A to D all do this. 
 
-Variants E and F are unidirectional from the Child side. This precludes lifecycle control from `Customer` to `Profile` and pushes lifecycle management up a level. To the Caller. In the case of many applications this is a Service layer.
+Variants E and F are unidirectional from the Child side. This precludes lifecycle control from `Customer` to `Profile` and pushes lifecycle management to the Caller. In the case of many applications this is a Service layer.
 
 Let's look at the first Variant in detail, then summarise the other Variants.
 
