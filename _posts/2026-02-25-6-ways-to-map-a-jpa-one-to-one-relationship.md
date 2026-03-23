@@ -297,7 +297,7 @@ The repository contains full implementations, tests, and schema assertions for e
 ## <a name="notes"></a>Notes
 1. I purposefully do not include using a JOIN table here.
    While this is a legitimate way of representing a one-to-one relationship
-   it is generally only used in a legacy system
+   it is generally only used for legacy systems
 
 2. if you dont know what composition is look here (See [here](https://stackoverflow.com/questions/11881552/implementation-difference-between-aggregation-and-composition-in-java))
 
