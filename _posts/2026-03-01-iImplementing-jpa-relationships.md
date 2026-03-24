@@ -10,10 +10,10 @@ header-img: "img/jekyll2.jpg"
 > "Jakarta Persistence". jakarta.ee. Retrieved 2021-10-05.
 > https://jakarta.ee/specifications/persistence/3.0/jakarta-persistence-spec-3.0.html
 
-# spring-jpa
+## spring-jpa
 Setting up Java Persistence API (JPA) using Spring Boot 4 and Hibernate.
 
-# Overview
+## Overview
 JPA allows us to map Java objects to a relational database, whats called Object-Relational Mapping (ORM).
 Getting this right creates a solid persistence layer for Java applications backed by a relational database.
 At its core it allows us to effectively represent @OneToOne, @OneToMany, and @ManyToMany relationships at the
@@ -26,7 +26,7 @@ So I have included a realistic set of tests.
 
 Plan is to create the entity/repository layer here, then build other layers over it.
 
-# The Entities
+## The Entities
 I have chosen a simple Domain model for demonstration purposes:
 
 domain model ER diagram here.
