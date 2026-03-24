@@ -227,7 +227,7 @@ public class ProfileA {
 }
 ```
 
-Placing the foreign key in the Parent table can sometimes feel slightly unnatural from a Relational Database perspective if the Child is conceptually dependent on the parent. Conversely, one advantage of Variant A is that making the Parent the 'owning side' means Lazy Loading of `Profile` works out of the box in this setup.
+Placing the foreign key in the Parent table can sometimes feel slightly unnatural from a Relational Database perspective if the Child is conceptually dependent on the parent. Conversely, one advantage of Variant A is that making the Parent the 'owning side' means Lazy Loading of `Profile` works 'out of the box' in this setup.
 
 ## All the Variants
 
@@ -334,7 +334,7 @@ Failing other interventions, this leaves Variants A and D. Both of which make le
 
 The important point here is that there is no one Variant for any scenario. Understanding the Domain model and the above tradeoffs should provide some direction.
 
-So which Variant should you use?
+So which Variant *should* you use?
 
 ---
 
