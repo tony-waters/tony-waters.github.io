@@ -314,11 +314,11 @@ The included (clickable) tests have evolved as I added to and refactored the [so
 
 I also wanted to record some of the observed Hibernate behaviour in this setup (I found some of it surprising):
 
-- [VariantA_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantA_ProfileLazyLoadingObservationTest.java)
-- [VariantB_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantB_ProfileLazyLoadingObservationTest.java)
-- [VariantC_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantC_ProfileLazyLoadingObservationTest.java)
-- [VariantD_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantD_ProfileLazyLoadingObservationTest.java)
-- [VariantF_SharedPkHibernateObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/hibernate/VariantF_SharedPkHibernateObservationTest.java)
+- [VariantA_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/observations_hibernate/VariantA_ProfileLazyLoadingObservationTest.java)
+- [VariantB_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/observations_hibernate/VariantB_ProfileLazyLoadingObservationTest.java)
+- [VariantC_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/observations_hibernate/VariantC_ProfileLazyLoadingObservationTest.java)
+- [VariantD_ProfileLazyLoadingObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/observations_hibernate/VariantD_ProfileLazyLoadingObservationTest.java)
+- [VariantF_SharedPkHibernateObservationTest](https://github.com/tony-waters/spring-jpa-one-to-one/blob/main/src/test/java/uk/bit1/spring_jpa/observations_hibernate/VariantF_SharedPkHibernateObservationTest.java)
 
 ---
 
