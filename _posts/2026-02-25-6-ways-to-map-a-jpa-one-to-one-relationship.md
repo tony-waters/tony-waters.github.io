@@ -362,5 +362,19 @@ The repository contains full implementations, tests, and schema assertions for e
 ---
 
 ## Resources
-- [Some Resource](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html)
+- [5 ways to initialize lazy associations and when to use them](https://thorben-janssen.com/5-ways-to-initialize-lazy-relations-and-when-to-use-them/)
+- [Don't Let Hibernate Steal Your Identity](https://web.archive.org/web/20171211235806/http://www.onjava.com/pub/a/onjava/2006/09/13/dont-let-hibernate-steal-your-identity.html)
+- [(Hopefully) the final article about equals and hashCode for JPA entities with DB-generated IDs](https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/)
+- [Understanding Hibernate’s OneToOne Lazy Loading: A Real-World Investigation](https://medium.com/@enisserbest/understanding-hibernates-onetoone-lazy-loading-a-real-world-investigation-7dbee64ed46a)
+- [Hibernate Tip: How to lazily load one-to-one associations](https://thorben-janssen.com/hibernate-tip-lazy-loading-one-to-one/)
+- [How to change the @OneToOne shared primary key column name with JPA and Hibernate](https://vladmihalcea.com/change-one-to-one-primary-key-column-jpa-hibernate/)
+- [The best way to map a @OneToOne relationship with JPA and Hibernate](https://vladmihalcea.com/the-best-way-to-map-a-onetoone-relationship-with-jpa-and-hibernate/)
+- [What's the JPA equivalent of the Hibernate @LazyToOne annotation?](https://stackoverflow.com/questions/16391789/whats-the-jpa-equivalent-of-the-hibernate-lazytoone-annotation)
+- [Hibernate N+1 query issue when fetching @OneToOne associations with JPA Criteria and @LazyToOne](https://discourse.hibernate.org/t/hibernate-n-1-query-issue-when-fetching-onetoone-associations-with-jpa-criteria-and-lazytoone/2037)
+- [Maven and Gradle Hibernate Enhance Plugin](https://vladmihalcea.com/maven-gradle-hibernate-enhance-plugin/)
+- [Hibernate 7.3 Migration Guide](https://docs.hibernate.org/orm/7.3/migration-guide/)
+- [Improve Hibernate Lazy fetching using Bytecode Enhancement plugin](https://medium.com/@b1994dev/improve-hibernate-lazy-fetching-using-bytecode-enhancement-plugin-613bd929962b)
+- [Hibernate ORM User Guide](https://docs.hibernate.org/orm/current/userguide/html_single/#settings-batch)
+- [Mastering Hibernate 7 with Spring Boot 4: The Next-Gen Configuration & Performance Guide](https://ankurm.com/mastering-hibernate-7-with-spring-boot-4-the-next-gen-configuration-performance-guide/)
+- [Domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design)
 
