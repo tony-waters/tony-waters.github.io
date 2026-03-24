@@ -291,7 +291,7 @@ So one question is should we test our use of the JPA annotations is correct?
 We can break this down further as the annotations refer to different facets of the ORM.
 
 
-# The Repositories
+## The Repositories
 
 ## highlights
 
@@ -299,5 +299,5 @@ We can break this down further as the annotations refer to different facets of t
 
 ## testing
 
-# The Service layer
+## The Service layer
 next ...
