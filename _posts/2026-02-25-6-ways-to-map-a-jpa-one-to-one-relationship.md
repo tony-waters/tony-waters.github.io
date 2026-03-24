@@ -118,7 +118,7 @@ public class CustomerA {
 }
 ```
 
-The presence of `@JoinColumn` indicates `CustomerA` is the 'owning side' of this relationship from a Relational perspective. So the foreign key goes in this table. As the 'owning side' it has to be updated in order to persist in the Database. If you only update the inverse side, nothing is persisted to the database. Its best to maintain the object graph and always do something like this:
+The presence of `@JoinColumn` indicates `CustomerA` is the 'owning side' of this relationship from a Relational perspective. So the foreign key goes in this table. As the 'owning side' it has to be updated in order to persist in the Database. If you only update the inverse side, **nothing is persisted to the database**. Its best to maintain the object graph and always do something like this:
 
 ``` java
 customer.setProfile(profile);
