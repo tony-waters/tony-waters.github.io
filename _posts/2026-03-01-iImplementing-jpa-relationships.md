@@ -1,7 +1,7 @@
 ---
 title: Implementing JPA relationships in Spring Boot JPA
 layout: post
-header-img: "img/jekyll2.jpg"
+header-img: "img/spring5.jpg"
 ---
 
 > The technical objective of this work is to provide an object/relational mapping facility
