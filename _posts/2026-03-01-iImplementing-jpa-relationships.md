@@ -1,7 +1,6 @@
 ---
 title: Implementing JPA relationships in Spring Boot JPA
 layout: post
-tags: [JPA, @OneToOne, Hibernate 7, SpringBoot 4]
 header-img: "img/jekyll2.jpg"
 ---
 
