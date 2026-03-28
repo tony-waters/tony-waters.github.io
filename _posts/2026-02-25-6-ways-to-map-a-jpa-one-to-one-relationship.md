@@ -326,15 +326,13 @@ I also wanted to record some of the observed Hibernate behaviour in this setup (
 
 I wish I had a simple answer to this. Coming from a Java background I primarily think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is.
 
-For the strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Such a domain model precludes pushing the lifecycle to the Service layer. So Variants E and F are not appealing.
+For the strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Id we want a strong domain model it precludes pushing the lifecycle to the Service layer. So Variants E and F are not appealing.
 
 Another consideration is Lazy Loading. At the moment Eagerly loading `Profile` is no big deal. But as `Profile` grows this could become more of a problem. Without changing the current setup this situation makes Variants B and C less attractive because the Parent is on the 'inverse side'. Notably, there are other options here. We could add selectors to the Customer Repository for example. Also, we could use Bytecode Enhancement.
 
 Failing other interventions, this leaves Variants A and D. Both of which make less conceptual sense from a Relational perspective. If I take this as the choice, then the only question is whether I want a bidirectional or unidirectional relationship.
 
-The important point here is that there is no one Variant for any scenario. Understanding the Domain model and the above tradeoffs should provide some direction.
-
-So which Variant *should* you use?
+The important point here is that there is no one Variant for any scenario. Understanding the Domain model and the above tradeoffs should provide some direction. Bear in mind there are other subtle combinations available.
 
 ---
 
