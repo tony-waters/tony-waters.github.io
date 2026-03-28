@@ -263,7 +263,7 @@ Most natural relational model. The parent *feels* like it owns the relationship,
 - `Profile.id == Customer.id`
 - No separate foreign key column
 
-Models true composition at the database level since Child cannot exist independently and cannot be reassigned. Also feel a little simpler to understand at the Object level, and one less field to worry about. One drawback in this setup is Lazy Loading of the `Profile` does not work 'out of the box' (see LazyLoading Tests).
+Models true composition at the database level since Child cannot exist independently and cannot be reassigned. Also feels a little simpler to understand at the Object level, and one less field to worry about. One drawback in this setup is Lazy Loading of the `Profile` does not work 'out of the box' (see LazyLoading Tests).
 
 ---
 
