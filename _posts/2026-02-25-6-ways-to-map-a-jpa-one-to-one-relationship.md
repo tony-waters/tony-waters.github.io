@@ -250,7 +250,7 @@ Here are all the (clickable) Variants with links to the GitHub repo folder where
 
 ## Summary of Variants B–F
 
-Rather than repeating the full walkthrough, the remaining variants can be understood as variations on the same core ideas demonstrated in Variant A. They are better understood through reference to the actual repositories. Below is a summary of Variants B to F:
+Rather than repeating the full walkthrough, we can apply the same core ideas demonstrated in Variant A to the other variants, combined with checking out the [actual repositories](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa). Below is a summary of Variants B to F:
 
 ---
 
