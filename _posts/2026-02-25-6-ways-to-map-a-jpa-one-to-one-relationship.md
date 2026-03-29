@@ -227,6 +227,12 @@ public class ProfileA {
 }
 ```
 
+Variant A can ve summarised as:
+
+- Foreign key is in Parent (`customer.profile_id`)
+- Parent is the 'owning side'
+- Child is inverse (`mappedBy`)
+
 Placing the foreign key in the Parent table can sometimes feel slightly unnatural from a Relational Database perspective if the Child is conceptually dependent on the parent. Conversely, one advantage of Variant A is that making the Parent the 'owning side' means Lazy Loading of `Profile` works 'out of the box' in this setup.
 
 ## All the Variants
@@ -251,7 +257,7 @@ Rather than repeating the full walkthrough, the remaining variants can be unders
 ### Variant B — FK in Child
 
 - Foreign key moves to the child (`profile.customer_id`)
-- Child becomes the owning side
+- Child becomes the 'owning side'
 - Parent becomes inverse (`mappedBy`)
 
 Most natural relational model. The parent *feels* like it owns the relationship, but the child controls persistence. One drawback in this setup is Lazy Loading of the `Profile` does not work 'out of the box' (see LazyLoading Tests).
