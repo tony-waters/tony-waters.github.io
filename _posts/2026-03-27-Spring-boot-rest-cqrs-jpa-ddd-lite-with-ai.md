@@ -10,7 +10,7 @@ After hours of back and forth we created this first iteration of [a Customer/Tic
 
 Working with AI is now an intrinsic part of a Developers role. Just for the tests alone you would be crazy not to. But there is much more.
 
-I asked my AI:
+I have been working with my current AI for over 3 months now. I asked it:
 
 > can you summarise what you bring to the game?
 
