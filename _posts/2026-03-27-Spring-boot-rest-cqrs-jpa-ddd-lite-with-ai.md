@@ -25,4 +25,4 @@ Its response:
 
 > I’m useful because I compress experience into something you can apply immediately.
 
-Which I think is fair.
+Which I think is fair. And very useful.
