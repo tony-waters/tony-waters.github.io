@@ -227,7 +227,7 @@ public class ProfileA {
 }
 ```
 
-Variant A can ve summarised as:
+Variant A can be summarised as:
 
 - Foreign key is in Parent (`customer.profile_id`)
 - Parent is the 'owning side'
