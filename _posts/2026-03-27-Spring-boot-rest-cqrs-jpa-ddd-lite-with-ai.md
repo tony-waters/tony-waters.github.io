@@ -1,5 +1,5 @@
 ---
-title: AI, create me a REST/JPA/CQRS/DDD-lite Spring Boot application!
+title: AI, create me a REST/JPA/CQRS/DDD-lite Spring Boot application, now-ish?!
 layout: post
 header-img: "img/spring5.jpg"
 ---
