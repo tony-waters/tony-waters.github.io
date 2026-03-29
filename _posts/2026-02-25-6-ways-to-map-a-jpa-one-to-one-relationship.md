@@ -167,7 +167,7 @@ public class ProfileA {
 }
 ```
 
-This allows navigation back to the `Customer` using its instance variable `profile`. And because it is the 'inverse side' holds no foreign key, and cannot be relied upon to save its associated `Customer` when saved itself.
+This allows navigation back to the `Customer` using its instance variable `profile`. As the 'inverse side' `Profile` holds no foreign key and cannot be relied upon to save its associated `Customer` when saved itself.
 It produces the following SQL:
 
 ``` sql
