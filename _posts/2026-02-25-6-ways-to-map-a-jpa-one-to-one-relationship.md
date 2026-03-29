@@ -330,7 +330,7 @@ I also wanted to record some of the observed Hibernate behaviour in this setup (
 
 ## Which variant should I use?
 
-I wish I had a simple answer to this. Coming from a Java background I primarily think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is.
+I wish I had a simple answer to this. Coming from a Java background I primarily think we have to keep the domain model in mind. But the whole point of ORM is to reconcile the Domain and Relational models. So what I really want is Variant B where Lazy Loading works as-is. Obviously, this may not be what I get - the Database design is rarely just up to us.
 
 For the strong composition of `Customer` and `Profile` there are some Variants we can more easily rule out. Id we want a strong domain model it precludes pushing the lifecycle to the Service layer. So Variants E and F are not appealing.
 
