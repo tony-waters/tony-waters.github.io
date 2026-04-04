@@ -148,7 +148,7 @@ create table customer_a (
 )
 ```
 
-On the other side of the relationship the Child (`Profile`) has a `mappedBy` to mark it as the 'inverse side' of the relationship and provide bidirectionality:
+On the other side of the relationship the Child (`Profile`) has `mappedBy` to mark it as the 'inverse side' of the relationship and provide bidirectionality:
 
 ``` java
 public class ProfileA {
