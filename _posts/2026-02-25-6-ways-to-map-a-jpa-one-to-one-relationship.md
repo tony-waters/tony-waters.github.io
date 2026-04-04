@@ -254,7 +254,7 @@ Rather than repeating the full walkthrough, we can apply the same core ideas dem
 
 ---
 
-### Variant B — FK in Child
+### [Variant B](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantB) — FK in Child
 
 - Foreign key moves to the child (`profile.customer_id`)
 - Child becomes the 'owning side'
@@ -264,7 +264,7 @@ Most natural relational model. The parent *feels* like it owns the relationship,
 
 ---
 
-### Variant C — Shared Primary Key (`@MapsId`)
+### [Variant C](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantC) — Shared Primary Key (`@MapsId`)
 
 - `Profile.id == Customer.id`
 - No separate foreign key column
@@ -273,7 +273,7 @@ Models true composition at the database level since Child cannot exist independe
 
 ---
 
-### Variant D — Unidirectional, FK in Parent
+### [Variant D](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantD) — Unidirectional, FK in Parent
 
 - Same schema as Variant A
 - No back-reference from Profile → Customer
@@ -282,7 +282,7 @@ Simplifies the object model by removing bidirectional complexity. As with Varian
 
 ---
 
-### Variant E — Unidirectional, FK in Child (Explicit Lifecycle)
+### [Variant E](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantE) — Unidirectional, FK in Child (Explicit Lifecycle)
 
 - Same schema as Variant B
 - No cascade or helper methods
@@ -291,7 +291,7 @@ Not a lot of Object modelling here in terms of the strong composition we want fo
 
 ---
 
-### Variant F — Shared PK + Explicit Lifecycle
+### [Variant F](https://github.com/tony-waters/spring-jpa-one-to-one/tree/main/src/main/java/uk/bit1/spring_jpa/variantF) — Shared PK + Explicit Lifecycle
 
 - Combines `@MapsId` with unidirectional design
 - No cascade, no bidirectional links
