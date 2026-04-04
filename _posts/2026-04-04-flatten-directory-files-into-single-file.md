@@ -17,7 +17,7 @@ What you actually want is:
 - That excludes junk
 - And is structured enough for tools (and humans) to understand
 
-The goal is to translate directory structure:
+The goal is to translate directory structure like this:
 
 ```text
 ├── dir1
@@ -276,6 +276,8 @@ The main features of this are:
 - uses markdown code fences, which helps LLMs parse files properly
 - includes the path before every file
 
+### Installation
+
 On Linux I drop this file (let's call it "repo-scan.sh") into ~/.local/bin and make it executable:
 
 ```bash
@@ -284,6 +286,14 @@ chmod +x ~/.local/bin/repo-scan.sh
 ```
 
 Then it can be run from any directory.
+
+### Can it be done in a one-liner?
+
+Well, yes. But its very ugly:
+
+```bash
+find . -type f ! -path "*/.git/*" ! -path "*/target/*" ! -path "*/build/*" ! -path "*/node_modules/*" ! -path "*/dist/*" ! -path "*/coverage/*" ! -path "*/.idea/*" ! -path "*/.vscode/*" ! -path "*/.mvn/wrapper/*" ! -path "*/tmp/*" ! -path "*/logs/*" ! -name "*.class" ! -name "*.jar" ! -name "*.war" ! -name "*.ear" ! -name "*.zip" ! -name "*.tar" ! -name "*.gz" ! -name "*.png" ! -name "*.jpg" ! -name "*.jpeg" ! -name "*.gif" ! -name "*.webp" ! -name "*.pdf" ! -name "*.iml" ! -name "*.log" -print0 | sort -z | while IFS= read -r -d '' f; do file --mime "$f" | grep -q 'charset=binary' && continue; ext="${f##*.}"; case "$ext" in java)l=java;;xml)l=xml;;yml|yaml)l=yaml;;properties)l=properties;;sql)l=sql;;sh)l=bash;;md)l=markdown;;json)l=json;;html)l=html;;css)l=css;;js)l=javascript;;ts)l=typescript;;txt)l=text;;*)l="";; esac; printf '\n---\nFILE: %s\n---\n```%s\n' "$f" "$l"; cat "$f"; printf '\n```\n'; done > repo_dump_for_llm.md
+```
 
 ### Final Thought
 
