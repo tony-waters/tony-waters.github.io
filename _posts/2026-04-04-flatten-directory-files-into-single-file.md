@@ -81,7 +81,7 @@ find . -type f ! -path "*/.git/*" ! -path "*/target/*" ! -path "*/build/*" ! -pa
 
 ### Final Thought
 
-While we could treat this as a quick shell hack, sometimes how you present the code matters as much as the code itself. This script gives you a clean, structured, reproducible, and LLM-friendly way to do that.
+Sometimes how you present the code matters as much as the code itself. This script gives you a clean, structured, reproducible, and LLM-friendly way to do that.
 
 
 
