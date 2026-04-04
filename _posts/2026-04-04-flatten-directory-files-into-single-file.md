@@ -90,6 +90,14 @@ Then it can be run from any directory.
 
 For example, this directory structure:
 
+```text
+├── dir1
+│   ├── dir2
+│   │   └── file3.txt
+│   └── file2.java
+├── file1.txt
+```
+
 Produces this output:
 
 <pre>
