@@ -93,9 +93,9 @@ For example, this directory structure:
 ```text
 ├── dir1
 │   ├── dir2
-│   │   └── file3.txt
-│   └── file2.java
-├── file1.txt
+│   │   └── file3.txt (contents: "the lazy dog")
+│   └── file2.java (contents: "jumped over" on separate lines)
+├── file1.txt (contents: "The quick brown fox")
 ```
 
 Produces this output:
