@@ -25,7 +25,7 @@ The goal is to translate a directory structure like this:
 ├── file1.txt (contents: "The quick brown fox")
 ```
 
-Into a single file something like this:
+Into a single file something like this (note the files are in alphabetical order to help with diffs):
 
 <pre>
 ---
