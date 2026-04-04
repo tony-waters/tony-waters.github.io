@@ -8,9 +8,7 @@ When working on a non-trivial codebase—especially something like a layered Spr
 
 > I want to show everything to a reviewer (or ChatGPT), without zipping, uploading, or losing context.
 
-Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable.
-
-What you actually want is:
+Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable. What you actually want is:
 
 - A single file
 - With clear boundaries between files
@@ -83,19 +81,7 @@ find . -type f ! -path "*/.git/*" ! -path "*/target/*" ! -path "*/build/*" ! -pa
 
 ### Final Thought
 
-Most people treat this as a quick shell hack. 
-
-That’s a mistake.
-
-If you’re serious about:
-
-- code reviews
-- architecture
-- using LLMs effectively
-
-…then how you present the code matters as much as the code itself.
-
-This script gives you a clean, structured, reproducible, LLM-friendly way to do that.
+While we could treat this as a quick shell hack, sometimes how you present the code matters as much as the code itself. This script gives you a clean, structured, reproducible, LLM-friendly way to do that.
 
 
 
