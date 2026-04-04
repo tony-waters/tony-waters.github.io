@@ -56,6 +56,16 @@ The quick brown fox
 Let’s build that properly.
 
 ```bash
+#!/usr/bin/env bash
+
+# Fail fast:
+# -e  → exit on error
+# -u  → error on undefined variables
+# -o pipefail → catch errors inside pipes
+set -euo pipefail
+
+# Output file (Markdown so it's LLM / GitHub friendly)
+
 OUTPUT="repo-dump.md"
 
 # ------------------------------------------------------------------------------
