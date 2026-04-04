@@ -4,11 +4,11 @@ layout: post
 header-img: "img/bash.png"
 ---
 
-When working on a non-trivial codebase—especially something like a layered Spring Boot application — you eventually hit this problem:
+When working on a non-trivial codebase — especially something like a layered Spring Boot application — you may hit this problem:
 
 > I want to show everything to a reviewer (or ChatGPT), without zipping, uploading, or losing context.
 
-Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable. What you actually want is:
+Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable. What you sometimes want is:
 
 - A single file
 - With clear boundaries between files
@@ -81,7 +81,7 @@ find . -type f ! -path "*/.git/*" ! -path "*/target/*" ! -path "*/build/*" ! -pa
 
 ### Final Thought
 
-While we could treat this as a quick shell hack, sometimes how you present the code matters as much as the code itself. This script gives you a clean, structured, reproducible, LLM-friendly way to do that.
+While we could treat this as a quick shell hack, sometimes how you present the code matters as much as the code itself. This script gives you a clean, structured, reproducible, and LLM-friendly way to do that.
 
 
 
