@@ -1,7 +1,7 @@
 ---
 title: Flattening a Codebase into a Single File (for Review, LLMs, and Sanity)
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/bash.png"
 ---
 
 When working on a non-trivial codebase—especially something like a layered Spring Boot application — you eventually hit this problem:
