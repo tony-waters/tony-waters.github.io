@@ -1,5 +1,5 @@
 ---
-title: Six Ways to Map One-to-One Relationships in Spring Boot JPA
+title: Six Ways to Map One-to-One Relationships in Spring JPA
 layout: post
 header-img: "img/spring5.jpg"
 ---
