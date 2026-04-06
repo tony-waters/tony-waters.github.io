@@ -1,5 +1,5 @@
 ---
-title: Load Testing Spring Boot with k6 - Verifying Real Behaviour Under Load
+title: Building Spring REST 4 - Verifying Real Behaviour Under Load using k6
 layout: post
 header-img: "img/spring5.jpg"
 ---

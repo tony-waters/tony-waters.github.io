@@ -1,5 +1,5 @@
 ---
-title: Modelling Aggregates in Spring Boot
+title: Building Spring REST 1 - Modelling Aggregates
 layout: post
 header-img: "img/spring5.jpg"
 ---
