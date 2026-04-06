@@ -1,6 +1,7 @@
 ---
-title: CQRS-lite with Spring Boot: Efficient Read Models Using JPA Projections
+title: CQRS-lite with Spring Boot - Efficient Read Models Using JPA Projections
 layout: post
+header-img: "img/spring5.jpg"
 ---
 
 In a previous article, we moved from CRUD-style design to **aggregates with behaviour**, applying ideas from Domain-Driven Design (DDD).
