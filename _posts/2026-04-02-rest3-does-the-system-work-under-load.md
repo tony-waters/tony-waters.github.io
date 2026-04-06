@@ -1,5 +1,5 @@
 ---
-title: Spring REST 2 - Beyond Unit Testing with k6
+title: Spring REST 3 - Beyond Unit Testing with k6
 layout: post
 header-img: "img/spring5.jpg"
 ---

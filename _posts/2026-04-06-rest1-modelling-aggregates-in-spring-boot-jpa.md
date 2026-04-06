@@ -1,5 +1,5 @@
 ---
-title: Spring REST 1 - Modelling Aggregates
+title: Spring REST 1 - Modelling Aggregates using JPA
 layout: post
 header-img: "img/spring5.jpg"
 ---
