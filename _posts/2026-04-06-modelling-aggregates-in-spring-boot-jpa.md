@@ -1,6 +1,7 @@
 ---
 title: Modelling Aggregates in Spring Boot
 layout: post
+header-img: "img/spring5.jpg"
 ---
 
 Most Spring Boot tutorials teach you how to build CRUD apps.
