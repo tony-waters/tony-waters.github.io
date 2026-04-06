@@ -1,16 +1,10 @@
 ---
-title: Building Spring REST 4 - Verifying Real Behaviour Under Load using k6
+title: Building Spring REST 2 - Beyond Unit Testing with k6
 layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Most Spring Boot testing stops at unit and integration tests.
-
-But those tests answer only one question:
-
-> “Does the code work in isolation?”
-
-They do NOT answer:
+Before we let our system out into the real world let's give it a little experience. It would be comforting to know that it can work well under load. Now let's be clear. I'm not talking about full-on load testing. It would just be nice to feel confident that the system in general and domain in particular is up to the job. If we stop at unit and integration tests we fail to answer the question:
 
 > “Does the system behave correctly under real usage?”
 
