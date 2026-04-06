@@ -4,64 +4,32 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Most Spring Boot tutorials teach you how to build CRUD apps.
+Most Spring Boot applications are built around CRUD:
 
-- Controller calls service
-- Service calls repository
-- Repository saves entity
+- Controllers call services
+- Services call repositories
+- Entities expose getters and setters
 
-And the entity?
+This approach works — until the domain becomes non-trivial.
 
-Just getters and setters.
+At that point, behaviour leaks into services, invariants are inconsistently enforced, and the model no longer reflects the business.
+
+This article shows how to move from CRUD-style design to **aggregate-based modelling**, drawing on concepts from **Domain-Driven Design (DDD)** while remaining pragmatic.
 
 ---
 
-## The problem
+## The limits of CRUD
 
-This style looks fine… until you try to add real behaviour.
-
-You end up with:
-
-- “God services” full of business logic
-- entities that are just data bags
-- rules scattered across layers
-- bugs when invariants aren’t enforced
-
-Example:
+In a typical CRUD model, entities are passive:
 
 ```java
 ticket.setStatus(RESOLVED);
-ticket.setDescription("Updated after resolution"); // should this even be allowed?
+ticket.setDescription("Updated after resolution");
 ```
 
-Nothing stops this.
+There is no guarantee that this sequence is valid.
 
-Because your entity has no opinion.
-
----
-
-## What we actually want
-
-Instead of CRUD, we want **aggregates with behaviour**.
-
-In this project, the core aggregate is:
-
-Customer
-└── Tickets
-└── Tags
-
-The rules live inside that structure:
-
-- A ticket belongs to a customer
-- A resolved ticket cannot be modified
-- Tags belong to tickets
-- Relationships must stay consistent
-
----
-
-## The mistake most people make
-
-They push all of this into the service layer.
+Any rules governing state transitions must be enforced externally, typically in services:
 
 ```java
 if (ticket.getStatus() == RESOLVED) {
@@ -69,19 +37,47 @@ if (ticket.getStatus() == RESOLVED) {
 }
 ```
 
-This is wrong.
+This leads to:
 
-Because now:
+- duplication of business rules
+- inconsistent enforcement
+- increasing service complexity
 
-- the rule is optional
-- it can be bypassed
-- it gets duplicated
+In DDD terms, this is known as an **anemic domain model**.
 
 ---
 
-## Move the rules into the entity
+## Aggregates in Domain-Driven Design
 
-Your entity should **protect itself**.
+DDD introduces the concept of an **aggregate**:
+
+> An aggregate is a cluster of associated objects treated as a single unit for data changes, with a clearly defined boundary and a root entity that enforces invariants.  
+> — Eric Evans, *Domain-Driven Design*
+
+In this project, the aggregate is:
+
+Customer (Aggregate Root)
+└── Tickets
+└── Tags
+
+### Key properties
+
+- **Aggregate Root**: `Customer`
+- **Consistency boundary**: all invariants must hold within the aggregate
+- **Controlled access**: external code interacts only via the root
+
+---
+
+## Invariants belong inside the aggregate
+
+An **invariant** is a rule that must always hold true.
+
+Example:
+
+> A resolved ticket cannot be modified.
+
+This rule should not live in a service.  
+It should be enforced by the domain model itself.
 
 ```java
 public void changeDescription(String description) {
@@ -98,17 +94,15 @@ private void requireEditable() {
 
 ---
 
-## Kill the setters
+## Behaviour over setters
 
-Bad:
+Instead of:
 
 ```java
-public void setStatus(TicketStatus status) {
-    this.status = status;
-}
+ticket.setStatus(RESOLVED);
 ```
 
-Better:
+We define explicit domain operations:
 
 ```java
 public void resolve() {
@@ -119,16 +113,7 @@ public void resolve() {
 
 ---
 
-## Managing relationships properly
-
-Bad:
-
-```java
-ticket.setCustomer(customer);
-customer.getTickets().add(ticket);
-```
-
-Fix:
+## Maintaining aggregate consistency
 
 ```java
 public void addTicket(Ticket ticket) {
@@ -143,22 +128,15 @@ public void addTicket(Ticket ticket) {
 
 ## The role of the service layer
 
-Instead of:
-
-```java
-// lots of logic
-ticket.setStatus(...);
-```
-
-You get:
-
 ```java
 ticket.resolve();
 ```
 
+Services orchestrate; aggregates enforce.
+
 ---
 
-## What about JPA?
+## Aggregates and JPA
 
 ```java
 @Entity
@@ -177,16 +155,26 @@ public class Ticket {
 
 ---
 
-## What you gain
+## What changes in practice
 
-- safer code
-- clearer intent
-- less duplication
-- simpler services
+| CRUD Model | Aggregate Model |
+|----------|---------------|
+| Entities are data holders | Entities enforce rules |
+| Services contain logic | Services orchestrate |
+| State is mutable | State changes are controlled |
+| Invariants are fragile | Invariants are guaranteed |
 
 ---
 
-## Final thought
+## Conclusion
 
-If your entities are just getters and setters,  
-you don’t have a model — you have a database wrapper.
+If your entities are only getters and setters,  
+you are not modelling a domain — you are exposing a database.
+
+Aggregates provide a way to:
+
+- enforce correctness
+- express domain intent
+- reduce accidental complexity
+
+Start small, and build from there.
