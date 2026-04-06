@@ -1,6 +1,7 @@
 ---
-title: Load Testing Spring Boot with k6: Verifying Real Behaviour Under Load
+title: Load Testing Spring Boot with k6 - Verifying Real Behaviour Under Load
 layout: post
+header-img: "img/spring5.jpg"
 ---
 
 Most Spring Boot testing stops at unit and integration tests.
