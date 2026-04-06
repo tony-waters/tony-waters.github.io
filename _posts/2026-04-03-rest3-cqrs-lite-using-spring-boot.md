@@ -1,5 +1,5 @@
 ---
-title: Building Spring REST 2 - Efficient Read Models Using CQRS-lite and JPA Projections
+title: Spring REST 3 - Efficient Read Models Using CQRS-lite and JPA Projections
 layout: post
 header-img: "img/spring5.jpg"
 ---
