@@ -13,15 +13,9 @@ The focus there was the Domain layer:
 - replacing setters with behaviour
 - making the domain responsible for its own consistency
 
-That answered:
+This article focuses on the Application layer. In the [sample application]() the Application Layer sits between the Controller and the Domain/Repository layer. 
 
-> where should business logic live?
-
-But it raises another question:
-
-> if the domain enforces the rules, what is the role of the Application layer?
-
-This article focuses on the Application layer, and in particular how it coordinates **commands and queries**.
+and in particular how it coordinates **commands and queries**.
 
 ---
 

@@ -187,18 +187,24 @@ Our Application Layer `uk.bit1.spring_jpa.application` sits between the Domain L
 
 It can be useful to separate the processes that query a system from the processes that mutate it. That way we can implement different approaches (or even different models) for the query and the mutate parts. This is the basis of the generic Object Oriented pattern [Command Query Separation](https://martinfowler.com/bliki/CommandQuerySeparation.html), and the more involved [Command Query Responsibility Segregation (CQRS)](https://martinfowler.com/bliki/CQRS.html).
 
-Instead this layer returns either Projections (for queries) or usually nothing (for Commands).
-
-* Clear separation of **Command vs Query** with CQRS
-* Projection-based read model (no entity leakage)
-* Query Pagination and Filtering
-
-On the Command side the application layer loads full aggregate, applies business rules, and persists changes:
+On the Command side the application layer loads full aggregate, and applies business rules:
 
 ```java
-Customer customer = customerRepository.findAggregateById(id);
-customer.resolveTicket(ticketId);
+public class CustomerCommandService {
+  ...
+  public void resolveTicket(ResolveTicketCommand cmd) {
+    loadCustomer(cmd.customerId()).resolveTicket(cmd.ticketId());
+  }
+  ...
+  private Customer loadCustomer(Long customerId) {
+    return customerRepository.findAggregateById(customerId)
+            .orElseThrow(() -> new CustomerNotFoundException(customerId));
+  }
+  ...
+}
 ```
+
+Because each method in the `CustomerCommandService` runs within a transaction, the JPA Domain takes care of the rest.
 
 While the Query side returns DTO projections, avoids entity loading, and is optimised for read performance:
 
@@ -206,6 +212,17 @@ While the Query side returns DTO projections, avoids entity loading, and is opti
 select new CustomerSummaryView(...)
 from Customer c
 ```
+
+
+Instead this layer returns either Projections (for queries) or usually nothing (for Commands).
+
+* Clear separation of **Command vs Query** with CQRS
+* Projection-based read model (no entity leakage)
+* Query Pagination and Filtering
+
+
+
+
 ### Web Service layer
 
 
