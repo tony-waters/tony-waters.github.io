@@ -45,7 +45,7 @@ This leads to:
 
 In DDD terms, this is known as an [**anemic domain model**]().
 
-In this article I want to move away from this anemic domain model by implementing the DDD concept of **aggregates**. I will use a [demo Spring REST system I have created]() as an example. In this article I concentrate on the [application Domain]() as this is where the aggregates are mainly located.
+I want to move away from this anemic domain model by implementing the DDD concept of **aggregates**. I will use a [demo Spring REST system I have created]() as an example. In this article I concentrate on the [application Domain]() as this is where the aggregates are mainly located.
 
 ---
 
@@ -70,7 +70,7 @@ public class Customer extends BaseEntity {
 }
 ```
 
-We can see from the `@JoinColumn` that `Customer` owns the `Profile`.Since `Profile` holds no reference to `Customer` the relationship is unidirectional:
+We can see from the `@JoinColumn` that `Customer` owns the `Profile`. Since `Profile` holds no reference to `Customer` the relationship is unidirectional:
 
 ```java
 class Profile extends BaseEntity {
