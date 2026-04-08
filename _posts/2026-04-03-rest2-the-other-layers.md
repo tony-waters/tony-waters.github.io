@@ -1,5 +1,5 @@
 ---
-title: Spring REST 2 - Application Layer: Commands, Queries, and Use Case Orchestration
+title: Spring REST 2 - Application Layer - Commands, Queries, and Use Case Orchestration
 layout: post
 header-img: "img/spring5.jpg"
 ---
