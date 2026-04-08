@@ -16,9 +16,7 @@ This works — until the domain becomes non-trivial. At that point:
 - invariants are inconsistently enforced
 - the model reflects the database, not the domain
 
-This article shows how to move from CRUD-style design to **aggregate-based modelling**.
-
-I will use a [demo Spring REST system I have created]() as an example. It represents a **first iteration** of a Spring REST service for Customer help-desk Tickets. 
+This article shows how to move from CRUD-style design to **aggregate-based modelling** using a [demo Spring REST system I have created]() as an example. The application represents a **first iteration** of a Spring REST service for Customer help-desk Tickets. 
 
 Here I concentrate on the [application Domain]() as this is where the aggregate logic is mostly located.
 
@@ -29,13 +27,15 @@ Here I concentrate on the [application Domain]() as this is where the aggregate 
 In a typical CRUD model, entities are passive:
 
 ```java
-ticket.setStatus(RESOLVED);
-ticket.setDescription("Updated after resolution");
+public class SomeService {
+    ...
+    ticket.setStatus(RESOLVED);
+    ticket.setDescription("Updated after resolution");
+    ...
+}
 ```
 
-There is no guarantee this sequence is valid.
-
-Rules must be enforced externally:
+There is no guarantee the above sequence is valid within the business rules. So we end up adding business rules to the Service that probably belong in the Domain. So rules must be enforced externally:
 
 ```java
 if (ticket.getStatus() == RESOLVED) {
