@@ -1,24 +1,26 @@
 ---
-title: Spring REST 1 - Modelling Aggregates using JPA v2
+title: Spring REST 1 - Modelling Aggregates using JPA Entities
 layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Most Spring Boot applications start with CRUD:
+It may be tempting to start building a Spring Boot application around CRUD functionality:
 
 - Controllers call services
 - Services call repositories
 - Entities expose getters and setters
 
-This works — until the domain becomes non-trivial.
-
-At that point:
+This works — until the domain becomes non-trivial. At that point:
 
 - business rules are duplicated across services
 - invariants are inconsistently enforced
 - the model reflects the database, not the domain
 
-This article shows how to move from CRUD-style design to **aggregate-based modelling**, using concepts from **Domain-Driven Design (DDD)** in a pragmatic way.
+This article shows how to move from CRUD-style design to **aggregate-based modelling**.
+
+I will use a [demo Spring REST system I have created]() as an example. It represents a **first iteration** of a Spring REST service for Customer help-desk Tickets. 
+
+Here I concentrate on the [application Domain]() as this is where the aggregate logic is mostly located.
 
 ---
 
@@ -68,8 +70,7 @@ With relationships:
 - Customer → Ticket (1–many)
 - Ticket → Tag (many–many)
 
-The key question is not how these relate in JPA —  
-but how they should be **grouped for consistency**.
+The key question is how these entities should be **grouped for consistency**.
 
 ---
 
@@ -101,9 +102,11 @@ Only `Customer` is accessed from outside.
 
 > External code must not directly manipulate `Ticket` or `Profile`.
 
----
+In this first iteration I have chosen to mostly ignore the `Tag` aggregate, while still using it. My focus in this iteration is the `Customer` aggregate.
 
-## Behaviour over setters
+While writing the code there some things I tried to bear in mind:
+
+### Behaviour over setters
 
 Instead of exposing setters:
 
@@ -120,11 +123,11 @@ public void resolve() {
 }
 ```
 
-This makes invalid transitions impossible.
+This makes invalid transitions less likely.
 
 ---
 
-## Invariants belong inside the aggregate
+### Invariants belong inside the aggregate
 
 An **invariant** is a rule that must always hold.
 
@@ -149,7 +152,7 @@ This rule now lives where it belongs: **inside the domain**.
 
 ---
 
-## The aggregate root controls mutations
+### The aggregate root controls mutations
 
 All changes go through `Customer`:
 
@@ -170,7 +173,7 @@ public void addTicket(Ticket ticket) {
 }
 ```
 
-This guarantees:
+This helps guarantee:
 
 - consistency
 - correct relationships
@@ -180,7 +183,7 @@ This guarantees:
 
 ## Loading the aggregate
 
-To work with the aggregate, we load it as a whole:
+In this first iteration, to work with the aggregate, we load it as a whole:
 
 ```java
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
@@ -191,6 +194,16 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 ```
 
 This ensures the full consistency boundary is available during modification.
+
+---
+
+## Testing the aggregate
+
+Domain tests for the sample application include unit tests that run without any JPA context. And `@DataJpaTest` tests that ...:
+
+- [CustomerTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/CustomerTest.java)
+- [TicketTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/TicketTest.java)
+- [CustomerRepositoryDataJpaTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/CustomerRepositoryDataJpaTest.java)
 
 ---
 
