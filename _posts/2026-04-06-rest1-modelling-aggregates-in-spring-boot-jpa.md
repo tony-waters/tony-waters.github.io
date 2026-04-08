@@ -49,10 +49,14 @@ In DDD terms, this is known as an **anemic domain model**.
 
 ## Aggregates in Domain-Driven Design
 
-DDD introduces the concept of an **aggregate**:
+DDD introduces the concept of an **aggregate** and an **aggregate root***:
 
 > An aggregate is a cluster of associated objects treated as a single unit for data changes, with a clearly defined boundary and a root entity that enforces invariants.  
 > — Eric Evans, *Domain-Driven Design*
+
+
+
+The fact is we have to deal with the Business logic somewhere. If it is not in the Domain model it will end up in the Service layer. 
 
 In this project, the aggregate is:
 
