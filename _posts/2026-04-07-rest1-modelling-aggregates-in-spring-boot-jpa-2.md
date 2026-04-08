@@ -57,7 +57,7 @@ In DDD, this is known as an **anemic domain model**.
 
 ## The domain
 
-The example domain consists of:
+The [example domain](https://github.com/tony-waters/spring-boot-app/tree/main/src/main/java/uk/bit1/spring_jpa/domain) consists of:
 
 - `Customer`
 - `Profile`
@@ -193,13 +193,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 }
 ```
 
-This ensures the full consistency boundary is available during modification.
+This ensures the full consistency boundary is available during modification. Depending on the resulting object graph this approach may not be ideal as it may not scale well, but its acceptable for this first iteration.
 
 ---
 
 ## Testing the aggregate
 
-Domain tests for the sample application include unit tests that run without any JPA context. And `@DataJpaTest` tests that ...:
+Domain tests for the sample application include unit tests that run without any JPA context. And `@DataJpaTest` tests:
 
 - [CustomerTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/CustomerTest.java)
 - [TicketTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/TicketTest.java)
