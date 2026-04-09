@@ -1,5 +1,5 @@
 ---
-title: Spring REST 3 - Beyond Unit Testing with k6
+title: Load Testing with k6
 layout: post
 header-img: "img/spring5.jpg"
 ---
