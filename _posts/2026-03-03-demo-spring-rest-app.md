@@ -97,31 +97,42 @@ Tests for this layer can be found in:
 - [`CustomerCommandControllerWebMvcTest`]()
 - [`CustomerQueryControllerWebMvcTest`]()
 
-# Other bits
+## Other bits (deployment and a little load testing for sanity)
 
-Apart from the Layers its worth mentioning the application has a seeder, runs in Docker, and has a GitHub build script. 
+Apart from the Layers its worth mentioning the application has a few other features:
 
-## Seeder
+### Seeder
 
 The seeder classes are:
 
 - [`DemoDataSeederService`]()
 - [`SeedCommandLineRunner`]()
 
-The `SeedCommandLineRunner` runs `DemoDataSeederService` when the profile is "seed".
+The `SeedCommandLineRunner` runs `DemoDataSeederService` when the Spring profile is "seed".
 
-## Docker
+### Docker
 
 The Docker classes are:
 
-- [`Docker`]()
-- [`docker-compaose.yaml`]()
+- [`Dockerfile`]()
+- [`docker-compose.yaml`]()
+- [`docker-compose-no-seed.yaml`]()
+- [`customer-write-smoke-test.js`]()
 
-I have included a Dockerfile to containerise the application. Also a `docker-compose.yaml` file to run the application with a separate Postgres database. Run it like this:
+Running the following will build and seed the application:
 
-> docker-compose up --build
+> docker-compose up --build --detach
 
-## GitHub build script
+Then provided K9 is installed, you can run some basic load tests:
 
-I have included a GitHub Actions script to publich the container imager [here](). It pulished to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
+> k6 run customer-write-smoke-test.js
+
+To just run the application and Postgres (no seeding):
+
+> docker-compose -f docker-compose-no-seed.yaml up --build --detach
+
+
+### GitHub build script
+
+I have included a GitHub Actions script to publish the container imager [here](). Its pulished to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
 
