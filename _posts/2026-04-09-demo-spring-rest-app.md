@@ -29,6 +29,8 @@ The application is broken down into layers.
 - Application Service Layer
 - REST Controller Layer
 
+I will summarise each of these briefly,, and point to where the important code and tests are.
+
 ## Domain / JPA Layer
 
 The main classes in this layer are:
