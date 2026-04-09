@@ -103,9 +103,20 @@ Apart from the Layers its worth mentioning the application has a seeder, runs in
 
 ## Seeder
 
+The seeder classes are:
+
+- [`DemoDataSeederService`]()
+- [`SeedCommandLineRunner`]()
+
+The `SeedCommandLineRunner` runs `DemoDataSeederService` when the profile is "seed".
+
 ## Docker
+
+I have included a Dockerfile to containerise the application. Also a `docker-compose.yaml` file to run the application with a separate Postgres database. Run it like this:
+
+> docker-compose up --build
 
 ## GitHub build script
 
-
+I have included a GitHub Actions script to publich the container imager [here](). It pulished to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
 
