@@ -112,6 +112,11 @@ The `SeedCommandLineRunner` runs `DemoDataSeederService` when the profile is "se
 
 ## Docker
 
+The Docker classes are:
+
+- [`Docker`]()
+- [`docker-compaose.yaml`]()
+
 I have included a Dockerfile to containerise the application. Also a `docker-compose.yaml` file to run the application with a separate Postgres database. Run it like this:
 
 > docker-compose up --build
