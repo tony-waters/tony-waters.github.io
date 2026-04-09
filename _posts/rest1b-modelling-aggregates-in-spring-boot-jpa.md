@@ -175,13 +175,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 By using `@EntityGraph` we return the full Object graph for a particular `Customer`/aggregate-root.
 
-### The Application (Domain Service) Layer
+### The Application/Domain-Service Layer
 
 > Domain services are different from infrastructural services because they embed and operate upon domain concepts ... Infrastructural services are instead focused on encapsulating the "plumbing" requirements of an application
 
 > https://www.gorodinski.com/Services-in-Domain-Driven-Design-DDD-3158cf7881f980c5807dfcd7df0a69ce
 
-Our Application Layer `uk.bit1.spring_jpa.application` sits between the Domain Layer and higher Service layers (like the Web Layer) - acting as a service layer for the Domain. It works with the Domain objects, but does not return them to the caller. 
+Our Application Layer `uk.bit1.spring_jpa.application` sits between the Domain Layer and higher Service layers (like the Web Layer) - acting as a application layer and service layer for the Domain. It works with the Domain objects, but does not return them to the caller. 
 
 #### Command / Query Separation
 

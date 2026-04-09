@@ -192,3 +192,7 @@ Using projections:
 
 Keep aggregates for writes.  
 Use projections for reads.
+
+## Notes
+
+[Using the Optimal Query Approach and Projection for JPA and Hibernate - Thorben Janssen](https://thorben-janssen.com/optimal-query-and-projection-jpa-hibernate/)
