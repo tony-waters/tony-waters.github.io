@@ -121,15 +121,21 @@ The Docker classes are:
 
 Running the following will build and seed the application:
 
-> docker-compose up --build --detach
+```bash
+docker-compose up --build --detach
+```
 
 Then provided K9 is installed, you can run some basic load tests:
 
-> k6 run customer-write-smoke-test.js
+```bash
+k6 run customer-write-smoke-test.js
+```
 
 To just run the application and Postgres (no seeding):
 
-> docker-compose -f docker-compose-no-seed.yaml up --build --detach
+```bash
+docker-compose -f docker-compose-no-seed.yaml up --build --detach
+```
 
 
 ### GitHub build script
