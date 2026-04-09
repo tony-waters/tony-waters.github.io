@@ -31,7 +31,11 @@ The application is broken down into layers.
 
 ## Domain / JPA Layer
 
-The classes in this layer can be found here: 
+The main classes in this layer are:
+
+- [`Customer`]()
+- [`Profile`]()
+- [`Ticket`]()
 
 The main focus was to avoid an [anemic domain model]() by using aggregates:
 
@@ -46,7 +50,7 @@ Our application has 2 aggregates, `Customer` and `Tag`. In this first iteration 
 
 ![Image alt]({{ site.baseurl }}/img/spring-customer-aggregate-2.png "Customer Aggregate Diagram")
 
-For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public return methods.
+For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public return methods, neither [`Ticket`]() or [`Profile`]() has any.
 
 Also note that all the entities in the aggregate focus on domain behaviour (like `resolveTicket()`) rather than setters (like `setStatus('resolved')`).
 
@@ -56,9 +60,50 @@ Domain tests for the sample application include unit tests that run without any 
 - [TicketTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/TicketTest.java)
 - [CustomerRepositoryDataJpaTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/CustomerRepositoryDataJpaTest.java)
 
+## Application Service Layer
 
+The main classes in this layer are:
 
+- [`CustomerCommandService`]()
+- [`CustomerQueryService`]()
+- [`CustomerQueryRepository`]()
 
+It can be useful to separate the processes that query a system from the processes that change it. That way we can implement different approaches (or even different models) for the query and the mutate parts. This is the basis of the generic Object Oriented pattern [Command Query Separation](https://martinfowler.com/bliki/CommandQuerySeparation.html), and the more involved [Command Query Responsibility Segregation (CQRS)](https://martinfowler.com/bliki/CQRS.html).
+
+The application services are split between [`CustomerCommandService`]() and [`CustomerQueryService`]().
+
+`CustomerCommandService` talks directly to the `Customer` aggregate root to apply changes to the data using Command objects. One outcome of this approach is you can end up with a lot of Command objects, since the recomendation is usually to use one object per command. These simple data carriers can be represented with `records` for simplicity.
+
+`CustomerQueryService` uses its [`CustomerQueryRepository`]() and JPQL, avoiding the domain model entirely. The Query side returns projections in the form of `record`s.
+
+Tests for this layer can be found in:
+
+- [`CustomerCommandServiceDataJpaTest`]()
+- [`CustomerQueryRepositoryDataJpaTest`]()
+
+## REST Controller Layer
+
+The main classes in this layer are:
+
+- [`CustomerCommandController`]()
+- [`CustomerQueryController`]()
+
+This is a vanilla Spring REST controller layer. Its thin, uses DTOs for requests, and basically calls the the Application Layer.
+
+Tests for this layer can be found in:
+
+- [`CustomerCommandControllerWebMvcTest`]()
+- [`CustomerQueryControllerWebMvcTest`]()
+
+# Other bits
+
+Apart from the Layers its worth mentioning the application has a seeder, runs in Docker, and has a GitHub build script. 
+
+## Seeder
+
+## Docker
+
+## GitHub build script
 
 
 
