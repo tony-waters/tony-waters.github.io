@@ -1,5 +1,5 @@
 ---
-title: Spring REST #1 - Aggregates, Command/Query separation, and Deployment 
+title: Spring REST 1 - Aggregates, Command/Query separation, and Deployment 
 layout: post
 header-img: "img/spring5.jpg"
 ---
