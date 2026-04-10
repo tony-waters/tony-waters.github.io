@@ -1,5 +1,5 @@
 ---
-title: Demo Spring REST Application
+title: Demo Spring REST Application - Aggregates, Command/Query separation, and Deployment 
 layout: post
 header-img: "img/spring5.jpg"
 ---
