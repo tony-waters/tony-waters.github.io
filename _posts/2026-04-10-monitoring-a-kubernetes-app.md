@@ -1,5 +1,5 @@
 ---
-title: Spring REST 3 - Observing the Spring Demo application in Kubernetes
+title: Spring REST 3 - Observing the Spring Demo Application in Kubernetes
 layout: post
 header-img: "img/spring5.jpg"
 ---

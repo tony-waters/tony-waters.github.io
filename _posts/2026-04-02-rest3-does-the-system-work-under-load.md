@@ -1,5 +1,5 @@
 ---
-title: Spring REST 2 - Local Load Testing with k6
+title: Spring REST 2 - Local Load Testing a Spring Demo Application with k6
 layout: post
 header-img: "img/spring5.jpg"
 ---

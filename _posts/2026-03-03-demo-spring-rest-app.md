@@ -1,5 +1,5 @@
 ---
-title: Spring REST 1 - Anatomy of a Demo Application 
+title: Spring REST 1 - Anatomy of a Non-Anemic Spring Demo Application 
 layout: post
 header-img: "img/spring5.jpg"
 ---
