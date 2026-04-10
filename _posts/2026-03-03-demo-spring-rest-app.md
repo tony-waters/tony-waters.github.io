@@ -29,7 +29,34 @@ The application is broken down into layers.
 - Application Service Layer
 - REST Controller Layer
 
-I will summarise each of these briefly,, and point to where the important code and tests are.
+
+        ┌──────────────────────────────┐
+        │      REST Controllers        │
+        │  (REST API: /api/customers)  │
+        └──────────────┬───────────────┘
+                       │
+        ┌──────────────▼───────────────┐
+        │    Application (Services)    │
+        │  Command + Query separation  │
+        └──────────────┬───────────────┘
+                       │
+     ┌─────────────────┴─────────────────┐
+     │                                   │
+┌────▼─────┐                     ┌───────▼────────┐
+│ Command  │                     │ Query          │
+│ Side     │                     │ Side           │
+│ (Domain) │                     │ (DTOs)         │
+└────┬─────┘                     └───────┬────────┘
+     │                                   │
+┌────▼──────────────┐          ┌─────────▼────────────┐
+│ Domain / Entities │          │ Projection Queries   │
+│ - Customer        │          │ (no entity leakage)  │
+│ - Ticket          │          └──────────────────────┘
+│ - Tag             │
+└───────────────────┘
+
+
+I will summarise each of these briefly, and point to where the important code and tests are.
 
 ## Domain / JPA Layer
 
