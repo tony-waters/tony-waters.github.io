@@ -1,5 +1,5 @@
 ---
-title: Spring REST 1 - Aggregates, Command/Query separation, and Deployment 
+title: Spring REST 1 - Anatomy of a Demo Application 
 layout: post
 header-img: "img/spring5.jpg"
 ---
@@ -13,7 +13,7 @@ I wanted to write a simple-ish Spring REST application to experiment with these 
 - H2 (test database)
 - AssertJ
 
-... and these aims:
+... and these aims (Aggregates, Command/Query separation, and Deployment or specifically:
 
 - non-anemic domain model using aggregates
 - separate Command and Query operations
