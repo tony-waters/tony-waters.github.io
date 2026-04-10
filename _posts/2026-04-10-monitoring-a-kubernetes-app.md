@@ -24,11 +24,26 @@ Some tools I like to use are:
 
 Lets take the sample application and put it into a local kubernetes environment - then run some tests and observe what happens. This will give us some confidence as it moves through downstream testing, as well as providing insight into and highlighting issues before it hits them.
 
+We will use the Demo Rest App docker image, created using the apps [GitHubAction]() and located [here]().
+
 ## The Helm setup in the repo
+
+We use Helm to do the heavy work in taking an image and creating a pod and the pods needs. Here are the Helm charts we want to include:
+
+- prometheus
+- istio
+- pgadmin
 
 
 ## The Terraform setup in the repo
 
+We will use Terraform to orchestrate the process of creating the 'infrastructure' (*) kere:
+
+## Running it all
+
+## Experimenting with the Observations
+
+[important]
 
 ---
 
