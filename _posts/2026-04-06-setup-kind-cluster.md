@@ -1,5 +1,5 @@
 ---
-title: Setting up a KIND cluster with ingress using Gateway API
+title: Spring REST 2 - Deploying the Spring REST Demo in KIND using Gateway API
 layout: post
 header-img: "img/kubernetes.png"
 ---
