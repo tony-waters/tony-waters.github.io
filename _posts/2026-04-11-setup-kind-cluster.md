@@ -97,6 +97,8 @@ gateway     gateway   cloud-provider-kind   172.18.0.3   True         114s
 
 If not, check the `cloud-provider-kind` logs for errors.
 
+In AWS this would create a ...
+
 ## Deploy application
 
 Once this is all setup we are ready to deploy an actual application. In order to work with the Gateway API we need to have a `HTTPRoute` to connect the `Gateway` with the application `Service`. Here is what the `HTTPRoute` looks like:
@@ -133,9 +135,22 @@ helm install spring-boot-app ./helm/spring-boot-app/
 
 ## Test it works
 
+Is the application healthy:
+
 ```shell
 curl http://172.18.0.3:80/actuator/health/liveness
+```
+
+Can we issue queries on the api:
+
+```shell
 curl http://172.18.0.3:80/api/customers
+```
+
+Lets run some tests:
+
+```shell
+BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.j
 ```
 
 
