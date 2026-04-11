@@ -1,7 +1,7 @@
 ---
 title: Setting up a KIND cluster with ingress using Gateway API
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/kubernetes.png"
 ---
 
 KinD (Kubernetes in Docker) is a ...
@@ -63,7 +63,7 @@ httproutes.gateway.networking.k8s.io           2026-04-11T20:41:16Z
 referencegrants.gateway.networking.k8s.io      2026-04-11T20:41:16Z
 ```
 
-There is still no actual Gateways yet though. So we now apply a Gateway manifest:
+There is still no actual Gateways yet though. So we need a Gateway manifest:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -81,6 +81,8 @@ spec:
         namespaces:
           from: All
 ```
+
+Which we apply like so:
 
 ```shell
 kubectl apply -f gateway.yaml
@@ -126,7 +128,7 @@ spec:
             value: /
 ```
 
-You can install the Helm charts from the `spring-boot-kubernetes` repo:
+You can install the Helm charts from the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes) repo:
 
 ```shell
 git clone https://github.com/tony-waters/spring-boot-kubernetes.git
