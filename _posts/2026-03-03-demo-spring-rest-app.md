@@ -167,7 +167,7 @@ docker-compose -f docker-compose-no-seed.yaml up --build --detach
 
 ### GitHub build script
 
-I have included a GitHub Actions script to publish the container imager [here](). Its pulished to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
+I have included a GitHub Actions script to publish the container image [here](). Its pulished to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
 
 ## Resources
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
