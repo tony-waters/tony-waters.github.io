@@ -13,9 +13,9 @@ I wanted to write a simple-ish Spring REST application to experiment with these 
 - H2 (test database)
 - AssertJ
 
-... and these aims (Aggregates, Command/Query separation, and Deployment or specifically:
+... and these aims (Aggregates, Command/Query separation, and Deployment) or specifically:
 
-- non-anemic domain model using aggregates
+- [non-anemic](https://martinfowler.com/bliki/AnemicDomainModel.html) domain model using aggregates
 - separate Command and Query operations
 - sensible tests aimed at specific layers of the application
 
@@ -169,3 +169,11 @@ docker-compose -f docker-compose-no-seed.yaml up --build --detach
 
 I have included a GitHub Actions script to publish the container imager [here](). Its pulished to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
 
+## Resources
+- [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
+- [Command Query Separation pattern - Martin Fowler](https://martinfowler.com/bliki/CommandQuerySeparation.html)
+- [Command Query Responsibility Segregation (CQRS) - Martin Fowler](https://martinfowler.com/bliki/CQRS.html)
+- [Getting started with CQRS](https://cqrs.nu/faq/Command%20and%20Query%20Responsibility%20Segregation/)
+- [Services in domain Driven Design](https://www.gorodinski.com/Services-in-Domain-Driven-Design-DDD-3158cf7881f980c5807dfcd7df0a69ce)
+- [Domain-Driven Design: Entities, Value Objects, and How To Distinguish Them](https://wempe.dev/blog/domain-driven-design-entities-value-objects)
+- [Domain-Driven Design Reference Definitions and PatternSummaries](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
