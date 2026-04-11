@@ -63,7 +63,7 @@ httproutes.gateway.networking.k8s.io           2026-04-11T20:41:16Z
 referencegrants.gateway.networking.k8s.io      2026-04-11T20:41:16Z
 ```
 
-There is still no actual Gateways yet though. So we now apply the Gateway manifest:
+There is still no actual Gateways yet though. So we now apply a Gateway manifest:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -102,7 +102,33 @@ If not, check the `cloud-provider-kind` logs for errors.
 Once this is all setup we are ready to deploy an actual application. In order to work with the Gateway API we need to have a `HTTPRoute` to connect the `Gateway` with the application `Service`. Here is what the `HTTPRoute` looks like:
 
 ```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: spring-boot-app
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: gateway
+      namespace: gateway
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: spring-boot-app
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+```
 
+You can install the Helm charts from the `spring-boot-kubernetes` repo:
+
+```shell
+git clone https://github.com/tony-waters/spring-boot-kubernetes.git
+helm install spring-boot-app ./helm/spring-boot-app/
 ```
 
 ## Test it works
