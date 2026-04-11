@@ -22,7 +22,7 @@ It can be installed using go:
 go install sigs.k8s.io/cloud-provider-kind@latest
 ```
 
-This installs the binary in $GOBIN (usually ~/go/bin). We can make it available everywhere by installing it into `/usr/local/bin`:
+On my local Linux system this installs the binary in $GOBIN (usually ~/go/bin). We can make it available everywhere by installing it into `/usr/local/bin`:
 
 ```shell
 sudo install ~/go/bin/cloud-provider-kind /usr/local/bin
