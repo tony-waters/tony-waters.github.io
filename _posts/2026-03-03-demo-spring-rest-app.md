@@ -29,32 +29,7 @@ The application is broken down into layers.
 - Application Service Layer
 - REST Controller Layer
 
-
-        ┌──────────────────────────────┐
-        │      REST Controllers        │
-        │  (REST API: /api/customers)  │
-        └──────────────┬───────────────┘
-                       │
-        ┌──────────────▼───────────────┐
-        │    Application (Services)    │
-        │  Command + Query separation  │
-        └──────────────┬───────────────┘
-                       │
-     ┌─────────────────┴─────────────────┐
-     │                                   │
-┌────▼─────┐                     ┌───────▼────────┐
-│ Command  │                     │ Query          │
-│ Side     │                     │ Side           │
-│ (Domain) │                     │ (DTOs)         │
-└────┬─────┘                     └───────┬────────┘
-     │                                   │
-┌────▼──────────────┐          ┌─────────▼────────────┐
-│ Domain / Entities │          │ Projection Queries   │
-│ - Customer        │          │ (no entity leakage)  │
-│ - Ticket          │          └──────────────────────┘
-│ - Tag             │
-└───────────────────┘
-
+![Image alt]({{ site.baseurl }}/img/spring-customer-layers.png "Application Layers Diagram")
 
 I will summarise each of these briefly, and point to where the important code and tests are.
 
@@ -66,7 +41,7 @@ The main classes in this layer are:
 - [`Profile`]()
 - [`Ticket`]()
 
-The main focus was to avoid an [anemic domain model]() by using aggregates:
+The main focus was to avoid an [anemic domain model](https://martinfowler.com/bliki/AnemicDomainModel.html) by using aggregates:
 
 > An aggregate is a cluster of associated objects treated as a single unit for data changes, with a clearly defined boundary and a root entity that enforces invariants.  
 > — Eric Evans, *Domain-Driven Design*
