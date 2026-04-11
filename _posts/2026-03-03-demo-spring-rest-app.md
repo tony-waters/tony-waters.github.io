@@ -142,13 +142,13 @@ docker-compose -f docker-compose-no-seed.yaml up --build --detach
 
 ### GitHub build script
 
-I have included a GitHub Actions script to publish the container image [here](). Its pulished to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
+I have included a GitHub Actions script to publish the container image [here](). It is published to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
 
 ## Resources
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
+- [Domain-Driven Design: Reference Definitions and Pattern Summaries - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
 - [Command Query Separation pattern - Martin Fowler](https://martinfowler.com/bliki/CommandQuerySeparation.html)
 - [Command Query Responsibility Segregation (CQRS) - Martin Fowler](https://martinfowler.com/bliki/CQRS.html)
 - [Getting started with CQRS](https://cqrs.nu/faq/Command%20and%20Query%20Responsibility%20Segregation/)
 - [Services in domain Driven Design](https://www.gorodinski.com/Services-in-Domain-Driven-Design-DDD-3158cf7881f980c5807dfcd7df0a69ce)
 - [Domain-Driven Design: Entities, Value Objects, and How To Distinguish Them](https://wempe.dev/blog/domain-driven-design-entities-value-objects)
-- [Domain-Driven Design Reference Definitions and PatternSummaries](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
