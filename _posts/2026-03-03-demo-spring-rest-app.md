@@ -13,7 +13,7 @@ I wanted to write a simple-ish Spring REST application to experiment with these 
 - H2 (test database)
 - AssertJ
 
-... and these aims (Aggregates, Command/Query separation, and Deployment) or specifically:
+... and these aims:
 
 - [non-anemic](https://martinfowler.com/bliki/AnemicDomainModel.html) domain model using aggregates
 - separate Command and Query operations
