@@ -109,7 +109,7 @@ gateway     gateway   cloud-provider-kind   **172.18.0.3**   True         114s
 
 If not, check the `cloud-provider-kind` logs for errors.
 
-## Deploy application
+## Deploy the application
 
 Once this is all setup we are ready to deploy an actual application. In order to work with the Gateway API we need to have a `HTTPRoute` to connect the `Gateway` with the application `Service`. Here is what the `HTTPRoute` looks like:
 
@@ -144,22 +144,31 @@ helm install spring-boot-app ./helm/spring-boot-app/
 
 ## Test it works
 
-Is the application healthy:
+Using the IP address from the Gateway, we can check if the application is healthy:
 
 ```shell
 curl http://172.18.0.3:80/actuator/health/liveness
 ```
 
-Can we issue queries on the api:
+Issue queries on the api:
 
 ```shell
 curl http://172.18.0.3:80/api/customers
 ```
 
-Lets run some tests:
+Or run some tests:
 
 ```shell
 BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.j
+```
+
+## Conclusion
+
+Thats it! We now have a kubernetes cluster running in `kind` and accessible using `cloud-provider-kind` and the Gateway API.
+All that is left to do is clean up:
+
+```shell
+kind delete cluster
 ```
 
 ## Resources
