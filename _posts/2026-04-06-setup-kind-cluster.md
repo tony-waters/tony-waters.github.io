@@ -26,7 +26,7 @@ for `cloud-provider-kind`:
 go install sigs.k8s.io/cloud-provider-kind@latest
 ```
 
-On my local Linux system this installs the `cloud-provider-kind` binary in $GOBIN (usually ~/go/bin). We can make it available everywhere by installing it into `/usr/local/bin`:
+On my local Linux system this installs the `cloud-provider-kind` binary in $GOBIN (usually ~/go/bin). We can (and to make our lives easier, should) make it available more generally by installing it into `/usr/local/bin`:
 
 ```shell
 sudo install ~/go/bin/cloud-provider-kind /usr/local/bin
@@ -34,13 +34,13 @@ sudo install ~/go/bin/cloud-provider-kind /usr/local/bin
 
 ## Running the cluster
 
-To be compatible with `cloud-provider-kind` we need to run a `kind` node image with version 1.33 or above: 
+To be compatible with `cloud-provider-kind` we need to create a cluster using a `kind` node image with version 1.33 or above: 
 
 ```shell
 kind create cluster --image kindest/node:v1.33.4
 ```
 
-The GitHub docs suggest we need to remove a label from the single kind node, `kind-control-plane`, to allow ingress access to the control plane, which is forbidden in the default single node setup (though in my setup the `kind-control-plane` node did not have this label):
+The [`cloud-provider-kind` GitHub docs](https://github.com/kubernetes-sigs/cloud-provider-kind?tab=readme-ov-file#allowing-load-balancers-access-to-control-plane-nodes) suggest we need to remove a label from the single kind node, `kind-control-plane`, to allow ingress access to the control plane, which is forbidden in the default single node setup (though in my setup the `kind-control-plane` node did not have this label):
 
 ```shell
 kubectl label node kind-control-plane node.kubernetes.io/exclude-from-external-load-balancers-
