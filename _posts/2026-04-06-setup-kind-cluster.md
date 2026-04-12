@@ -40,13 +40,13 @@ To be compatible with `cloud-provider-kind` we need to create a cluster using a 
 kind create cluster --image kindest/node:v1.33.4
 ```
 
-The [`cloud-provider-kind` GitHub docs](https://github.com/kubernetes-sigs/cloud-provider-kind?tab=readme-ov-file#allowing-load-balancers-access-to-control-plane-nodes) suggest we need to remove a label from the single kind node, `kind-control-plane`, to allow ingress access to the control plane, which is forbidden in the default single node setup (though in my setup the `kind-control-plane` node did not have this label):
+The [`cloud-provider-kind` GitHub docs](https://github.com/kubernetes-sigs/cloud-provider-kind?tab=readme-ov-file#allowing-load-balancers-access-to-control-plane-nodes) suggest we need to remove a label from the single `kind` node, `kind-control-plane`, to allow ingress access to the control plane, which is forbidden in the default single node setup (though in my setup the `kind-control-plane` node did not have this label):
 
 ```shell
 kubectl label node kind-control-plane node.kubernetes.io/exclude-from-external-load-balancers-
 ```
 
-Before running `cloud-provider-kind` note there are no Custom Resource Definitions in the cluster:
+Before running `cloud-provider-kind` note there are no Custom Resource Definitions (CRDs) in the cluster:
 
 ```shell
 tw:~/Code/spring-boot-kubernetes$ kubectl get crd
@@ -136,7 +136,7 @@ spec:
             value: /
 ```
 
-You can find the Helm charts in the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes/tree/main/helm) repo. I install them using Terraform:
+You can find the Helm charts in the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes/tree/main/helm) repo. I install this chart, and a Postgres chart, using Terraform:
 
 ```shell
 cd terraform && terraform apply -var-file=terraform.tfvars.example
