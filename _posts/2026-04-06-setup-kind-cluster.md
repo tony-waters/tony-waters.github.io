@@ -46,15 +46,22 @@ The GitHub docs suggest we need to remove a label from the single kind node, `ki
 kubectl label node kind-control-plane node.kubernetes.io/exclude-from-external-load-balancers-
 ```
 
-`cloud-provider-kind` runs as a separate application, so we do this in a new window:
+Before running `cloud-provider-kind` note there are no Custom Resource Definitions in the cluster:
+
+```shell
+tw:~/Code/spring-boot-kubernetes$ kubectl get crd
+No resources found
+```
+
+Then run `cloud-provider-kind` as a separate application, so we do this in a new window:
 
 ```shell
 cloud-provider-kind
 ```
 
-Its important that your cluster is up and running when you do this step as it adds some CRDs to the cluster. Its also important that you keep this running throughout the process! This caught me out once or twice.
+The cluster must be up and running when you do this step as it adds some CRDs to the cluster. Its also important that you keep this running throughout the process! This caught me out once or twice.
 
-There should now be an additional CRD in the cluster:
+There should now be some CRDs in the cluster:
 
 ```shell
 tw:~/Code/spring-boot-kubernetes$ kubectl get crd
@@ -97,8 +104,7 @@ With any luck, we should soon have a Gateway with an IP address we can use to ac
 ```shell
 tw:~/Code/spring-boot-kubernetes$ kubectl get gateway -A
 NAMESPACE   NAME      CLASS                 ADDRESS      PROGRAMMED   AGE
-gateway     gateway   cloud-provider-kind   172.18.0.3   True         114s
-
+gateway     gateway   cloud-provider-kind   **172.18.0.3**   True         114s
 ```
 
 If not, check the `cloud-provider-kind` logs for errors.
