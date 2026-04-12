@@ -77,7 +77,7 @@ find . -type f ! -path "*/.git/*" ! -path "*/target/*" ! -path "*/build/*" ! -pa
 
 ### Conclusion
 
-Sometimes how you present the code matters. This script gives you a clean, structured, reproducible, and LLM-friendly way to convert text-based directories into a single file.
+This script gives you a clean, structured, reproducible, and LLM-friendly way to convert text-based directories into a single file.
 
 
 
