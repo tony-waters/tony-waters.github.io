@@ -26,7 +26,7 @@ for `cloud-provider-kind`:
 go install sigs.k8s.io/cloud-provider-kind@latest
 ```
 
-On my local Linux system this installs the binary in $GOBIN (usually ~/go/bin). We can make it available everywhere by installing it into `/usr/local/bin`:
+On my local Linux system this installs the `cloud-provider-kind` binary in $GOBIN (usually ~/go/bin). We can make it available everywhere by installing it into `/usr/local/bin`:
 
 ```shell
 sudo install ~/go/bin/cloud-provider-kind /usr/local/bin
@@ -136,10 +136,10 @@ spec:
             value: /
 ```
 
-You can install the Helm charts from the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes) repo:
+You can find the Helm charts in the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes/tree/main/helm) repo . I install them using Terraform:
 
 ```shell
-helm install spring-boot-app ./helm/spring-boot-app/
+cd terraform && terraform apply -var-file=terraform.tfvars.example
 ```
 
 ## Test it works
@@ -156,10 +156,16 @@ Issue queries on the api:
 curl http://172.18.0.3:80/api/customers
 ```
 
-Or run some tests:
+Or run some tests (from the `k6` folder):
 
 ```shell
-BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.j
+BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.js
+```
+
+If you want to throw some seed data into the mix to make the tests more realistic, you can run the seed job inside the cluster first. This will create 5,000 customers with related data:
+
+```shell
+cd seed && ./run-seed.sh
 ```
 
 ## Conclusion
