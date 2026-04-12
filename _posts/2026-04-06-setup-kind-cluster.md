@@ -4,7 +4,7 @@ layout: post
 header-img: "img/kubernetes.png"
 ---
 
-Lets deploy the Demo Spring Boot application into Kubernetes using [`kind`](https://kind.sigs.k8s.io/) as the cluster and [`cloud-provider-kind`](https://github.com/kubernetes-sigs/cloud-provider-kind) to provide ingress to the cluster.
+Lets deploy the [Demo Spring Boot application](https://github.com/tony-waters/spring-boot-app) into Kubernetes using [`kind`](https://kind.sigs.k8s.io/) as the cluster and [`cloud-provider-kind`](https://github.com/kubernetes-sigs/cloud-provider-kind) to provide ingress to the cluster.
 
 Once installed, we will need some additional files which live in [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes):
 
@@ -12,7 +12,7 @@ Once installed, we will need some additional files which live in [`tony-waters/s
 git clone https://github.com/tony-waters/spring-boot-kubernetes.git
 ```
 
-## Install
+## Installation
 
 Both `kind` and `cloud-provider-kind` can be installed using golang. To install `kind`:
 
@@ -32,7 +32,7 @@ On my local Linux system this installs the binary in $GOBIN (usually ~/go/bin). 
 sudo install ~/go/bin/cloud-provider-kind /usr/local/bin
 ```
 
-## Run
+## Running the cluster
 
 To be compatible with `cloud-provider-kind` we will need to run a node image version of 1.33 or above: 
 
