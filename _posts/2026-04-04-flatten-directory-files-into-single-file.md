@@ -6,7 +6,7 @@ header-img: "img/bash.png"
 
 Sometimes you want  to show most of a code base to a reviewer (like ChatGPT), without zipping, uploading, or losing context. Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable. What you sometimes want is:
 
-- A single file
+- A single document
 - With clear boundaries between files
 - That excludes junk
 - And is structured enough for tools (and humans) to understand
