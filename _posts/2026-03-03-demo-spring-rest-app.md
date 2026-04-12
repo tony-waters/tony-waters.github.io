@@ -152,3 +152,5 @@ I have included a GitHub Actions script to [publish the container image](https:/
 - [Services in domain Driven Design](https://www.gorodinski.com/Services-in-Domain-Driven-Design-DDD-3158cf7881f980c5807dfcd7df0a69ce)
 - [Domain-Driven Design: Entities, Value Objects, and How To Distinguish Them](https://wempe.dev/blog/domain-driven-design-entities-value-objects)
 - [K6](https://k6.io/)
+- [Chart Releaser Action to Automate GitHub Page Charts](https://helm.sh/docs/howto/chart_releaser_action/)
+- [Publishing Helm Charts to GitHub Container Registry](https://paulyu.dev/article/publishing-helm-charts-to-ghcr/)
