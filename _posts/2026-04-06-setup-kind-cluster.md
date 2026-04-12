@@ -93,7 +93,7 @@ spec:
           from: All
 ```
 
-Which we apply like so:
+If you cloned the previously mentioned repo, we can apply the Gateway like so:
 
 ```shell
 kubectl apply -f gateway.yaml
@@ -150,13 +150,13 @@ Using the IP address from the Gateway, we can check if the application is health
 curl http://172.18.0.3:80/actuator/health/liveness
 ```
 
-Issue queries on the api:
+Issue queries on the REST API:
 
 ```shell
 curl http://172.18.0.3:80/api/customers
 ```
 
-Or run some tests (from the `k6` folder):
+And run some tests (from the `k6` folder):
 
 ```shell
 BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.js
