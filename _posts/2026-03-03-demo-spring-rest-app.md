@@ -37,9 +37,9 @@ I will summarise each of these briefly, and point to where the important code an
 
 The main classes in this layer are:
 
-- [`Customer`]()
-- [`Profile`]()
-- [`Ticket`]()
+- [`Customer`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/domain/customer/Customer.java)
+- [`Profile`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/domain/customer/Profile.java)
+- [`Ticket`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/domain/customer/Ticket.java)
 
 The main focus was to avoid an [anemic domain model](https://martinfowler.com/bliki/AnemicDomainModel.html) by using aggregates:
 
@@ -68,36 +68,36 @@ Domain tests for the sample application include unit tests that run without any 
 
 The main classes in this layer are:
 
-- [`CustomerCommandService`]()
-- [`CustomerQueryService`]()
-- [`CustomerQueryRepository`]()
+- [`CustomerCommandService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/command/CustomerCommandService.java)
+- [`CustomerQueryService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryService.java)
+- [`CustomerQueryRepository`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryRepository.java)
 
 It can be useful to separate the processes that query a system from the processes that change it. That way we can implement different approaches (or even different models) for the query and the mutate parts. This is the basis of the generic Object Oriented pattern [Command Query Separation](https://martinfowler.com/bliki/CommandQuerySeparation.html), and the more involved [Command Query Responsibility Segregation (CQRS)](https://martinfowler.com/bliki/CQRS.html).
 
-The application services are split between [`CustomerCommandService`]() and [`CustomerQueryService`]().
+The application services are split between [`CustomerCommandService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/command/CustomerCommandService.java) and [`CustomerQueryService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryService.java).
 
 `CustomerCommandService` talks directly to the `Customer` aggregate root to apply changes to the data using Command objects. One outcome of this approach is you can end up with a lot of Command objects, since the recomendation is usually to use one object per command. These simple data carriers can be represented with `records` for convenience.
 
-`CustomerQueryService` uses its [`CustomerQueryRepository`]() and JPQL, avoiding the domain model entirely. The Query side returns projections in the form of `record`s.
+`CustomerQueryService` uses its [`CustomerQueryRepository`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryRepository.java) and JPQL, avoiding the domain model entirely. The Query side returns projections in the form of `record`s.
 
 Tests for this layer can be found in:
 
-- [`CustomerCommandServiceDataJpaTest`]()
-- [`CustomerQueryRepositoryDataJpaTest`]()
+- [`CustomerCommandServiceDataJpaTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/application/customer/command/CustomerCommandServiceDataJpaTest.java)
+- [`CustomerQueryRepositoryDataJpaTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryRepositoryDataJpaTest.java)
 
 ## REST Controller Layer
 
 The main classes in this layer are:
 
-- [`CustomerCommandController`]()
-- [`CustomerQueryController`]()
+- [`CustomerCommandController`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/web/customer/CustomerCommandController.java)
+- [`CustomerQueryController`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/web/customer/CustomerQueryController.java)
 
 This is a vanilla Spring REST controller layer. Its thin, uses DTOs for requests, and basically calls the the Application Layer.
 
 Tests for this layer can be found in:
 
-- [`CustomerCommandControllerWebMvcTest`]()
-- [`CustomerQueryControllerWebMvcTest`]()
+- [`CustomerCommandControllerWebMvcTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/web/customer/CustomerCommandControllerWebMvcTest.java)
+- [`CustomerQueryControllerWebMvcTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/web/customer/CustomerQueryControllerWebMvcTest.java)
 
 ## Other bits (deployment and a little load testing for sanity)
 
@@ -107,8 +107,8 @@ Apart from the Layers its worth mentioning the application has a few other featu
 
 The seeder classes are:
 
-- [`DemoDataSeederService`]()
-- [`SeedCommandLineRunner`]()
+- [`DemoDataSeederService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/bootstrap/DemoDataSeederService.java)
+- [`SeedCommandLineRunner`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/bootstrap/SeedCommandLineRunner.java)
 
 The `SeedCommandLineRunner` runs `DemoDataSeederService` when the Spring profile is "seed".
 
@@ -116,10 +116,10 @@ The `SeedCommandLineRunner` runs `DemoDataSeederService` when the Spring profile
 
 The Docker classes are:
 
-- [`Dockerfile`]()
-- [`docker-compose.yaml`]()
-- [`docker-compose-no-seed.yaml`]()
-- [`customer-write-smoke-test.js`]()
+- [`Dockerfile`](https://github.com/tony-waters/spring-boot-app/blob/main/Dockerfile)
+- [`docker-compose.yaml`](https://github.com/tony-waters/spring-boot-app/blob/main/docker-compose.yaml)
+- [`docker-compose-no-seed.yaml`](https://github.com/tony-waters/spring-boot-app/blob/main/docker-compose-no-seed.yaml)
+- [`customer-write-smoke-test.js`](https://github.com/tony-waters/spring-boot-app/blob/main/customer-write-smoke-test.js)
 
 Running the following will build and seed the application:
 
@@ -139,10 +139,9 @@ To just run the application and Postgres (no seeding):
 docker-compose -f docker-compose-no-seed.yaml up --build --detach
 ```
 
-
 ### GitHub build script
 
-I have included a GitHub Actions script to publish the container image [here](). It is published to https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app
+I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app)
 
 ## Resources
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)

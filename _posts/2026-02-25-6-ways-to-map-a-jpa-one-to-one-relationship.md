@@ -167,7 +167,7 @@ public class ProfileA {
 }
 ```
 
-This allows navigation back to the `Customer` using its instance variable `profile`. As the 'inverse side' `Profile` holds no foreign key and cannot be relied upon to save its associated `Customer` when saved itself.
+This allows navigation back to the associated `Customer`. As the 'inverse side' `Profile` holds no foreign key and cannot be relied upon to save its associated `Customer` when saved itself.
 It produces the following SQL:
 
 ``` sql
@@ -359,7 +359,7 @@ The [repository](https://github.com/tony-waters/spring-jpa-one-to-one) contains 
 ---
 
 ## <a name="notes"></a>Notes
-1. I purposefully do not include using a JOIN table here. While this is a legitimate way of representing a one-to-one relationship it is generally only used for legacy systems.
+1. I purposefully do not include using a JOIN table here. While this is a legitimate way of representing a one-to-one relationship it is generally only used for legacy systems and edge cases.
 
 2. For what 'composition' means in an Object/Java context see [here](https://stackoverflow.com/questions/11881552/implementation-difference-between-aggregation-and-composition-in-java).
 
