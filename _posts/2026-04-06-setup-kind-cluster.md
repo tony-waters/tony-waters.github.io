@@ -144,7 +144,7 @@ cd terraform && terraform apply -var-file=terraform.tfvars.example
 
 ## Test it works
 
-Using the IP address from the Gateway, we can check if the application is healthy:
+Using the IP address from the `Gateway`, we can check if the application is healthy:
 
 ```shell
 curl http://172.18.0.3:80/actuator/health/liveness
@@ -162,7 +162,7 @@ And run some integration/load tests (from the `k6` folder):
 BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.js
 ```
 
-If you want to throw some seed data into the mix to make the tests more realistic, you can run the seed job inside the cluster first. This will create 5,000 customers with related data:
+If you want to throw some seed data into the mix to make the tests more realistic, you can first run the seeder as a Helm job inside the cluster. This will create 5,000 customers with related data:
 
 ```shell
 cd seed && ./run-seed.sh
