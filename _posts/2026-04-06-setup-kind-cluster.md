@@ -181,6 +181,7 @@ kind delete cluster
 
 [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind)
 [Experimenting with Gateway API using kind](https://kubernetes.io/blog/2026/01/28/experimenting-gateway-api-with-kind/)
+[Kubernetes Gateway API in 2026: The Definitive Guide to Envoy Gateway, Istio, Cilium and Kong](https://dev.to/mechcloud_academy/kubernetes-gateway-api-in-2026-the-definitive-guide-to-envoy-gateway-istio-cilium-and-kong-2bkl)
 
 
 
