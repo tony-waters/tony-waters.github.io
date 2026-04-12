@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-I wanted to write a simple-ish Spring REST application to experiment with these technologies:
+I wanted to write a [simple-ish Spring REST application](https://github.com/tony-waters/spring-boot-app) to experiment with these technologies:
 
 - Java 21
 - Spring Boot 4.x
@@ -141,7 +141,7 @@ docker-compose -f docker-compose-no-seed.yaml up --build --detach
 
 ### GitHub build script
 
-I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app)
+I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml) produced by the [Spring Demo application](https://github.com/tony-waters/spring-boot-app). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app)
 
 ## Resources
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
