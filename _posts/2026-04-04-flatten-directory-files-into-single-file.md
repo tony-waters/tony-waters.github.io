@@ -4,7 +4,7 @@ layout: post
 header-img: "img/bash.png"
 ---
 
-When working on a non-trivial codebase — especially something like a layered Spring Boot application — you want to show everything to a reviewer (or ChatGPT), without zipping, uploading, or losing context. Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable. What you sometimes want is:
+Sometimes you want  to show most of a code base to a reviewer (like ChatGPT), without zipping, uploading, or losing context. Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable. What you sometimes want is:
 
 - A single file
 - With clear boundaries between files
