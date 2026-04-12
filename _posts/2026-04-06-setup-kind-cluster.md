@@ -34,7 +34,7 @@ sudo install ~/go/bin/cloud-provider-kind /usr/local/bin
 
 ## Running the cluster
 
-To be compatible with `cloud-provider-kind` we will need to run a node image version of 1.33 or above: 
+To be compatible with `cloud-provider-kind` we need to run a `kind` node image with version 1.33 or above: 
 
 ```shell
 kind create cluster --image kindest/node:v1.33.4
@@ -111,7 +111,7 @@ If not, check the `cloud-provider-kind` logs for errors.
 
 ## Deploy the application
 
-Once this is all setup we are ready to deploy an actual application. In order to work with the Gateway API we need to have a `HTTPRoute` to connect the `Gateway` with the application `Service`. Here is what the `HTTPRoute` looks like:
+Once this is all setup we are ready to deploy an actual application. In order to work with the Kubernetes [Gateway API](https://kubernetes.io/docs/concepts/services-networking/gateway/) we need to have a `HTTPRoute` to connect the `Gateway` with the application `Service`. Here is what the `HTTPRoute` looks like:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
