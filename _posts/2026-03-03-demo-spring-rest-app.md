@@ -76,7 +76,7 @@ It can be useful to separate the processes that query a system from the processe
 
 The application services are split between [`CustomerCommandService`]() and [`CustomerQueryService`]().
 
-`CustomerCommandService` talks directly to the `Customer` aggregate root to apply changes to the data using Command objects. One outcome of this approach is you can end up with a lot of Command objects, since the recomendation is usually to use one object per command. These simple data carriers can be represented with `records` for simplicity.
+`CustomerCommandService` talks directly to the `Customer` aggregate root to apply changes to the data using Command objects. One outcome of this approach is you can end up with a lot of Command objects, since the recomendation is usually to use one object per command. These simple data carriers can be represented with `records` for convenience.
 
 `CustomerQueryService` uses its [`CustomerQueryRepository`]() and JPQL, avoiding the domain model entirely. The Query side returns projections in the form of `record`s.
 
