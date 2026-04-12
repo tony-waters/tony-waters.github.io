@@ -4,19 +4,23 @@ layout: post
 header-img: "img/kubernetes.png"
 ---
 
-KinD (Kubernetes in Docker) is a ...
+Lets deploy the Demo Spring Boot application into Kubernetes using [`kind`](https://kind.sigs.k8s.io/) as the cluster and [`cloud-provider-kind`](https://github.com/kubernetes-sigs/cloud-provider-kind) to provide ingress to the cluster.
 
-[`cloud-provider-kind`](https://github.com/kubernetes-sigs/cloud-provider-kind)
+Once installed, we will need some additional files which live in [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes):
+
+```shell
+git clone https://github.com/tony-waters/spring-boot-kubernetes.git
+```
 
 ## Install
+
+Both `kind` and `cloud-provider-kind` can be installed using golang. To install `kind`:
 
 ```shell
 go install sigs.k8s.io/kind@v0.31.0
 ```
 
-Cloud-provider-kind is ....
-
-It can be installed using go:
+for `cloud-provider-kind`:
 
 ```shell
 go install sigs.k8s.io/cloud-provider-kind@latest
@@ -99,8 +103,6 @@ gateway     gateway   cloud-provider-kind   172.18.0.3   True         114s
 
 If not, check the `cloud-provider-kind` logs for errors.
 
-In AWS this would create a ...
-
 ## Deploy application
 
 Once this is all setup we are ready to deploy an actual application. In order to work with the Gateway API we need to have a `HTTPRoute` to connect the `Gateway` with the application `Service`. Here is what the `HTTPRoute` looks like:
@@ -131,7 +133,6 @@ spec:
 You can install the Helm charts from the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes) repo:
 
 ```shell
-git clone https://github.com/tony-waters/spring-boot-kubernetes.git
 helm install spring-boot-app ./helm/spring-boot-app/
 ```
 
@@ -154,9 +155,6 @@ Lets run some tests:
 ```shell
 BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.j
 ```
-
-
-## Notes
 
 ## Resources
 
