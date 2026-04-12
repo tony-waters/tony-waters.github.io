@@ -59,7 +59,7 @@ Then run `cloud-provider-kind` as a separate application, so we do this in a new
 cloud-provider-kind
 ```
 
-The cluster must be up and running when you do this step as it adds some CRDs to the cluster. Its also important that you keep this running throughout the process! This caught me out once or twice.
+The cluster must be up and running when you do this step as it adds some CRDs to the cluster. Its also important that you keep this running throughout the process. This caught me out once or twice!
 
 There should now be some CRDs in the cluster:
 
