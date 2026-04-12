@@ -54,6 +54,32 @@ The main features of the script are:
 - uses markdown code fences, which helps LLMs parse files properly
 - includes the path before every file
 
+## Editing the script
+
+This script is made to be edited. It works for me at the moment, but you may want to add your own exclusions:
+
+```shell
+find "$@" -type f \
+  ! -path "*/.git/*" \
+  ! -path "*/target/*" \
+  ! -path "*/build/*" \
+  ! -path "*/node_modules/*" \
+  ! -path "*/dist/*" \
+  ...
+```
+
+And inferred languages:
+
+```shell
+  # Infer language
+  ext="${file##*.}"
+  case "$ext" in
+    java) lang="java" ;;
+    xml) lang="xml" ;;
+    yml|yaml) lang="yaml" ;;
+  ...
+```
+
 ### Installation
 
 The script can be found [here](https://github.com/tony-waters/directory-to-text/blob/main/directory-to-text.sh).
