@@ -74,7 +74,7 @@ httproutes.gateway.networking.k8s.io           2026-04-11T20:41:16Z
 referencegrants.gateway.networking.k8s.io      2026-04-11T20:41:16Z
 ```
 
-There is still no actual Gateway yet though. The manifest should look something like this:
+There is still no actual `Gateway` yet though. The manifest should look something like this:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -99,7 +99,7 @@ If you cloned the previously mentioned repo, you can apply this manifest like so
 kubectl apply -f gateway.yaml
 ```
 
-With any luck, we should soon have a Gateway with an IP address we can use to access the cluster:
+With any luck, we should soon have a `Gateway` with an IP address we can use to access the cluster:
 
 ```shell
 tw:~/Code/spring-boot-kubernetes$ kubectl get gateway -A

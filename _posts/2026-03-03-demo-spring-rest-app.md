@@ -31,7 +31,7 @@ The application is broken down into layers.
 
 ![Image alt]({{ site.baseurl }}/img/spring-customer-layers.png "Application Layers Diagram")
 
-I will summarise each of these briefly, and point to where the important code and tests are.
+I will briefly summarise each of these layers, and point to where the important code and tests are.
 
 ## Domain / JPA Layer
 
@@ -41,7 +41,7 @@ The main classes in this layer are:
 - [`Profile`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/domain/customer/Profile.java)
 - [`Ticket`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/domain/customer/Ticket.java)
 
-The main focus was to avoid an [anemic domain model](https://martinfowler.com/bliki/AnemicDomainModel.html) by using aggregates:
+A focus was to avoid an [anemic domain model](https://martinfowler.com/bliki/AnemicDomainModel.html) by using aggregates:
 
 > An aggregate is a cluster of associated objects treated as a single unit for data changes, with a clearly defined boundary and a root entity that enforces invariants.  
 > — Eric Evans, *Domain-Driven Design*
@@ -54,7 +54,7 @@ The basic idea is that by grouping entities into logical groups (called an aggre
 
 Enforcement of invariants becomes simpler, because it happens inside the aggregate, rather than leaking into services. And since all traffic to the aggregate goes via the aggregate root, its easier to reason over. In fact, the aggregate root never returns entity objects from within the aggregate.
 
-For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods, neither [`Ticket`]() or [`Profile`]() has any.
+For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods - neither [`Ticket`]() or [`Profile`]() has any.
 
 Also note that all the entities in the aggregate focus on domain behaviour (like `resolveTicket()`) rather than setters (like `setStatus('resolved')`).
 
@@ -127,7 +127,7 @@ Running the following will build and seed the application:
 docker-compose up --build --detach
 ```
 
-Then provided K9 is installed, you can run some basic load tests:
+Then provided [K6](https://k6.io/) is installed, you can run some basic load tests:
 
 ```bash
 k6 run customer-write-smoke-test.js
@@ -151,3 +151,4 @@ I have included a GitHub Actions script to [publish the container image](https:/
 - [Getting started with CQRS](https://cqrs.nu/faq/Command%20and%20Query%20Responsibility%20Segregation/)
 - [Services in domain Driven Design](https://www.gorodinski.com/Services-in-Domain-Driven-Design-DDD-3158cf7881f980c5807dfcd7df0a69ce)
 - [Domain-Driven Design: Entities, Value Objects, and How To Distinguish Them](https://wempe.dev/blog/domain-driven-design-entities-value-objects)
+- [K6](https://k6.io/)
