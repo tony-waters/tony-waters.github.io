@@ -4,7 +4,7 @@ layout: post
 header-img: "img/kubernetes.png"
 ---
 
-Lets deploy the [Demo Spring Boot application](https://github.com/tony-waters/spring-boot-app) into Kubernetes using [`kind`](https://kind.sigs.k8s.io/) as the cluster and [`cloud-provider-kind`](https://github.com/kubernetes-sigs/cloud-provider-kind) to provide ingress to the cluster.
+Lets deploy the [Demo Spring Boot application](https://github.com/tony-waters/spring-boot-app) into Kubernetes using [`kind`](https://kind.sigs.k8s.io/) as the cluster and [`cloud-provider-kind`](https://github.com/kubernetes-sigs/cloud-provider-kind) to provide HTTP access to the cluster. 
 
 Once installed, we will need some additional files which live in [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes):
 
@@ -74,7 +74,7 @@ httproutes.gateway.networking.k8s.io           2026-04-11T20:41:16Z
 referencegrants.gateway.networking.k8s.io      2026-04-11T20:41:16Z
 ```
 
-There is still no actual Gateways yet though. So we need a Gateway manifest:
+There is still no actual Gateway yet though. The manifest should look something like this:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -93,7 +93,7 @@ spec:
           from: All
 ```
 
-If you cloned the previously mentioned repo, we can apply the Gateway like so:
+If you cloned the previously mentioned repo, you can apply this manifest like so:
 
 ```shell
 kubectl apply -f gateway.yaml
@@ -136,7 +136,7 @@ spec:
             value: /
 ```
 
-You can find the Helm charts in the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes/tree/main/helm) repo . I install them using Terraform:
+You can find the Helm charts in the [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes/tree/main/helm) repo. I install them using Terraform:
 
 ```shell
 cd terraform && terraform apply -var-file=terraform.tfvars.example
@@ -156,7 +156,7 @@ Issue queries on the REST API:
 curl http://172.18.0.3:80/api/customers
 ```
 
-And run some tests (from the `k6` folder):
+And run some integration/load tests (from the `k6` folder):
 
 ```shell
 BASE_URL=http://172.18.0.3:80 k6 run ./k6/customer-behabiour-write-test.js
@@ -170,7 +170,7 @@ cd seed && ./run-seed.sh
 
 ## Conclusion
 
-Thats it! We now have a kubernetes cluster running in `kind` and accessible using `cloud-provider-kind` and the Gateway API.
+Thats it! We now have the Spring Demo application running in a kubernetes `kind` cluster and accessible via the Gateway API using `cloud-provider-kind`.
 All that is left to do is clean up:
 
 ```shell
