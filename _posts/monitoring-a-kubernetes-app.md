@@ -19,6 +19,7 @@ Some tools I like to use are:
 - Istio (network charts)
 - Prometheus
 - Logging
+- pgadmin
 
 ## Objectives
 
