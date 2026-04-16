@@ -152,24 +152,25 @@ Here is what the `HTTPRoute` looks like:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: application
+  name: springapp
   namespace: application
 spec:
   parentRefs:
-    - kind: Gateway
+    - group: gateway.networking.k8s.io
+      kind: Gateway
       name: application-gateway
       namespace: application-gateway
   hostnames:
     - application
   rules:
-    - matches:
+    - backendRefs:
+        - kind: Service
+          name: springapp
+          port: 80
+      matches:
         - path:
             type: PathPrefix
             value: /
-      backendRefs:
-        - name: spring-boot-app
-          port: 80
-
 ```
 
 I am asking the Gateway to send any traffic with `Host: application` as a Header to the `spring-boot-app` service on port 80. The `Service` sends this request to the application on port 8080:
@@ -178,16 +179,16 @@ I am asking the Gateway to send any traffic with `Host: application` as a Header
 apiVersion: v1
 kind: Service
 metadata:
-  name: spring-boot-app
+  name: springapp
   namespace: application
 spec:
   type: ClusterIP
   selector:
-    app: spring-boot-app
+    app: springapp
   ports:
     - name: http
-      protocol: TCP
       port: 80
+      protocol: TCP
       targetPort: 8080
 ```
 
