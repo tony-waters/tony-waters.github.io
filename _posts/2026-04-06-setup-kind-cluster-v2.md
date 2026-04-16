@@ -47,7 +47,7 @@ user:~/Code/spring-boot-kubernetes$ kubectl get crd
 No resources found
 ```
 
-Then run `cloud-provider-kind` as a separate application. There are 2 ways of doing this
+To get the `Gateway API` CRDs, and provide access to the cluster. we need `cloud-provider-kind` running as a separate application. There are 2 ways of doing this
 
 ### 1. Running `cloud-provider-kind` from a shell
 
@@ -76,9 +76,9 @@ docker run -d \
   registry.k8s.io/cloud-provider-kind/cloud-controller-manager:${VERSION}
 ```
 
-I found this approach preferable because ...
+### Note
 
-The cluster must be up and running when you do this step as it adds some CRDs to the cluster. Its also important that you keep this running throughout the process. This caught me out once or twice!
+Whichever option you use, the cluster must be up and running when you do this step as it adds some CRDs to the cluster. Its also important that you keep this running throughout the process. This caught me out once or twice!
 
 There should now be some CRDs in the cluster:
 
