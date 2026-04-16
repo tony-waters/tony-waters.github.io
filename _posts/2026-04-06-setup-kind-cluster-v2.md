@@ -163,7 +163,11 @@ spec:
   hostnames:
     - application
   rules:
-    - backendRefs:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
         - name: spring-boot-app
           port: 80
 
@@ -232,6 +236,11 @@ helm dependency build ./helm/springseed
 helm install springseed ./helm/springseed
 ```
 
+You should see this in the logs:
+
+```shell
+INFO 14 --- [spring-jpa] [           main] u.b.s.bootstrap.DemoDataSeederService    : Seed complete: 5000 customers  
+```
 ## Test it works
 
 Using the IP address from the `Gateway`, we can check if the application is healthy:
