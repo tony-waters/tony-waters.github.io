@@ -93,16 +93,15 @@ httproutes.gateway.networking.k8s.io           2026-04-11T20:41:16Z
 referencegrants.gateway.networking.k8s.io      2026-04-11T20:41:16Z
 ```
 
-## Installing the Spring Demo Application
+## Installing the Spring Demo Infrastructure
 
 In order to run the application we need to make the following changes to the cluster:
 
 - create namespaces
 - add a Gateway to allow traffic in
 - add a Postgres database
-- deploy the application
 
-optionally:
+And optionally:
 
 - seed data
 - run K9 tests
@@ -267,7 +266,7 @@ k6 run \
   ./k6/write-test.js
 ```
 
-If thats clean, you can try running using `TEST_PROFILE=load` and `TEST_PROFILE=break`.
+If thats clean, you can try running using `TEST_PROFILE=load` and `TEST_PROFILE=stress`.
 
 Same for the read tests:
 
@@ -279,14 +278,27 @@ k6 run \
   ./k6/read-test.js
 ```
 
-## Conclusion
+## Cleanup
 
-Thats it! We now have the Spring Demo application running in a kubernetes `kind` cluster and accessible via the Gateway API using `cloud-provider-kind`.
 All that is left to do is clean up:
 
 ```shell
 kind delete cluster
 ```
+
+If your running `cloud-provider-kind` in a container you may need to cleanup Docker, including volumes<sup>[[1]](#notes)</sup>.
+
+## Conclusion
+
+Thats it! We now have the Spring Demo application running in a kubernetes `kind` cluster and accessible via the Gateway API using `cloud-provider-kind`. Also, we have added some K6 tests to see how the system holds up.
+
+---
+
+## <a name="notes"></a>Notes
+1. I found it easier to heavily `docker prune`.
+
+---
+
 
 ## Resources
 
@@ -294,6 +306,8 @@ kind delete cluster
 - [Experimenting with Gateway API using kind](https://kubernetes.io/blog/2026/01/28/experimenting-gateway-api-with-kind/)
 - [Kubernetes Gateway API](https://kubernetes.io/docs/concepts/services-networking/gateway/)
 - [Kubernetes Gateway API in 2026: The Definitive Guide to Envoy Gateway, Istio, Cilium and Kong](https://dev.to/mechcloud_academy/kubernetes-gateway-api-in-2026-the-definitive-guide-to-envoy-gateway-istio-cilium-and-kong-2bkl)
+- [Load testing with k6 and k8s](https://www.toucantoco.com/en/tech-blog/tech-blog/load-testing-with-k6-and-k8s)
+
 
 
 
