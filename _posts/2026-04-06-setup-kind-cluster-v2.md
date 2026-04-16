@@ -239,7 +239,7 @@ helm install springseed ./helm/springseed
 You should see this in the logs:
 
 ```shell
-INFO 14 --- [spring-jpa] [           main] u.b.s.bootstrap.DemoDataSeederService    : Seed complete: 5000 customers  
+Seed complete: 5000 customers  
 ```
 ## Test it works
 
