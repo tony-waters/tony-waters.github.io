@@ -43,11 +43,11 @@ kubectl label node kind-control-plane node.kubernetes.io/exclude-from-external-l
 Before running `cloud-provider-kind` note there are no Custom Resource Definitions (CRDs) in the cluster:
 
 ```shell
-user:~/Code/spring-boot-kubernetes$ kubectl get crd
+user:~/spring-boot-kubernetes$ kubectl get crd
 No resources found
 ```
 
-To get the `Gateway API` CRDs, and provide access to the cluster. we need `cloud-provider-kind` running as a separate application. There are 2 ways of doing this
+To get the `Gateway API` CRDs, and provide access to the cluster. we need `cloud-provider-kind` running as a separate application. There are 2 ways of doing this:
 
 ### 1. Running `cloud-provider-kind` from a shell
 
@@ -73,7 +73,7 @@ docker run -d \
   --rm \
   --network host \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  registry.k8s.io/cloud-provider-kind/cloud-controller-manager:${VERSION}
+  registry.k8s.io/cloud-provider-kind/cloud-controller-manager:v0.10.0
 ```
 
 ### Note
@@ -101,6 +101,11 @@ In order to run the application we need to make the following changes to the clu
 - add a Gateway to allow traffic in
 - add a Postgres database
 - deploy the application
+
+optionally:
+
+- seed data
+- run K9 tests
 
 To make things easy to reason over, I have created an over-simplified set of Helm charts for this, keeping `values.yaml` files to a minimum. Install them from the `helm` and `helm-infra` directories. Start by installing the infrastructure . Note that the separate components of `helm-infra` (namespaces, Gateway, and Postgres) are installed using a parent chart.
 
