@@ -6,7 +6,16 @@ header-img: "img/kubernetes.png"
 
 Lets deploy the [Demo Spring Boot application](https://github.com/tony-waters/spring-boot-app) into Kubernetes using [`kind`](https://kind.sigs.k8s.io/) as the cluster and [`cloud-provider-kind`](https://github.com/kubernetes-sigs/cloud-provider-kind) to provide HTTP access to the cluster. 
 
-Once installed, we will need some additional files which live in [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes):
+Once `kind` is installed, we will:
+
+- add `cloud-provider-kind` to deploy the CRDs and deal with the `Gateway API`
+- use Helm to:
+  - install Postgres, a `Gateway`, and some namespaces
+  - install the Spring Demo application
+  - seed some data (5,000 Customers and related data)
+- run some K6 read and write tests
+
+We need some additional files which live in [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes):
 
 ```shell
 git clone https://github.com/tony-waters/spring-boot-kubernetes.git
