@@ -216,7 +216,7 @@ To deploy the application:
 helm install springapp ./helm/springapp
 ```
 
-Once everything is up and running, you should have a working HTTPRoute:
+Once everything is up and running, you should have a working HTTPRoute. Check for "Route is accepted" and "All references resolved" messages:
 
 ```shell
 > kubectl describe httproute springapp -n application
