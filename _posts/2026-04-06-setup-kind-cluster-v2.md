@@ -8,7 +8,7 @@ Lets deploy the [Demo Spring Boot application](https://github.com/tony-waters/sp
 
 Once `kind` is installed, we will:
 
-- add `cloud-provider-kind` to deploy the CRDs and deal with the `Gateway API`
+- run `cloud-provider-kind` to deploy the CRDs and deal with the `Gateway API`
 - use Helm to:
   - install Postgres, a `Gateway`, and some namespaces
   - install the Spring Demo application
@@ -20,6 +20,7 @@ The repository to run the above is here [`tony-waters/spring-boot-kubernetes`](h
 ```shell
 git clone https://github.com/tony-waters/spring-boot-kubernetes.git
 ```
+---
 
 ## Installation
 
@@ -58,6 +59,8 @@ No resources found
 
 To get the `Gateway API` CRDs, and provide access to the cluster. we need `cloud-provider-kind` running as a separate application. There are 2 ways of doing this:
 
+---
+
 ### 1. Running `cloud-provider-kind` from a shell
 
 On my local Linux system `go` installs the `cloud-provider-kind` binary in $GOBIN (usually ~/go/bin). We can (and to make our lives easier, should) make it available more generally by installing it into `/usr/local/bin`:
@@ -72,6 +75,8 @@ Then we can run it in a dedicated shell:
 cloud-provider-kind
 ```
 
+---
+
 ### 2. Running `cloud-provider-kind` from a Docker container
 
 The provider also comes as a Docker image:
@@ -84,6 +89,8 @@ docker run -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
   registry.k8s.io/cloud-provider-kind/cloud-controller-manager:v0.10.0
 ```
+
+---
 
 ### Note
 
@@ -102,6 +109,8 @@ httproutes.gateway.networking.k8s.io           2026-04-11T20:41:16Z
 referencegrants.gateway.networking.k8s.io      2026-04-11T20:41:16Z
 ```
 
+---
+
 ## Installing the Spring Demo Infrastructure
 
 In order to run the application we need to make the following changes to the cluster:
@@ -110,12 +119,7 @@ In order to run the application we need to make the following changes to the clu
 - add a Gateway to allow traffic in
 - add a Postgres database
 
-And optionally:
-
-- seed data
-- run K9 tests
-
-To make things easy to reason over, I have created an over-simplified set of Helm charts for this, keeping `values.yaml` files to a minimum. Install them from the `helm` and `helm-infra` directories. Start by installing the infrastructure . Note that the separate components of `helm-infra` (namespaces, Gateway, and Postgres) are installed using a parent chart.
+To make things easy to reason over, I have created an over-simplified set of Helm charts for this, keeping `values.yaml` files to a minimum. Install them from the `helm` and `helm-infra` directories. Start by installing the infrastructure. Note that the separate components of `helm-infra` (namespaces, Gateway, and Postgres) are installed using a parent chart.
 
 ```shell
 helm dependency build ./helm-infra
@@ -132,11 +136,13 @@ gateway     gateway   cloud-provider-kind   **172.18.0.3**   True         114s
 
 If not, check the `cloud-provider-kind` logs for errors.
 
+---
+
 ## Deploy the application
 
 Once this is all setup we are ready to deploy an actual application. In order to work with the Kubernetes [Gateway API](https://kubernetes.io/docs/concepts/services-networking/gateway/) we need to have a `HTTPRoute` to connect the `Gateway` with the application `Service`.
 
-Here is the Gateway from the previous step:
+Here is the `Gateway` from the previous step:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -182,7 +188,7 @@ spec:
             value: /
 ```
 
-I am asking the Gateway to send any traffic with `Host: application` as a Header to the `spring-boot-app` service on port 80. The `Service` sends this request to the application on port 8080:
+I am asking the Gateway to send any traffic with `Host: application` as a Header to the `springapp` service on port 80. The `Service` sends this request to the application on port 8080:
 
 ```yaml
 apiVersion: v1
@@ -238,6 +244,8 @@ Events:              <none>
 
 ```
 
+## Seed some data
+
 Optionally, if you want to throw some seed data into the mix to make tests more realistic run the seeder. This will create 5,000 customers with related data:
 
 ```shell
@@ -258,7 +266,7 @@ Using the IP address from the `Gateway`, we can check if the application is heal
 curl -H "Host: application" http://172.18.0.3:80/actuator/health/liveness
 ```
 
-Issue queries on the REST API:
+And talk to the REST API:
 
 ```shell
 curl -H "Host: application" http://172.18.0.3:80/api/customers
@@ -305,7 +313,7 @@ Thats it! We now have the Spring Demo application running in a kubernetes `kind`
 ---
 
 ## <a name="notes"></a>Notes
-1. I found it easier to heavily `docker prune`.
+1. I found it easier to zap akk running containers then heavily `docker prune`.
 
 ---
 
