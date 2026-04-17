@@ -286,7 +286,7 @@ k6 run \
 
 If thats clean, you can try running using `TEST_PROFILE=load` and `TEST_PROFILE=stress`.
 
-Same for the read tests:
+Same for the read test:
 
 ```shell
 k6 run \
