@@ -104,22 +104,19 @@ Tests for this layer can be found in:
 - [`CustomerCommandControllerWebMvcTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/web/customer/CustomerCommandControllerWebMvcTest.java)
 - [`CustomerQueryControllerWebMvcTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/web/customer/CustomerQueryControllerWebMvcTest.java)
 
-## Other bits (deployment and a little load testing for sanity)
 
-Apart from the Layers its worth mentioning the application has a few other features:
+## Seeder
 
-### Seeder
-
-The seeder classes are:
+The demo application includes a seeder which fills the database with 5,000 Customers and related data. The seeder classes are:
 
 - [`DemoDataSeederService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/bootstrap/DemoDataSeederService.java)
 - [`SeedCommandLineRunner`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/bootstrap/SeedCommandLineRunner.java)
 
 The `SeedCommandLineRunner` runs `DemoDataSeederService` when the Spring profile is "seed".
 
-### Docker
+## Docker
 
-The Docker files are:
+You can run the Spring Demo application along with a Postgres database and the above seeder using `Docker`/`docker-compose`. The important files are:
 
 - [`Dockerfile`](https://github.com/tony-waters/spring-boot-app/blob/main/Dockerfile)
 - [`docker-compose.yaml`](https://github.com/tony-waters/spring-boot-app/blob/main/docker-compose.yaml)
@@ -134,10 +131,10 @@ docker-compose up --build --detach
 To just run the application and Postgres (no seeding):
 
 ```bash
-docker-compose -f docker-compose-no-seed.yaml up
+docker-compose -f docker-compose-no-seed.yaml up --build --detach
 ```
 
-### GitHub build script
+## GitHub build script
 
 I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml) produced by the [Spring Demo application](https://github.com/tony-waters/spring-boot-app). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app)
 
@@ -164,6 +161,13 @@ k6 run \
   -e BASE_URL=http://localhost:8080 \
   ./k6/read-test.js
 ```
+
+## Convenience `up` and `down` scripts
+
+I have included convenience scripts for bringing the system up (`up.sh`) and bringing it down (`down.sh`):
+
+- [`up.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/up.sh)
+- [`down.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/down.sh)
 
 ## Resources
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
