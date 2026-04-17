@@ -119,12 +119,11 @@ The `SeedCommandLineRunner` runs `DemoDataSeederService` when the Spring profile
 
 ### Docker
 
-The Docker classes are:
+The Docker files are:
 
 - [`Dockerfile`](https://github.com/tony-waters/spring-boot-app/blob/main/Dockerfile)
 - [`docker-compose.yaml`](https://github.com/tony-waters/spring-boot-app/blob/main/docker-compose.yaml)
 - [`docker-compose-no-seed.yaml`](https://github.com/tony-waters/spring-boot-app/blob/main/docker-compose-no-seed.yaml)
-- [`customer-write-smoke-test.js`](https://github.com/tony-waters/spring-boot-app/blob/main/customer-write-smoke-test.js)
 
 Running the following will build and seed the application:
 
@@ -144,9 +143,9 @@ I have included a GitHub Actions script to [publish the container image](https:/
 
 ---
 
-## Run some K6 tests:
+## K6 tests
 
-Provided [K6](https://k6.io/) is installed, you can run write and read smoke tests. Run the write test like this:
+Provided [K6](https://k6.io/) is installed, you can run write and read tests. Run the write test like this:
 
 ```shell
 k6 run \
