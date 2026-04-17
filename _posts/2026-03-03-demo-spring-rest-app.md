@@ -152,7 +152,6 @@ Provided [K6](https://k6.io/) is installed, you can run write and read smoke tes
 k6 run \
   -e TEST_PROFILE=smoke \
   -e BASE_URL=http://localhost:8080 \
-  -e HOST_HEADER=application \
   ./k6/write-test.js
 ```
 
@@ -164,7 +163,6 @@ Same for the read tests:
 k6 run \
   -e TEST_PROFILE=smoke \
   -e BASE_URL=http://localhost:8080 \
-  -e HOST_HEADER=application \
   ./k6/read-test.js
 ```
 
