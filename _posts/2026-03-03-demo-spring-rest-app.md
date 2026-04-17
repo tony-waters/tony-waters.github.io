@@ -43,7 +43,8 @@ The main classes in this layer are:
 
 A focus was to avoid an [anemic domain model](https://martinfowler.com/bliki/AnemicDomainModel.html) by using aggregates:
 
-> An aggregate is a cluster of associated objects treated as a single unit for data changes, with a clearly defined boundary and a root entity that enforces invariants.  
+> An aggregate is a cluster of associated objects treated as a single unit for data changes, with a clearly defined boundary and a root entity that enforces invariants.
+> 
 > — Eric Evans, *Domain-Driven Design*
 
 Our application has 2 aggregates, `Customer` and `Tag`. In this first iteration I am going to focus on the `Customer` aggregate:
@@ -72,7 +73,11 @@ The main classes in this layer are:
 - [`CustomerQueryService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryService.java)
 - [`CustomerQueryRepository`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryRepository.java)
 
-It can be useful to separate the processes that query a system from the processes that change it. That way we can implement different approaches (or even different models) for the query and the mutate parts. This is the basis of the generic Object Oriented pattern [Command Query Separation](https://martinfowler.com/bliki/CommandQuerySeparation.html), and the more involved [Command Query Responsibility Segregation (CQRS)](https://martinfowler.com/bliki/CQRS.html).
+It can be useful to separate the processes that query a system from the processes that change it. That way we can implement different approaches (or even different models) for the query and the mutate parts. This is the basis of the generic Object Oriented pattern [Command Query Separation](https://martinfowler.com/bliki/CommandQuerySeparation.html), and the more involved [Command Query Responsibility Segregation (CQRS)](https://martinfowler.com/bliki/CQRS.html):
+
+> The really valuable idea in this principle is that it's extremely handy if you can clearly separate methods that change state from those that don't. This is because you can use queries in many situations with much more confidence, introducing them anywhere, changing their order. You have to be more careful with modifiers.
+>
+> — [Martin Fowler](https://martinfowler.com/bliki/CommandQuerySeparation.html)
 
 The application services are split between [`CustomerCommandService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/command/CustomerCommandService.java) and [`CustomerQueryService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryService.java).
 
