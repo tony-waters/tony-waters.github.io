@@ -279,7 +279,7 @@ I have included read and write tests for K6. Run the write test like this:
 ```shell
 k6 run \
   -e TEST_PROFILE=smoke \
-  -e BASE_URL=http://172.18.0.3 \
+  -e BASE_URL=http://localhost:8080 \
   -e HOST_HEADER=application \
   ./k6/write-test.js
 ```
@@ -291,7 +291,7 @@ Same for the read tests:
 ```shell
 k6 run \
   -e TEST_PROFILE=smoke \
-  -e BASE_URL=http://172.18.0.3 \
+  -e BASE_URL=http://localhost:8080 \
   -e HOST_HEADER=application \
   ./k6/read-test.js
 ```

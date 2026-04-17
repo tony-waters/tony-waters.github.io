@@ -137,7 +137,7 @@ k6 run k6/read-test.js
 To just run the application and Postgres (no seeding):
 
 ```bash
-docker-compose -f docker-compose-no-seed.yaml up --build --detach
+docker-compose -f docker-compose-no-seed.yaml up
 ```
 
 ### GitHub build script
