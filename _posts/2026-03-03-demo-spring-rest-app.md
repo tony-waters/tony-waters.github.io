@@ -129,16 +129,36 @@ docker-compose up --build --detach
 
 Then provided [K6](https://k6.io/) is installed, you can run write and read smoke tests:
 
-```bash
-k6 run k6/write-test.js
-k6 run k6/read-test.js
-```
-
 To just run the application and Postgres (no seeding):
 
 ```bash
 docker-compose -f docker-compose-no-seed.yaml up
 ```
+
+## Run some K6 tests:
+
+I have included read and write tests for K6. Run the write test like this:
+
+```shell
+k6 run \
+  -e TEST_PROFILE=smoke \
+  -e BASE_URL=http://localhost:8080 \
+  -e HOST_HEADER=application \
+  ./k6/write-test.js
+```
+
+If thats clean, you can try running using `TEST_PROFILE=load` and `TEST_PROFILE=stress`.
+
+Same for the read tests:
+
+```shell
+k6 run \
+  -e TEST_PROFILE=smoke \
+  -e BASE_URL=http://localhost:8080 \
+  -e HOST_HEADER=application \
+  ./k6/read-test.js
+```
+
 
 ### GitHub build script
 
