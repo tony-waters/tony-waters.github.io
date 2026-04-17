@@ -20,6 +20,7 @@ The repository to run the above is here [`tony-waters/spring-boot-kubernetes`](h
 ```shell
 git clone https://github.com/tony-waters/spring-boot-kubernetes.git
 ```
+
 ---
 
 ## Installation
@@ -35,6 +36,8 @@ for `cloud-provider-kind`:
 ```shell
 go install sigs.k8s.io/cloud-provider-kind@latest
 ```
+
+---
 
 ## Running the cluster
 
@@ -243,6 +246,8 @@ Events:              <none>
 
 ```
 
+---
+
 ## Seed some data
 
 Optionally, if you want to throw some seed data into the mix to make tests more realistic run the seeder. This will create 5,000 customers with related data:
@@ -256,6 +261,9 @@ You should see this in the logs:
 ```shell
 Seed complete: 5000 customers  
 ```
+
+---
+
 ## Test it works
 
 Using the IP address from the `Gateway`, we can check if the application is healthy:
@@ -269,6 +277,8 @@ And talk to the REST API:
 ```shell
 curl -H "Host: application" http://172.18.0.3:80/api/customers
 ```
+
+---
 
 ## Run some K6 tests:
 
@@ -294,6 +304,8 @@ k6 run \
   ./k6/read-test.js
 ```
 
+---
+
 ## Cleanup
 
 All that is left to do is clean up:
@@ -303,6 +315,8 @@ kind delete cluster
 ```
 
 If your running `cloud-provider-kind` in a container you may need to cleanup Docker, including volumes<sup>[[1]](#notes)</sup>.
+
+---
 
 ## Conclusion
 

@@ -8,10 +8,10 @@ I wanted to write a [simple-ish Spring REST application](https://github.com/tony
 
 - Java 21
 - Spring Boot 4.x
-- Spring Data JPA
-- Hibernate 7
-- H2 (test database)
+- Spring Data JPA / Hibernate 7
+- H2 (tests) + Postgres (runtime)
 - AssertJ
+- K6 (load testing)
 
 ... and these aims:
 
@@ -53,9 +53,9 @@ Our application has 2 aggregates, `Customer` and `Tag`. In this first iteration 
 
 ![Image alt]({{ site.baseurl }}/img/spring-customer-aggregate-2.png "Customer Aggregate Diagram")
 
-The basic idea is that by grouping entities into logical groups (called an aggregate) and controlling access to this group through a single entity (called the aggregate root) we can create better systems.
+The basic idea is that by grouping entities into logical groups (called an aggregate) and controlling access to this group through a single entity (called the aggregate root) we can create better systems by preventing invalid state and centralising invariants.
 
-Enforcement of invariants becomes simpler, because it happens inside the aggregate, rather than leaking into services. And since all traffic to the aggregate goes via the aggregate root, its easier to reason over. In fact, the aggregate root never returns entity objects from within the aggregate.
+Enforcement of invariants becomes simpler, because it happens inside the aggregate, rather than leaking into services. And since all traffic to the aggregate goes via the aggregate root, its easier to reason over. In this design, the aggregate root does not expose internal entities directly.
 
 For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods - neither [`Ticket`]() or [`Profile`]() has any.
 
@@ -83,7 +83,7 @@ It can be useful to separate the processes that query a system from the processe
 >
 > — [Martin Fowler](https://martinfowler.com/bliki/CommandQuerySeparation.html)
 
-The application services are split between [`CustomerCommandService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/command/CustomerCommandService.java) and [`CustomerQueryService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryService.java).
+The application services are split between [`CustomerCommandService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/command/CustomerCommandService.java) and [`CustomerQueryService`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryService.java). This is not full CQRS — just a pragmatic separation to keep writes behaviour-focused and reads efficient.
 
 `CustomerCommandService` talks directly to the `Customer` aggregate root to apply changes to the data using Command objects. One outcome of this approach is you can end up with a lot of Command objects, since the recomendation is usually to use one object per command. These simple data carriers can be represented with `records` for convenience.
 
@@ -180,6 +180,18 @@ I have included convenience scripts for bringing the system up (`up.sh`) and bri
 
 - [`up.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/up.sh)
 - [`down.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/down.sh)
+
+---
+
+## Conclusion
+
+Thats it! We now have a Spring REST Demo application with:
+
+- non-anemic domain model using aggregates
+- separate Command and Query operations
+- sensible tests aimed at specific layers of the application
+
+... running in a Docker container. Also, we have added some K6 tests to see how the system holds up.
 
 ---
 
