@@ -138,6 +138,12 @@ To just run the application and Postgres (no seeding):
 docker-compose -f docker-compose-no-seed.yaml up
 ```
 
+### GitHub build script
+
+I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml) produced by the [Spring Demo application](https://github.com/tony-waters/spring-boot-app). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app)
+
+---
+
 ## Run some K6 tests:
 
 Provided [K6](https://k6.io/) is installed, you can run write and read smoke tests. Run the write test like this:
@@ -161,11 +167,6 @@ k6 run \
   -e HOST_HEADER=application \
   ./k6/read-test.js
 ```
-
-
-### GitHub build script
-
-I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml) produced by the [Spring Demo application](https://github.com/tony-waters/spring-boot-app). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app)
 
 ## Resources
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
