@@ -218,8 +218,9 @@ helm install springapp ./helm/springapp
 
 Once everything is up and running, you should have a working HTTPRoute:
 
-```yaml
+```shell
 > kubectl describe httproute springapp -n application
+
 Name:         springapp
 Namespace:    application
 Labels:       app.kubernetes.io/managed-by=Helm
