@@ -15,7 +15,7 @@ Once `kind` is installed, we will:
   - seed some data (5,000 Customers and related data)
 - run some K6 read and write tests
 
-We need some additional files which live in [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes):
+The repository to run the above is here [`tony-waters/spring-boot-kubernetes`](https://github.com/tony-waters/spring-boot-kubernetes):
 
 ```shell
 git clone https://github.com/tony-waters/spring-boot-kubernetes.git
