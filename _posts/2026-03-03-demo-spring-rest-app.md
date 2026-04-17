@@ -127,10 +127,11 @@ Running the following will build and seed the application:
 docker-compose up --build --detach
 ```
 
-Then provided [K6](https://k6.io/) is installed, you can run some basic load tests:
+Then provided [K6](https://k6.io/) is installed, you can run write and read smoke tests:
 
 ```bash
-k6 run customer-write-smoke-test.js
+k6 run k6/write-test.js
+k6 run k6/read-test.js
 ```
 
 To just run the application and Postgres (no seeding):
