@@ -50,10 +50,10 @@ The [`cloud-provider-kind` GitHub docs](https://github.com/kubernetes-sigs/cloud
 kubectl label node kind-control-plane node.kubernetes.io/exclude-from-external-load-balancers-
 ```
 
-Before running `cloud-provider-kind` note there are no Custom Resource Definitions (CRDs) in the cluster:
+Note that before running `cloud-provider-kind` there are no Custom Resource Definitions (CRDs) in the cluster:
 
 ```shell
-user:~/spring-boot-kubernetes$ kubectl get crd
+> kubectl get crd
 No resources found
 ```
 
@@ -79,7 +79,7 @@ cloud-provider-kind
 
 ### 2. Running `cloud-provider-kind` from a Docker container
 
-The provider also comes as a Docker image:
+`cloud-provider-kind` also comes as a Docker image:
 
 ```shell
 docker run -d \
@@ -119,7 +119,7 @@ In order to run the application we need to make the following changes to the clu
 - add a Gateway to allow traffic in
 - add a Postgres database
 
-To make things easy to reason over, I have created an over-simplified set of Helm charts for this, keeping `values.yaml` files to a minimum. Install them from the `helm` and `helm-infra` directories. Start by installing the infrastructure. Note that the separate components of `helm-infra` (namespaces, Gateway, and Postgres) are installed using a parent chart.
+To make things easy to reason over, I have created an over-simplified set of Helm charts for this, keeping `values.yaml` files to a minimum. Install them from the `helm` and `helm-infra` directories. Start by installing the infrastructure - the separate components of `helm-infra` (namespaces, Gateway, and Postgres) are installed using a parent chart.
 
 ```shell
 helm dependency build ./helm-infra
@@ -210,14 +210,13 @@ spec:
 To deploy the application:
 
 ```shell
-helm dependency build ./helm/springapp
 helm install springapp ./helm/springapp
 ```
 
 Once everything is up and running, you should have a working HTTPRoute:
 
 ```yaml
-user:~/spring-boot-kubernetes$ kubectl describe httproute springapp -n application
+> kubectl describe httproute springapp -n application
 Name:         springapp
 Namespace:    application
 Labels:       app.kubernetes.io/managed-by=Helm
@@ -249,7 +248,6 @@ Events:              <none>
 Optionally, if you want to throw some seed data into the mix to make tests more realistic run the seeder. This will create 5,000 customers with related data:
 
 ```shell
-helm dependency build ./helm/springseed
 helm install springseed ./helm/springseed
 ```
 
@@ -313,7 +311,7 @@ Thats it! We now have the Spring Demo application running in a kubernetes `kind`
 ---
 
 ## <a name="notes"></a>Notes
-1. I found it easier to zap akk running containers then heavily `docker prune`.
+1. I found it easier to zap all running containers then heavily `docker prune`.
 
 ---
 
