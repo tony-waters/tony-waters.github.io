@@ -33,6 +33,8 @@ The application is broken down into layers.
 
 I will briefly summarise each of these layers, and point to where the important code and tests are.
 
+---
+
 ## Domain / JPA Layer
 
 The main classes in this layer are:
@@ -65,6 +67,8 @@ Domain tests for the sample application include unit tests that run without any 
 - [TicketTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/TicketTest.java)
 - [CustomerRepositoryDataJpaTest](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/domain/customer/CustomerRepositoryDataJpaTest.java)
 
+---
+
 ## Application Service Layer
 
 The main classes in this layer are:
@@ -90,6 +94,8 @@ Tests for this layer can be found in:
 - [`CustomerCommandServiceDataJpaTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/application/customer/command/CustomerCommandServiceDataJpaTest.java)
 - [`CustomerQueryRepositoryDataJpaTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/application/customer/query/CustomerQueryRepositoryDataJpaTest.java)
 
+---
+
 ## REST Controller Layer
 
 The main classes in this layer are:
@@ -104,6 +110,7 @@ Tests for this layer can be found in:
 - [`CustomerCommandControllerWebMvcTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/web/customer/CustomerCommandControllerWebMvcTest.java)
 - [`CustomerQueryControllerWebMvcTest`](https://github.com/tony-waters/spring-boot-app/blob/main/src/test/java/uk/bit1/spring_jpa/web/customer/CustomerQueryControllerWebMvcTest.java)
 
+---
 
 ## Seeder
 
@@ -113,6 +120,8 @@ The demo application includes a seeder which fills the database with 5,000 Custo
 - [`SeedCommandLineRunner`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/bootstrap/SeedCommandLineRunner.java)
 
 The `SeedCommandLineRunner` runs `DemoDataSeederService` when the Spring profile is "seed".
+
+---
 
 ## Docker
 
@@ -133,10 +142,11 @@ To just run the application and Postgres (no seeding):
 ```bash
 docker-compose -f docker-compose-no-seed.yaml up --build --detach
 ```
+---
 
 ## GitHub build script
 
-I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml) produced by the [Spring Demo application](https://github.com/tony-waters/spring-boot-app). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app)
+I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml) produced by the [Spring Demo application](https://github.com/tony-waters/spring-boot-app). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app).
 
 ---
 
@@ -162,12 +172,16 @@ k6 run \
   ./k6/read-test.js
 ```
 
+---
+
 ## Convenience `up` and `down` scripts
 
 I have included convenience scripts for bringing the system up (`up.sh`) and bringing it down (`down.sh`):
 
 - [`up.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/up.sh)
 - [`down.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/down.sh)
+
+---
 
 ## Resources
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)
