@@ -1,5 +1,5 @@
 ---
-title: Spring REST 2 - Deploying the Spring REST Demo in KIND using Gateway API
+title: Spring REST 2 - Deploying the Spring REST Demo in KIND using Gateway API and Helm
 layout: post
 header-img: "img/kubernetes.png"
 ---
@@ -11,7 +11,7 @@ Once `kind` is installed, we will:
 - run `cloud-provider-kind` to deploy the CRDs and deal with the `Gateway API`
 - use Helm to:
   - install Postgres, a `Gateway`, and some namespaces
-  - install the Spring Demo application
+  - deploy the Spring Demo application
   - seed some data (5,000 Customers and related data)
 - run some K6 read and write tests
 
