@@ -37,6 +37,8 @@ for `cloud-provider-kind`:
 go install sigs.k8s.io/cloud-provider-kind@latest
 ```
 
+On my Linux system both installed into $GOBIN (usually ~/go/bin). Once installed I moved `kind` to the `/usr/local/bin/` directory to make it accessible.
+
 ---
 
 ## Running the cluster
