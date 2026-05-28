@@ -4,19 +4,15 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-In my last post I looked at deploying the demo Spring REST application and its dependencies onto a local Kubernetes `kind` cluster, using `GatewayAPI` for routing. This involved using:
+Last post I deployed a demo spring boot application into a Kubernetes `kind` cluster, using Bash scripts to orchestrate the various technologies involved. While it worked, using shell scripts to automate creating and destroying the cluster, infrastructure, and application felt hacky - I wished for a more structured way of orchestrating things.
 
-- kind
-- Helm
-- kubectl
-- docker
-- cloud-provider-kind
+I decided to try and create the same demo/development environment using Terraform. Because of the nature of the environment I was able to use Terraform to do things that would not be advisable in less important environments - that's to say don't try this approach with non-trivial Terraform code.
 
-Using shell scripts to automate creating and destroying the cluster, infrastructure, and application felt hacky. I could have used Helmfile or ... but that would not cover all parts of the setup/teardown process, and I wanted to be able to bring up my whole dev cluster. The obvious answer was Terraform, but this involves using it in ways you would not consider in production. My requirements were to:
+Using Terraform I want to:
 
 1. create a `kind` cluster
-2. use Docker to run `cloud-provider-kind` for the Gateway
-3. use Helm to install Postgres, pgadmin, and Prometheus/Grafana
+2. make Docker run `cloud-provider-kind` for the Gateway
+3. have Helm install Postgres, pgadmin, and Prometheus/Grafana
 4. deploy and seed the Spring REST application
 
 I ended up creating 3 Terraform installations:
@@ -32,6 +28,7 @@ To bring everything up run (from the `terraform` directory):
 ```shell
 terraform -chdir=kind init
 terraform -chdir=kind apply -auto-approve
+sleep 30
 
 terraform -chdir=infra init
 terraform -chdir=infra apply -auto-approve
@@ -138,35 +135,19 @@ Grafana is available at the path `/grafana`. To login use `admin`/`admin`:
 
 ---
 
+## Conclusion
 
+While using Terraform to create a Development environment involves practices one would not want to use for production, it provides a repeatable and modular approach that can be more easily reasoned over. In many ways the Terraform was quicker to write and get working than the bash scripts - much easier to troubleshoot.
+
+On the other hand, the scripts are a lot faster to run :)
 
 ## Resources
 
-
-## add serviceaccount and clusterrolebinding to admin stuff!
-
-https://istio.io/latest/docs/setup/platform-setup/kind/
-
-# terraform kind provider
-https://github.com/elioseverojunior/terraform-provider-kind
-
-
-## prometheus helm chart simplified
-
-https://medium.com/@kedarnath93/high-level-understanding-of-prometheus-helm-chart-c764e720e4ec
-
-## kube-prometheus-stack
-
-https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/README.md
-
-## Monitor a Spring Boot App Using Prometheus
-
-https://www.baeldung.com/spring-boot-prometheus
-https://docs.spring.io/spring-boot/api/rest/actuator/prometheus.html
-
-# install pgadmin in kubernetes
-
-https://www.enterprisedb.com/blog/how-deploy-pgadmin-kubernetes
+- [Terraform kind provider](https://github.com/elioseverojunior/terraform-provider-kind)
+- [Prometheus helm chart simplified](https://medium.com/@kedarnath93/high-level-understanding-of-prometheus-helm-chart-c764e720e4ec)
+- [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/README.md)
+- [Monitor a Spring Boot App Using Prometheus](https://docs.spring.io/spring-boot/api/rest/actuator/prometheus.html)
+- [Install pgadmin in kubernetes](https://www.enterprisedb.com/blog/how-deploy-pgadmin-kubernetes)
 
 '
 
