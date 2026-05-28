@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Last post I deployed a demo spring boot application into a Kubernetes `kind` cluster, using Bash scripts to orchestrate the various technologies involved. While it worked, using shell scripts to automate creating and destroying the cluster, infrastructure, and application felt hacky - I wished for a more structured way of orchestrating things.
+[Last post](https://tony-waters.github.io/2026/04/06/setup-kind-cluster-v2.html) I deployed a [demo spring boot application](https://github.com/tony-waters/spring-boot-app) into a Kubernetes `kind` cluster, using Bash scripts to orchestrate the various technologies involved. While it worked, using shell scripts to automate creating and destroying the cluster, infrastructure, and application felt hacky - I wished for a more structured way of orchestrating things.
 
 If only there was something that could allow me to define and provision local infrastructure using declarative configuration files?
 
