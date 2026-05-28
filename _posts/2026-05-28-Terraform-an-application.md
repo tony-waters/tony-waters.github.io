@@ -39,6 +39,8 @@ terraform -chdir=app init
 terraform -chdir=app apply -auto-approve
 ```
 
+> Alternatively, run the `./up.sh` script
+
 This takes about 6 minutes to be ready. You should have these pods running:
 
 ```shell
@@ -136,6 +138,18 @@ Grafana is available at the path `/grafana`. To login use `admin`/`admin`:
 ![Image alt]({{ site.baseurl }}/img/grafana-login.png "Grafana login screen")
 
 ---
+
+## Bring it all down
+
+To destroy the cluster, infrastructure, and application:
+
+```shell
+terraform -chdir=app destroy -auto-approve
+terraform -chdir=infra destroy -auto-approve
+terraform -chdir=kind destroy -auto-approve
+```
+
+> Alternatively, run the `./down.sh` script
 
 ## Conclusion
 
