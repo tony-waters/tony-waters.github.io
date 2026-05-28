@@ -1,10 +1,12 @@
 ---
-title: Using Terraform for a local dev environment
+title: Spring REST 3 - Using Terraform for a local Development environment
 layout: post
 header-img: "img/spring5.jpg"
 ---
 
 Last post I deployed a demo spring boot application into a Kubernetes `kind` cluster, using Bash scripts to orchestrate the various technologies involved. While it worked, using shell scripts to automate creating and destroying the cluster, infrastructure, and application felt hacky - I wished for a more structured way of orchestrating things.
+
+If only there was something that could allow me to define and provision local infrastructure using declarative configuration files?
 
 I decided to try and create the same demo/development environment using Terraform. Because of the nature of the environment I was able to use Terraform to do things that would not be advisable in less important environments - that's to say don't try this approach with non-trivial Terraform code.
 
