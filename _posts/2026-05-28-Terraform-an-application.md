@@ -8,7 +8,7 @@ header-img: "img/spring5.jpg"
 
 > If only there was something that could allow me to define and provision local infrastructure using declarative configuration files?
 
-I decided to try and create the same demo/development environment using Terraform. Because of the nature of the environment I was able to use Terraform to do things that would not be advisable in less important environments - that's to say don't try this approach with non-trivial Terraform code.
+I decided to try and create the same demo/development environment using [`Terraform`](https://developer.hashicorp.com/terraform). Because of the nature of the environment I was able to use Terraform to do things that would not be advisable in less important environments - that's to say don't try this approach with non-trivial Terraform code.
 
 Using Terraform I want to:
 
