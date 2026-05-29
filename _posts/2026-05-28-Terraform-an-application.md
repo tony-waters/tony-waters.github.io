@@ -12,10 +12,10 @@ I decided to try and create the same demo/development environment using [`Terraf
 
 Using Terraform I want to:
 
-1. create a `kind` cluster
+1. create a `kind` cluster with 3 nodes
 2. make Docker run `cloud-provider-kind` for the Gateway
 3. have Helm install Postgres, pgadmin, and Prometheus/Grafana
-4. deploy and seed the Spring REST application
+4. deploy and seed 5 replicas of the Spring REST application
 
 I ended up creating 3 Terraform installations:
 
@@ -46,30 +46,34 @@ This takes about 6 minutes to be ready. You should have these pods running:
 ```shell
 > kubectl get po -A
 NAMESPACE            NAME                                                      READY   STATUS      RESTARTS   AGE
-application          springapp-6f849fd676-t5kqv                                1/1     Running     0          2m45s
-application          springseed-lgc5c                                          0/1     Completed   0          97s
-kube-system          coredns-7d764666f9-g2w8g                                  1/1     Running     0          6m45s
-kube-system          coredns-7d764666f9-lfnlv                                  1/1     Running     0          6m45s
-kube-system          etcd-springapp-cluster-control-plane                      1/1     Running     0          6m52s
-kube-system          kindnet-4t9jv                                             1/1     Running     0          6m44s
-kube-system          kindnet-9vrn5                                             1/1     Running     0          6m45s
-kube-system          kindnet-dbx7k                                             1/1     Running     0          6m44s
-kube-system          kube-apiserver-springapp-cluster-control-plane            1/1     Running     0          6m51s
-kube-system          kube-controller-manager-springapp-cluster-control-plane   1/1     Running     0          6m51s
-kube-system          kube-proxy-2vxcd                                          1/1     Running     0          6m44s
-kube-system          kube-proxy-mjk2p                                          1/1     Running     0          6m45s
-kube-system          kube-proxy-pjlch                                          1/1     Running     0          6m44s
-kube-system          kube-scheduler-springapp-cluster-control-plane            1/1     Running     0          6m51s
-local-path-storage   local-path-provisioner-67b8995b4b-j4khz                   1/1     Running     0          6m45s
-pgadmin              pgadmin-0                                                 1/1     Running     0          5m52s
-postgres             postgres-0                                                1/1     Running     0          5m52s
-prometheus           prometheus-grafana-7f84984f7d-skx2c                       3/3     Running     0          4m48s
-prometheus           prometheus-kube-prometheus-operator-67f88f78c6-k6phm      1/1     Running     0          4m48s
-prometheus           prometheus-kube-state-metrics-d585bd88d-5hdgg             1/1     Running     0          4m48s
-prometheus           prometheus-prometheus-kube-prometheus-prometheus-0        2/2     Running     0          4m34s
-prometheus           prometheus-prometheus-node-exporter-cm44v                 1/1     Running     0          4m48s
-prometheus           prometheus-prometheus-node-exporter-hkzxr                 1/1     Running     0          4m48s
-prometheus           prometheus-prometheus-node-exporter-s59qs                 1/1     Running     0          4m48s
+application          springapp-6f849fd676-b48z7                                1/1     Running     0          2m27s
+application          springapp-6f849fd676-bxkdc                                1/1     Running     0          2m27s
+application          springapp-6f849fd676-k9226                                1/1     Running     0          2m27s
+application          springapp-6f849fd676-sfz6d                                1/1     Running     0          2m27s
+application          springapp-6f849fd676-w49kz                                1/1     Running     0          2m27s
+application          springseed-f6wt9                                          0/1     Completed   0          55s
+kube-system          coredns-7d764666f9-9vx6r                                  1/1     Running     0          6m29s
+kube-system          coredns-7d764666f9-gk8t6                                  1/1     Running     0          6m29s
+kube-system          etcd-springapp-cluster-control-plane                      1/1     Running     0          6m37s
+kube-system          kindnet-hh4gb                                             1/1     Running     0          6m29s
+kube-system          kindnet-q2pm2                                             1/1     Running     0          6m28s
+kube-system          kindnet-tvbbv                                             1/1     Running     0          6m28s
+kube-system          kube-apiserver-springapp-cluster-control-plane            1/1     Running     0          6m37s
+kube-system          kube-controller-manager-springapp-cluster-control-plane   1/1     Running     0          6m37s
+kube-system          kube-proxy-5mz2s                                          1/1     Running     0          6m29s
+kube-system          kube-proxy-76m29                                          1/1     Running     0          6m28s
+kube-system          kube-proxy-jbp8j                                          1/1     Running     0          6m28s
+kube-system          kube-scheduler-springapp-cluster-control-plane            1/1     Running     0          6m37s
+local-path-storage   local-path-provisioner-67b8995b4b-xw66k                   1/1     Running     0          6m29s
+pgadmin              pgadmin-0                                                 1/1     Running     0          5m36s
+postgres             postgres-0                                                1/1     Running     0          5m36s
+prometheus           prometheus-grafana-7f84984f7d-l4tkw                       3/3     Running     0          4m33s
+prometheus           prometheus-kube-prometheus-operator-67f88f78c6-66gsf      1/1     Running     0          4m33s
+prometheus           prometheus-kube-state-metrics-d585bd88d-6slbg             1/1     Running     0          4m33s
+prometheus           prometheus-prometheus-kube-prometheus-prometheus-0        2/2     Running     0          4m17s
+prometheus           prometheus-prometheus-node-exporter-2w4dn                 1/1     Running     0          4m33s
+prometheus           prometheus-prometheus-node-exporter-g7n9g                 1/1     Running     0          4m33s
+prometheus           prometheus-prometheus-node-exporter-nxlff                 1/1     Running     0          4m33s
 ```
 
 Once it has run, lets do a sanity check that we can reach it and it has been seeded. First we need the IP address of the Gateway:
@@ -100,21 +104,21 @@ curl -H "Host: application" http://172.18.0.4:80/api/customers
 I have included read and write tests for K6. Run the write test like this:
 
 ```shell
-k6 run \
+user:~/Code/spring-boot-kubernetes/terraform$ k6 run \
   -e TEST_PROFILE=smoke \
   -e BASE_URL=http://172.18.0.4 \
   -e HOST_HEADER=application \
-  ./k6/write-test.js
+  ../k6/write-test.js
 ```
 
 Same for the read test:
 
 ```shell
-k6 run \
+user:~/Code/spring-boot-kubernetes/terraform$ k6 run \
   -e TEST_PROFILE=smoke \
   -e BASE_URL=http://172.18.0.4 \
   -e HOST_HEADER=application \
-  ./k6/read-test.js
+  ../k6/read-test.js
 ```
 
 You can also run using `TEST_PROFILE=load` and `TEST_PROFILE=stress`.
