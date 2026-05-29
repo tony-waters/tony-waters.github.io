@@ -123,11 +123,13 @@ You can also run using `TEST_PROFILE=load` and `TEST_PROFILE=stress`.
 
 pagadmin is available at. To login use `user@somewhere.com`/`pgadmin`:
 
-![Image alt]({{ site.baseurl }}/img/pgadmin-login.png "pgadmin login screen")
+![Image alt]({{ site.baseurl }}/img/pgadmin-home.png "pgadmin login screen")
 
 You will also need to use password `change-me-now` to connect to the database.
 
-![Image alt]({{ site.baseurl }}/img/pgadmin-login.png "pgadmin login screen")
+![Image alt]({{ site.baseurl }}/img/pgadmin-database.png "pgadmin database login screen")
+
+![Image alt]({{ site.baseurl }}/img/pgadmin-graphs.png "pgadmin graphs")
 
 ---
 
@@ -136,6 +138,8 @@ You will also need to use password `change-me-now` to connect to the database.
 Grafana is available at the path `/grafana`. To login use `admin`/`admin`: 
 
 ![Image alt]({{ site.baseurl }}/img/grafana-login.png "Grafana login screen")
+
+![Image alt]({{ site.baseurl }}/img/grafana-dashboard.png "Grafana Dashboard")
 
 ---
 
