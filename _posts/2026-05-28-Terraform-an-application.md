@@ -45,29 +45,30 @@ This takes about 6 minutes to be ready. You should have these pods running:
 
 ```shell
 > kubectl get po -A
-NAMESPACE            NAME                                                      READY   STATUS      RESTARTS   AGE
-application          springapp-6f849fd676-rtmv7                                1/1     Running     0          3m26s
-application          springseed-mcz8m                                          0/1     Completed   0          2m13s
-kube-system          coredns-7d764666f9-s8fxp                                  1/1     Running     0          6m42s
-kube-system          coredns-7d764666f9-sfzpk                                  1/1     Running     0          6m42s
-kube-system          etcd-springapp-cluster-control-plane                      1/1     Running     0          6m51s
-kube-system          kindnet-msb85                                             1/1     Running     0          6m42s
-kube-system          kindnet-prwd9                                             1/1     Running     0          6m42s
-kube-system          kube-apiserver-springapp-cluster-control-plane            1/1     Running     0          6m51s
-kube-system          kube-controller-manager-springapp-cluster-control-plane   1/1     Running     0          6m50s
-kube-system          kube-proxy-9wtv5                                          1/1     Running     0          6m42s
-kube-system          kube-proxy-wgplp                                          1/1     Running     0          6m42s
-kube-system          kube-scheduler-springapp-cluster-control-plane            1/1     Running     0          6m50s
-local-path-storage   local-path-provisioner-67b8995b4b-m8j7m                   1/1     Running     0          6m42s
-pgadmin              pgadmin-0                                                 1/1     Running     0          6m17s
-postgres             postgres-0                                                1/1     Running     0          6m17s
-prometheus           prometheus-grafana-7f84984f7d-kbx26                       3/3     Running     0          5m2s
-prometheus           prometheus-kube-prometheus-operator-67f88f78c6-ps5vg      1/1     Running     0          5m2s
-prometheus           prometheus-kube-state-metrics-d585bd88d-8g7xl             1/1     Running     0          5m2s
-prometheus           prometheus-prometheus-kube-prometheus-prometheus-0        2/2     Running     0          4m50s
-prometheus           prometheus-prometheus-node-exporter-7g5mm                 1/1     Running     0          5m2s
-prometheus           prometheus-prometheus-node-exporter-m57fv                 1/1     Running     0          5m2s
-
+NAMESPACE            NAME                                                      READY   STATUS    RESTARTS   AGE
+application          springapp-6f849fd676-pxb57                                1/1     Running   0          25m
+kube-system          coredns-7d764666f9-5fb94                                  1/1     Running   0          29m
+kube-system          coredns-7d764666f9-gzzlz                                  1/1     Running   0          29m
+kube-system          etcd-springapp-cluster-control-plane                      1/1     Running   0          29m
+kube-system          kindnet-8mm8s                                             1/1     Running   0          29m
+kube-system          kindnet-m7zxj                                             1/1     Running   0          29m
+kube-system          kindnet-mzfn7                                             1/1     Running   0          29m
+kube-system          kube-apiserver-springapp-cluster-control-plane            1/1     Running   0          29m
+kube-system          kube-controller-manager-springapp-cluster-control-plane   1/1     Running   0          29m
+kube-system          kube-proxy-87wgw                                          1/1     Running   0          29m
+kube-system          kube-proxy-t9tzp                                          1/1     Running   0          29m
+kube-system          kube-proxy-tfhqp                                          1/1     Running   0          29m
+kube-system          kube-scheduler-springapp-cluster-control-plane            1/1     Running   0          29m
+local-path-storage   local-path-provisioner-67b8995b4b-stx59                   1/1     Running   0          29m
+pgadmin              pgadmin-0                                                 1/1     Running   0          28m
+postgres             postgres-0                                                1/1     Running   0          28m
+prometheus           prometheus-grafana-7f84984f7d-c6cd9                       3/3     Running   0          27m
+prometheus           prometheus-kube-prometheus-operator-67f88f78c6-9qhjh      1/1     Running   0          27m
+prometheus           prometheus-kube-state-metrics-d585bd88d-gsxt7             1/1     Running   0          27m
+prometheus           prometheus-prometheus-kube-prometheus-prometheus-0        2/2     Running   0          26m
+prometheus           prometheus-prometheus-node-exporter-48q7j                 1/1     Running   0          27m
+prometheus           prometheus-prometheus-node-exporter-bcmc2                 1/1     Running   0          27m
+prometheus           prometheus-prometheus-node-exporter-wzfbz                 1/1     Running   0          27m
 ```
 
 Once it has run, lets do a sanity check that we can reach it and it has been seeded. First we need the IP address of the Gateway:
