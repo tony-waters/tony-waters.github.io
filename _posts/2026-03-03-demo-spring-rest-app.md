@@ -2,6 +2,16 @@
 title: Spring REST 1 - Anatomy of a Non-Anemic Spring Demo Application 
 layout: post
 header-img: "img/spring5.jpg"
+description: How to create a non-trivial REST service using Spring using JPA/Hibernate
+---
+
+---
+This is the first of three posts exploring creating, testing, deploying, and observing a non-trivial REST application created using Spring:
+
+- [Part 1](https://tony-waters.github.io/2026/03/03/demo-spring-rest-app.html): build a modern Spring REST application utilising domain-driven and CQRS architecture and sensible unit tests
+- [Part 2](https://tony-waters.github.io/2026/04/06/setup-kind-cluster-v2.html): deploy the application to a local Kubernetes cluster using KIND, Helm, and the new GatewayAPI for HTTP access
+- [Part 3](https://tony-waters.github.io/2026/05/28/Terraform-an-application.html): experiment with using Terraform to create the local development environment and add Prometheus and Grafana observation
+---
 ---
 
 I wanted to write a [simple-ish Spring REST application](https://github.com/tony-waters/spring-boot-app) to experiment with these technologies:
