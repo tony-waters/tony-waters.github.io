@@ -52,7 +52,7 @@ terraform -chdir=app apply -auto-approve
 
 > Alternatively, run the `./up.sh` script
 
-On my laptop this takes about 6 minutes for all the pods to be ready and the seeder job to complete. It should look like this:
+On my laptop this it about 6 minutes for all the pods to be ready and the seeder job to complete. It should look like this:
 
 ```shell
 > kubectl get po -A
@@ -150,7 +150,7 @@ You can also run using `TEST_PROFILE=load` and `TEST_PROFILE=stress`.
 
 ## pgadmin
 
-pagadmin is available at. To login use `user@somewhere.com`/`pgadmin`:
+pagadmin should now be available ay `http://<gateway-ip>/pgadmin/`. To login use `user@somewhere.com`/`pgadmin`:
 
 ![Image alt]({{ site.baseurl }}/img/pgadmin-home.png "pgadmin login screen")
 
