@@ -200,7 +200,7 @@ I have included convenience scripts for bringing the system up (`up.sh`) and tak
 
 Thats it! We now have a Spring REST Demo application with:
 
-- non-anemic domain model using aggregates
+- a non-anemic domain model using aggregates
 - separate Command and Query operations
 - sensible tests aimed at specific layers of the application
 
