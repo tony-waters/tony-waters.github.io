@@ -189,7 +189,7 @@ k6 run \
 
 ## Convenience `up` and `down` scripts
 
-I have included convenience scripts for bringing the system up (`up.sh`) and bringing it down (`down.sh`):
+I have included convenience scripts for bringing the system up (`up.sh`) and taking it down (`down.sh`):
 
 - [`up.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/up.sh)
 - [`down.sh`](https://github.com/tony-waters/spring-boot-app/blob/main/down.sh)
