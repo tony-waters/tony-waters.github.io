@@ -14,22 +14,23 @@ header-img: "img/spring5.jpg"
 ---
 ---
 
-[Last post](https://tony-waters.github.io/2026/04/06/setup-kind-cluster-v2.html) I deployed a [demo spring boot application](https://github.com/tony-waters/spring-boot-app) into a Kubernetes [`kind`](https://kind.sigs.k8s.io/) cluster, using Bash scripts to orchestrate the various technologies involved. While it worked, using shell scripts to automate creating and destroying the cluster, infrastructure, and application felt hacky - I wished for a more structured way of orchestrating things.
+[Last post](https://tony-waters.github.io/2026/04/06/setup-kind-cluster-v2.html) I deployed a [demo spring boot application](https://github.com/tony-waters/spring-boot-app) into a Kubernetes [`kind`](https://kind.sigs.k8s.io/) cluster, using Bash scripts to orchestrate the various technologies involved. While it worked, using shell scripts to automate creating and destroying the cluster, infrastructure, and application felt hacky - I wished for a more structured way of orchestrating things ...
 
 > If only there was something that could allow me to define and provision local infrastructure using declarative configuration files?
 
-I decided to try and create the same demo/development environment using [`Terraform`](https://developer.hashicorp.com/terraform). Because of the nature of the environment I was able to use Terraform to do things that would not be advisable in less important environments - that's to say don't try this approach with non-trivial Terraform code.
+I want to try and create the same demo/development environment using [`Terraform`](https://developer.hashicorp.com/terraform) instead of bash scripts. Let me say up front, this is not a template for production use! Because of the Development nature of the environment I was able to use Terraform to do things that would not necessarily be advisable in production. As with many tools, [Terraform has many use cases](https://developer.hashicorp.com/terraform/intro/use-cases).
 
-Using Terraform I want to:
+To create the Development environment with Terraform I want to:
 
 1. create a `kind` cluster with 3 nodes
 2. make Docker run `cloud-provider-kind` for the Gateway
 3. have Helm install Postgres, pgadmin, and Prometheus/Grafana
-4. deploy and seed 5 replicas of the Spring REST application
+4. deploy 5 replicas of the Spring REST application
+5. run a job to seed the (now) distributed application 
 
 I ended up creating 3 Terraform installations:
 
-1. cluster/kind
+1. cluster (kind)
 2. infrastructure (Postgres, pgadmin, Prometheus/Grafana)
 3. application (the Spring REST demo)
 
@@ -51,7 +52,7 @@ terraform -chdir=app apply -auto-approve
 
 > Alternatively, run the `./up.sh` script
 
-This takes about 6 minutes to be ready. You should have these pods running:
+On my laptop this takes about 6 minutes for all the pods to be ready and the seeder job to complete. It should look like this:
 
 ```shell
 > kubectl get po -A
@@ -86,7 +87,7 @@ prometheus           prometheus-prometheus-node-exporter-g7n9g                 1
 prometheus           prometheus-prometheus-node-exporter-nxlff                 1/1     Running     0          4m33s
 ```
 
-Once it has run, lets do a sanity check that we can reach it and it has been seeded. First we need the IP address of the Gateway:
+To access the cluster we need the IP address of the Gateway:
 
 ```shell
 > kubectl get gateway -A
@@ -94,13 +95,25 @@ NAMESPACE             NAME                  CLASS                 ADDRESS      P
 application-gateway   application-gateway   cloud-provider-kind   **172.18.0.4**   True         5m17s
 ```
 
-We can issue a `curl` to check we have access and the database is seeded (the header is used by the `HTTPRoute` to direct traffic to the application):
+Using the IP, we can issue a `curl` to check we have access and the database is seeded (the header is used by the `HTTPRoute` to direct traffic to the application):
 
 ```shell
 curl -H "Host: application" http://172.18.0.4:80/api/customers
 ```
 
-If all is well, you should see something like this:
+This should hit the following method in `CustomerQueryController`:
+
+```java
+@GetMapping
+Page<CustomerSummaryView> findCustomers(
+        @RequestParam(required = false) String name,
+        Pageable pageable
+) {
+    return customerQueryService.findCustomers(name, pageable);
+}
+```
+
+If all is well, it should return a paginated result (thanks to `org.springframework.data.domain.Pageable`:
 
 ```shell
 curl -H "Host: application" http://172.18.0.4:80/api/customers

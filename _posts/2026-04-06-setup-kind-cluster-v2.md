@@ -291,6 +291,25 @@ And talk to the REST API:
 curl -H "Host: application" http://172.18.0.3:80/api/customers
 ```
 
+This should hit the `CustomerQueryController#findCustomers()` method in the `spring-boot-app`:
+
+```java
+@GetMapping
+Page<CustomerSummaryView> findCustomers(
+        @RequestParam(required = false) String name,
+        Pageable pageable
+) {
+    return customerQueryService.findCustomers(name, pageable);
+}
+```
+
+If all is well, it should return a paginated result (thanks to `org.springframework.data.domain.Pageable`:
+
+```shell
+curl -H "Host: application" http://172.18.0.4:80/api/customers
+{"content":[{"id":31219,"displayName":"Alice Allen"},{"id":6048,"displayName":"Alice Allen"},{"id":29901,"displayName":"Alice Allen"},{"id":18419,"displayName":"Alice Allen"},{"id":7813,"displayName":"Alice Allen"},{"id":26007,"displayName":"Alice Allen"},{"id":23844,"displayName":"Alice Allen"},{"id":29265,"displayName":"Alice Allen"},{"id":13290,"displayName":"Alice Allen"},{"id":1333,"displayName":"Alice Allen"},{"id":21029,"displayName":"Alice Allen"},{"id":15190,"displayName":"Alice Allen"},{"id":702,"displayName":"Alice Allen"},{"id":18958,"displayName":"Alice Allen"},{"id":6024,"displayName":"Alice Allen"},{"id":9085,"displayName":"Alice Allen"},{"id":20279,"displayName":"Alice Brown"},{"id":15754,"displayName":"Alice Brown"},{"id":16101,"displayName":"Alice Brown"},{"id":3927,"displayName":"Alice Brown"}],"empty":false,"first":true,"last":false,"number":0,"numberOfElements":20,"pageable":{"offset":0,"pageNumber":0,"pageSize":20,"paged":true,"sort":{"empty":false,"sorted":true,"unsorted":false},"unpaged":false},"size":20,"sort":{"empty":false,"sorted":true,"unsorted":false},"totalElements":5000,"totalPages":250}
+```
+
 ---
 
 ## Run some K6 tests:
