@@ -114,7 +114,7 @@ The main classes in this layer are:
 - [`CustomerCommandController`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/web/customer/CustomerCommandController.java)
 - [`CustomerQueryController`](https://github.com/tony-waters/spring-boot-app/blob/main/src/main/java/uk/bit1/spring_jpa/web/customer/CustomerQueryController.java)
 
-This is a vanilla Spring REST controller layer. Its thin, uses DTOs for requests, and basically calls the the Application Layer.
+This is a vanilla Spring REST controller layer. Its thin, uses DTOs for requests, and basically calls the Application Layer.
 
 Tests for this layer can be found in:
 
@@ -159,6 +159,8 @@ docker-compose -f docker-compose-no-seed.yaml up --build --detach
 
 I have included a GitHub Actions script to [publish the container image](https://github.com/tony-waters/spring-boot-app/blob/main/.github/workflows/publish-image.yml) produced by the [Spring Demo application](https://github.com/tony-waters/spring-boot-app). It is published to [GitHub Container Registry](https://github.com/tony-waters/spring-boot-app/pkgs/container/spring-boot-app).
 
+This image is used by [Part 2](https://tony-waters.github.io/2026/04/06/setup-kind-cluster-v2.html) and [Part 3](https://tony-waters.github.io/2026/05/28/Terraform-an-application.html) of this series of posts.
+
 ---
 
 ## K6 tests
@@ -201,8 +203,6 @@ Thats it! We now have a Spring REST Demo application with:
 - non-anemic domain model using aggregates
 - separate Command and Query operations
 - sensible tests aimed at specific layers of the application
-
-... running in a Docker container. Also, we have added some K6 tests to see how the system holds up.
 
 ---
 
