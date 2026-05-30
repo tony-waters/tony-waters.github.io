@@ -24,7 +24,7 @@ I wrote a [simple non-trivial Spring REST application](https://github.com/tony-w
 - AssertJ
 - K6 (load testing)
 
-... and these aims:
+... with these aims:
 
 - [non-anemic](https://martinfowler.com/bliki/AnemicDomainModel.html) domain model using aggregates
 - separate Command and Query operations
@@ -66,9 +66,9 @@ Our application has 2 aggregates, `Customer` and `Tag`. In this first iteration 
 
 The basic idea is that by grouping entities into logical groups (called an aggregate) and controlling access to this group through a single entity (called the aggregate root) we can create better systems by preventing invalid state and centralising invariants.
 
-Enforcement of invariants becomes simpler, because it happens inside the aggregate, rather than leaking into services. And since all traffic to the aggregate goes via the aggregate root, its easier to reason over. In this design, the aggregate root does not expose internal entities directly.
+Enforcement of invariants becomes simpler, because it happens inside the aggregate, rather than leaking into services. And since all traffic to the aggregate goes via the aggregate root, its easier to reason over.
 
-For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods - neither [`Ticket`]() or [`Profile`]() has any.
+In this design, the aggregate root does not expose internal entities directly. For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods - neither [`Ticket`]() nor [`Profile`]() have any.
 
 Also note that all the entities in the aggregate focus on domain behaviour (like `resolveTicket()`) rather than setters (like `setStatus('resolved')`).
 
