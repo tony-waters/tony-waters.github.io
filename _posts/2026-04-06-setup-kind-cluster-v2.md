@@ -51,6 +51,22 @@ On my Linux system both installed into $GOBIN (usually ~/go/bin). Once installed
 
 ---
 
+## TL;DR
+
+To quickly get the cluster, dependent infrastructure, and application up and running:
+
+> ./up.sh
+
+Then seed it:
+
+> ./seed.sh
+
+To bring it all down:
+
+> ./down.sh
+
+But to understand what is actually happening read on ...
+
 ## Running the cluster
 
 To be compatible with `cloud-provider-kind` we need to create a cluster using a `kind` node image with version 1.33 or above: 
@@ -303,7 +319,7 @@ Page<CustomerSummaryView> findCustomers(
 }
 ```
 
-If all is well, it should return a paginated result (thanks to `org.springframework.data.domain.Pageable`:
+If all is well, it should return a paginated result (thanks to `org.springframework.data.domain.Pageable`):
 
 ```shell
 curl -H "Host: application" http://172.18.0.4:80/api/customers
