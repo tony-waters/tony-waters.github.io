@@ -8,7 +8,7 @@ For a seemingly straightforward JPA annotation, `@OneToOne` relationships can be
 
 ## Tech stack
 
-- Java 21
+- Java 25
 - Spring Boot 4.x
 - Spring Data JPA
 - Hibernate 7

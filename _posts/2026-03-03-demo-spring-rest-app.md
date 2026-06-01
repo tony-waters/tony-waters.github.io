@@ -145,13 +145,13 @@ You can run the Spring Demo application along with a Postgres database and the a
 Running the following will build and seed the application:
 
 ```bash
-docker-compose up --build --detach
+docker compose up --build --detach
 ```
 
 To just run the application and Postgres (no seeding):
 
 ```bash
-docker-compose -f docker-compose-no-seed.yaml up --build --detach
+docker compose -f docker-compose-no-seed.yaml up --build --detach
 ```
 ---
 
