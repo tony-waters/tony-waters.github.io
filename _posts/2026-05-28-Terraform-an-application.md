@@ -186,7 +186,7 @@ terraform -chdir=kind destroy -auto-approve
 
 ## Conclusion
 
-While using Terraform to create a Development environment involves practices one would not want to use for production, it provides a repeatable and modular approach that can be more easily reasoned over. In many ways the Terraform was quicker to write and get working than the bash scripts - much easier to troubleshoot.
+While using Terraform to create a Development environment involves practices one would not want to use for production, it provides a repeatable and modular approach that can be easily reasoned over. In many ways the Terraform was quicker to write and get working than the bash scripts - and much easier to troubleshoot.
 
 On the other hand, the scripts are a lot faster to run :)
 
