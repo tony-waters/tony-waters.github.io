@@ -113,7 +113,7 @@ Page<CustomerSummaryView> findCustomers(
 }
 ```
 
-If all is well, it should return a paginated result (thanks to `org.springframework.data.domain.Pageable`:
+If all is well, it should return a paginated result (thanks to `org.springframework.data.domain.Pageable`):
 
 ```shell
 curl -H "Host: application" http://172.18.0.4:80/api/customers
