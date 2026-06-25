@@ -64,9 +64,7 @@ Our application has 2 aggregates, `Customer` and `Tag`. In this first iteration 
 
 ![Image alt]({{ site.baseurl }}/img/spring-customer-aggregate-2.png "Customer Aggregate Diagram")
 
-The basic idea is that by grouping entities into logical groups (called an aggregate) and controlling access to this group through a single entity (called the aggregate root) we can create better systems by preventing invalid state and centralising invariants.
-
-Enforcement of invariants becomes simpler, because it happens inside the aggregate, rather than leaking into services. And since all traffic to the aggregate goes via the aggregate root, its easier to reason over.
+The basic idea is that by grouping entities into logical groups (each group called an `aggregate`) and controlling access to this group through a single entity within the group (called the `aggregate root`) it is easier to prevent invalid state because the invariants are centralised and easier to reason over. Think Facade pattern, where one of the original Classes takes charge.
 
 In this design, the aggregate root does not expose internal entities directly. For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods - neither [`Ticket`]() nor [`Profile`]() have any.
 
