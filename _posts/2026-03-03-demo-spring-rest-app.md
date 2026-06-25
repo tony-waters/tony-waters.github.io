@@ -17,7 +17,7 @@ description: How to create a non-trivial REST service using Spring using JPA/Hib
 
 I wrote a [simple non-trivial Spring REST application](https://github.com/tony-waters/spring-boot-app) to experiment with the following technologies:
 
-- Java ~~21~~25 (LTS)
+- Java ~~21~~ 25 (LTS)
 - Spring Boot 4.x (Spring 7.x)
 - Spring Data JPA / Hibernate 7
 - H2 (tests) + Postgres (runtime)
