@@ -60,11 +60,11 @@ A focus was to avoid an [anemic domain model](https://martinfowler.com/bliki/Ane
 > 
 > — Eric Evans, *Domain-Driven Design*
 
-Our application has 2 aggregates, `Customer` and `Tag`. In this first iteration I am going to focus on the `Customer` aggregate:
+In this first iteration, I suggest 2 aggregates, `Customer` and `Tag`. I will focus on the `Customer` aggregate:
 
 ![Image alt]({{ site.baseurl }}/img/spring-customer-aggregate-2.png "Customer Aggregate Diagram")
 
-The basic idea is that by grouping entities into logical groups (each group called an `aggregate`) and controlling access to this group through a single entity within the group (called the `aggregate root`) it is easier to prevent invalid state because the invariants are centralised and easier to reason over. Think Facade pattern, where one of the original Classes takes charge. If there is no obvious candidate to take charge of the group, maybe the group is more than one group. [Identifying aggregates and roots is not necessarily a simple process](https://softwareengineering.stackexchange.com/questions/355647/find-the-ddd-aggregate-root).
+The basic idea of `aggregates` is that by fencing entities into logical groups (each group called an `aggregate`) and controlling access to this group through a single entity within the group (called the `aggregate root`) it is easier to prevent invalid state because the invariants are centralised and easier to reason over. Think Facade pattern, where one of the original Classes takes charge. If there is no obvious candidate to take charge of the group, maybe the group is more than one group. [Identifying aggregates and roots is not necessarily a simple process](https://softwareengineering.stackexchange.com/questions/355647/find-the-ddd-aggregate-root).
 
 In this design, the aggregate root does not expose internal entities directly. For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods - neither [`Ticket`]() nor [`Profile`]() have any.
 
