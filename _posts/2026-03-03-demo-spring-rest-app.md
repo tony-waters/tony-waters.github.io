@@ -68,7 +68,7 @@ The basic idea of `aggregates` is that by fencing entities into logical groups (
 
 In this design, the aggregate root does not expose internal entities directly. For example, take  [`Customer`](), our aggregate root. It has no entity objects as return values. And it is the only entity in the aggregate with public methods - neither [`Ticket`]() nor [`Profile`]() have any.
 
-Also note that all the entities in the aggregate focus on domain behaviour (like `resolveTicket()`) rather than setters (like `setStatus('resolved')`).
+Also note that all the entities in the aggregate focus on domain behaviour (like `resolveTicket()`) rather than setters (like `setStatus('resolved')`). The idea is to use domain language, not generic technical terms. 'Resolve ticket' has meaning within the domain.
 
 Domain tests for the sample application include unit tests that run without any JPA context. And `@DataJpaTest` tests:
 
