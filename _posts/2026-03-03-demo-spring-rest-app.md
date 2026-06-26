@@ -174,7 +174,7 @@ k6 run \
   ./k6/write-test.js
 ```
 
-If thats clean, you can try running using `TEST_PROFILE=load` and `TEST_PROFILE=stress`.
+If thats clean, you can try running using `TEST_PROFILE=load` and `TEST_PROFILE=stress`. Be aware that 'stress' will cause some failures. Which can be very useful.
 
 Same for the read tests:
 
