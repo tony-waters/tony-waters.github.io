@@ -15,7 +15,9 @@ What you sometimes want is:
 
 Sounds good? Great! But before you do this, please [read the README and understand the warnings!](https://github.com/tony-waters/directory-to-text/blob/main/README.md).
 
-OK? Good. The goal is to translate a directory structure like this:
+OK? Good. Let's get back to it then.
+
+The goal is to translate a directory structure like this:
 
 ```text
 ├── dir1
