@@ -59,6 +59,7 @@ The main features of the script are:
 - sorts output, so diffs are stable
 - uses markdown code fences, which helps LLMs parse files properly
 - includes the path before every file
+- you can change it to suit your specific needs
 
 ## Editing the script
 
