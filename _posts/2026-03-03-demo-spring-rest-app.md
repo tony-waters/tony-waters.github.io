@@ -56,7 +56,7 @@ The main classes in this layer are:
 
 A focus was to avoid an [anemic domain model](https://martinfowler.com/bliki/AnemicDomainModel.html) by using aggregates:
 
-> An aggregate is a cluster of associated objects treated as a single unit for data changes, with a clearly defined boundary and a root entity that enforces invariants.
+> An aggregate is a cluster of **associated objects** treated as a **single unit for data changes**, with a clearly defined boundary and **a root entity that enforces invariants**.
 > 
 > — Eric Evans, *Domain-Driven Design*
 
