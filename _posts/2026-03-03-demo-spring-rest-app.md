@@ -66,7 +66,7 @@ In this first iteration, I suggest 2 aggregates, `Customer` and `Tag`. I will fo
 
 The basic idea of `aggregates` is that by fencing entities into logical groups (each group called an `aggregate`) and controlling access to this group through a single entity within the group (called the `aggregate root`) it is easier to prevent invalid state because the invariants are encapsulated so easier to reason over. Think Facade pattern, where one of the original Classes gets promoted (for good reason) to the Facade. If there is no obvious candidate to take charge of the group, maybe the group is more than one group. [Identifying aggregates and roots is not necessarily a simple process](https://softwareengineering.stackexchange.com/questions/355647/find-the-ddd-aggregate-root).
 
-In this design, just like the Facade, the aggregate root does not expose internal entities directly.
+In this design the aggregate root does not expose internal entities directly.
 
 For example, take  [`Customer`](), our aggregate root. **It has no entity objects as return values**. And it is **the only entity in the aggregate with public methods** - neither [`Ticket`]() nor [`Profile`]() have any.
 
