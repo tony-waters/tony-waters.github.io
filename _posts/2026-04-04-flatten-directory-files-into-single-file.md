@@ -6,8 +6,6 @@ header-img: "img/bash.png"
 
 Sometimes you want to [show most of a code base to a reviewer](https://github.com/tony-waters/directory-to-text/tree/main) (like ChatGPT), without zipping, uploading, or losing context. Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable.
 
-Please [read the README and understand the warnings!](https://github.com/tony-waters/directory-to-text/blob/main/README.md).
-
 What you sometimes want is:
 
 - A single document
@@ -15,7 +13,9 @@ What you sometimes want is:
 - That excludes junk
 - And is structured enough for tools (and humans) to understand
 
-The goal is to translate a directory structure like this:
+Sounds good? Great! But before you do this, please [read the README and understand the warnings!](https://github.com/tony-waters/directory-to-text/blob/main/README.md).
+
+OK? Good. The goal is to translate a directory structure like this:
 
 ```text
 ├── dir1
