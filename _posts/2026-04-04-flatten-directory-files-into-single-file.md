@@ -4,7 +4,11 @@ layout: post
 header-img: "img/bash.png"
 ---
 
-Sometimes you want  to show most of a code base to a reviewer (like ChatGPT), without zipping, uploading, or losing context. Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable. What you sometimes want is:
+Sometimes you want to [show most of a code base to a reviewer](https://github.com/tony-waters/directory-to-text/tree/main) (like ChatGPT), without zipping, uploading, or losing context. Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable.
+
+Please [read the README and understand the warnings!](https://github.com/tony-waters/directory-to-text/blob/main/README.md).
+
+What you sometimes want is:
 
 - A single document
 - With clear boundaries between files
