@@ -4,11 +4,31 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-A common requirement is that the owner of something can change it. For example, for most sites I subscribe to I would expect to be able to change my email address or marketing options, while I would not expect to be able to change these details for another user.
+A common requirement is that the owner of something can change it. For example, for most sites I subscribe to I would expect to be able to change my email address or marketing options. Additionally, I would not expect to be able to change these details for another user.
 
-This can easily be done using `@PreAuthorise`, some `SpEL`, and some boilerplate.
+Using Spring Security we can create infinately complex `SpEL` expressions.
 
-Rather than proliferating this common requirement in its base `@PreAuthorise` form, lets male it easily reusable and updatable using DRY principles and Custom Annotations.
+In this post I highlight a straightforward way of encapsulating `@PreAutorsie` `SpEL` expressions using Custom Annotations in Spring Security to create a `@UserOwned` annotation 
+
+This can easily be achieved using `@PreAuthorise`, some `SpEL`, and some boilerplate:
+
+...
+
+While this works, the repetition breaks DRY principles. The logic is proliferated throughout the codebase, making it harder to change.
+
+Rather than letting this common requirement run wild in its basic `@PreAuthorise` form, lets make it easily reusable and updatable using DRY principles and Custom Annotations.
+
+## Using Custom Annotations
+
+
+
+## Testing
+
+
+
+## Conclusion
+
+
 
 
 
