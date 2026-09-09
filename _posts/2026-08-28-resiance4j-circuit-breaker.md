@@ -80,21 +80,6 @@ Then run the k6 load test:
 k6 run k6/circuit-breaker.js
 ```
 
-The k6 test sends normal order traffic while the email service is healthy.
-
-The k6 test should produce this outcome:
-
-- orders with `emailStatus` set to `SENT`
-
-That is the normal closed-circuit path: the dependency is healthy, the downstream call succeeds, and the order API records that the email was sent.
-
-The REST service also exposes actuator endpoints for circuit breaker state and events:
-
-```text
-http://localhost:8081/actuator/circuitbreakers
-http://localhost:8081/actuator/circuitbreakerevents
-```
-
 If the downstream service is unavailable, the useful log lines look like this:
 
 ```text
@@ -113,6 +98,13 @@ There are two different failures shown here.
 The first is a downstream failure. The `rest-service` calls `email-service`, and `email-service` returns an error. The circuit breaker records that error.
 
 The second is an open-circuit rejection. The `rest-service` does not call `email-service` at all. Resilience4j rejects the call locally with `CallNotPermittedException`, and the fallback marks the email as deferred.
+
+The REST service also exposes actuator endpoints for circuit breaker state and events:
+
+```text
+http://localhost:8081/actuator/circuitbreakers
+http://localhost:8081/actuator/circuitbreakerevents
+```
 
 When the downstream service is healthy again and the wait duration has passed, the circuit breaker allows trial calls:
 
