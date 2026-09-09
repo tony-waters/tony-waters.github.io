@@ -59,7 +59,7 @@ EmailDeliveryResult emailFallback(Order order, Throwable cause) {
 }
 ```
 
-The API still returns `201 Created` because the order has been saved. Only the email notification is deferred.
+The API still returns `201 Created` because the order has been saved. The email notification is deferred or lost.
 
 ## Running the System
 
