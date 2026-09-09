@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-This is another post in a series on [Resilience4j](https://resilience4j.readme.io/) with SpringBoot. Resilience4j provides common resilience patterns that can be used with SpringBoot. In this post I demonstrate the `Circuit Breaker` pattern.
+This is another post in a series on [Resilience4j](https://resilience4j.readme.io/) with SpringBoot. Resilience4j provides common resilience patterns that can be used with SpringBoot. In this post I want to look at the `Circuit Breaker` pattern.
 
 A [Circuit Breaker](https://resilience4j.readme.io/docs/circuitbreaker) stops an application from repeatedly calling a dependency that is already failing. Instead of sending every request over the network and waiting for another error, the circuit breaker watches recent outcomes. When failures cross a configured threshold, it opens and rejects new calls immediately.
 
