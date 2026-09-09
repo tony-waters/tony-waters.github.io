@@ -6,9 +6,7 @@ header-img: "img/spring5.jpg"
 
 This is the first of a series of posts on [Resilience4j](https://resilience4j.readme.io/) with SpringBoot. Resilience4j provides some common resilience patterns that can be used with SpringBoot. In this post I want to look at the `Bulkhead` pattern.
 
-A [Bulkhead](https://resilience4j.readme.io/docs/bulkhead) limits how much shared capacity a particular operation or dependency can consume at once. If a slow downstream service starts tying up threads or HTTP connections, a bulkhead caps the number of concurrent calls allowed to reach it, helping protect the rest of the application.
-
-In Resilience4j, a `semaphore bulkhead` does this without creating its own threads; it simply acts as a concurrency gate, whereas a `thread-pool bulkhead` provides stronger isolation by running the protected work on a dedicated bounded thread pool.
+A [Bulkhead](https://resilience4j.readme.io/docs/bulkhead) limits how much shared capacity a particular operation or dependency can consume at once. If a slow downstream service starts tying up threads or HTTP connections, a bulkhead caps the number of concurrent calls allowed to reach it, helping protect the rest of the application<sup>[[1]](#notes)</sup>.
 
 This demo uses two Spring Boot services:
 
@@ -170,3 +168,6 @@ So while we have maintained control of the calling service, the `Bulkhead` alone
 In this demo, the intentionally slow email service causes the order API to pile up behind it. Adding a bulkhead made that behavior visible, and protects the calling service. But what happens to the work that did not run? For order confirmation emails, losing one might be annoying but recoverable. For payments, stock reservations, refunds, account changes, or anything with financial or legal consequences, simply returning a fallback and moving on would be dangerous.
 
 In a real system, rejected work usually needs a durable path. The bulkhead protects the application from overload, but it does not decide what should happen to rejected work.
+
+## <a name="notes"></a>Notes
+1. In Resilience4j, a `semaphore bulkhead` does this without creating its own threads; it simply acts as a concurrency gate, whereas a `thread-pool bulkhead` provides stronger isolation by running the protected work on a dedicated bounded thread pool. I use s semaphore in this example.
