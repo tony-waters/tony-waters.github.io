@@ -133,11 +133,11 @@ The final line is particularly significant:
 availableConcurrentCalls=4
 ```
 
-All four permits are available again. The bulkhead has recovered automatically because the pressure on the downstream service has subsided.
+All four permits are available again. The bulkhead has recovered automatically because the pressure on the downstream service has subsided. However, just in these log fragments orders 50 and 51 have received no email. So we would still need to do something about orders marked `EMAIL_DEFERRED`.
 
 ### Observing the K6 results
 
-Looking at the K6 results we can see that not all the emails got delivered:
+Looking at the K6 results we can confirm that not all the emails got delivered:
 
 ``` bash
 █ THRESHOLDS
