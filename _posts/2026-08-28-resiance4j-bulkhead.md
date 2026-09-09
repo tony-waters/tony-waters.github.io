@@ -28,7 +28,7 @@ resilience4j:
         max-wait-duration: 700
 ```
 
-Here only 4 email calls can run at the same time. Extra calls are queued for 700ms then rejected.
+Here only 4 calls to the email service can run at the same time. Extra calls are queued for 700ms then rejected.
 
 ## The Protected Call
 
