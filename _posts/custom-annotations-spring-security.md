@@ -14,6 +14,16 @@ This can easily be achieved using `@PreAuthorise`, some `SpEL`, and some boilerp
 
 ...
 
+
+
+## Without Custom Annotations - @PreAuthorise and SpEL
+
+To create a 'owned by user' security gate using the build in `@PreAuthorise` annotation we would probably do something similar to this:
+
+...
+
+We would then simply apply this to all the methods requiring such authorisation.
+
 While this works, the repetition breaks DRY principles. The logic is proliferated throughout the codebase, making it harder to change.
 
 Rather than letting this common requirement run wild in its basic `@PreAuthorise` form, lets make it easily reusable and updatable using DRY principles and Custom Annotations.
