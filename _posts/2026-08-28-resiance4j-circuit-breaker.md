@@ -186,5 +186,5 @@ In this demo, the intentionally slow email service causes the order API to pile 
 
 ## Addendum: How is this different from a Bulkhead?
 
-Circuit Breaker and Bulkhead are complementary resilience patterns that protect microservices from cascading failures but address different failure modes.  Circuit Breakers prevent repeated calls to failing dependencies by opening the circuit when error rates exceed a threshold, enabling fail-fast behavior and giving the external service time to recover.  Bulkheads isolate system resources (such as thread pools or connection pools) into independent compartments, ensuring that a slowdown or failure in one dependency does not exhaust resources and starve other critical services. 
+Circuit-breaker and bulkhead are complementary resilience patterns that protect microservices from cascading failures but address different failure modes.  Circuit Breakers prevent repeated calls to failing dependencies by opening the circuit when error rates exceed a threshold, enabling fail-fast behavior and giving the external service time to recover.  Bulkheads isolate system resources (such as thread pools or connection pools) into independent compartments, ensuring that a slowdown or failure in one dependency does not exhaust resources and starve other critical services. 
 
