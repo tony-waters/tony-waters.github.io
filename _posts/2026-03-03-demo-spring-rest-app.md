@@ -1,5 +1,5 @@
 ---
-title: Spring REST 1 - Anatomy of a Non-Anemic Spring Application 
+title: Anatomy of a Non-Anemic Spring Application 
 layout: post
 header-img: "img/spring5.jpg"
 description: How to create a non-trivial REST service using Spring using JPA/Hibernate

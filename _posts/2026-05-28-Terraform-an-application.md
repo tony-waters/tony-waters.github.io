@@ -1,5 +1,5 @@
 ---
-title: Spring REST 3 - Using Terraform for a local Development environment
+title: Using Terraform for a local Development environment
 layout: post
 header-img: "img/spring5.jpg"
 ---

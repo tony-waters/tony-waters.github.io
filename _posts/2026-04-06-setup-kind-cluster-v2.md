@@ -1,5 +1,5 @@
 ---
-title: Spring REST 2 - Deploying the Spring REST Demo in KIND using Gateway API and Helm
+title: Deploying the Spring REST Demo in KIND using Gateway API and Helm
 layout: post
 header-img: "img/kubernetes.png"
 ---
