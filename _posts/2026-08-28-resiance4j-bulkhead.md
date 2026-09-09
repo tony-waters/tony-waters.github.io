@@ -170,4 +170,4 @@ In this demo, the intentionally slow email service causes the order API to pile 
 In a real system, rejected work usually needs a durable path. The bulkhead protects the application from overload, but it does not decide what should happen to rejected work.
 
 ## <a name="notes"></a>Notes
-1. In Resilience4j, a `semaphore bulkhead` does this without creating its own threads; it simply acts as a concurrency gate, whereas a `thread-pool bulkhead` provides stronger isolation by running the protected work on a dedicated bounded thread pool. I use s semaphore in this example.
+1. In Resilience4j, a `semaphore bulkhead` does this without creating its own threads; it simply acts as a concurrency gate, whereas a `thread-pool bulkhead` provides stronger isolation by running the protected work on a dedicated bounded thread pool. I use a semaphore in this example.
