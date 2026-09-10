@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Matt Pocock's skills is an open-source repository of agent skills designed for real engineering workflows rather than "vibe coding". It provides structured, reusable instructions for AI coding agents like Claude Code, Codex, and Cursor to enforce discipline in planning, testing, and architecture.
+An open-source repository of agent skills designed for real engineering workflows rather than "vibe coding". It provides structured, reusable instructions for AI coding agents like Claude Code, Codex, and Cursor to enforce discipline in planning, testing, and architecture.
 
 ---
 I have been watching a number of [Matt Pocock](https://www.aihero.dev/) videos recently and visiting his site, and was keen to try out his process.
