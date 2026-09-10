@@ -1,10 +1,10 @@
 ---
-title: Matt Pocock stole my Vibe Coding
+title: Matt Pocock stole my Vibe (Coding)
 layout: post
 header-img: "img/spring5.jpg"
 ---
 
-An open-source repository of agent skills designed for real engineering workflows rather than "vibe coding". What will we think off next!
+An open-source repository of AI-agnostic agent skills designed for real engineering workflows rather than "vibe coding".
 
 ---
 I have been watching a number of [Matt Pocock](https://www.aihero.dev/) videos recently and visiting his site, and was keen to try out his process.
