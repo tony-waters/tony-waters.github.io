@@ -4,6 +4,9 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
+Matt Pocock's skills is an open-source repository of agent skills designed for real engineering workflows rather than "vibe coding". It provides structured, reusable instructions for AI coding agents like Claude Code, Codex, and Cursor to enforce discipline in planning, testing, and architecture.
+
+---
 I have been watching a number of [Matt Pocock](https://www.aihero.dev/) videos recently and visiting his site, and was keen to try out his process.
 He basically has a collection of AI-agnostic `skills` [he provides](https://github.com/mattpocock/skills), along with a process to take an idea into production code.
 
@@ -80,8 +83,6 @@ _Avoid_: fraud status, account status
 This is extremely useful! The terminology here will be used for class and method names in the resulting code.
 
 At the time of writing I have tried the `grill-with-docs` skill on two (admittedly different sized) projects. For the first project I got asked 111 questions, for the second a little under 40. I am excited about trying this process again.
-
-Matt Pocock's skills is an open-source repository of agent skills designed for real engineering workflows rather than "vibe coding". It provides structured, reusable instructions for AI coding agents like Claude Code, Codex, and Cursor to enforce discipline in planning, testing, and architecture.
 
 ## <a name="notes"></a>Notes
 1. Eric Evans, Domain Driven Design (2003)
