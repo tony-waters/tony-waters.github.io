@@ -8,7 +8,7 @@ This is another post in a series on [Resilience4j](https://resilience4j.readme.i
 
 A [Circuit Breaker](https://resilience4j.readme.io/docs/circuitbreaker) stops an application from repeatedly calling a dependency that is already failing. Instead of sending every request over the network and waiting for another error, the circuit breaker reacts to recent outcomes. When failures cross a configured threshold, it opens and rejects new calls immediately.
 
-This demo uses two Spring Boot services:
+[This demo](https://github.com/tony-waters/resilience4j-circuit-breaker-demo) uses two Spring Boot services:
 
 - `rest-service` accepts orders, saves them to Postgres, and calls the email-service.
 - `email-service` delays by 1 second, then pretends to send order confirmation emails.

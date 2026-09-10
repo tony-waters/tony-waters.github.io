@@ -5,6 +5,8 @@ header-img: "img/spring5.jpg"
 description: How to create a non-trivial REST service using Spring using JPA/Hibernate
 ---
 
+Domain-Driven Design (DDD) helps manage complex business logic in Spring Boot applications by enforcing a clear separation between the domain model (business rules) and the infrastructure layer (data persistence). But what does a non-anemic domain model look like?
+
 ---
 
 > This is the first of three posts exploring creating, testing, deploying, and observing a non-trivial REST application created using Spring Boot:
