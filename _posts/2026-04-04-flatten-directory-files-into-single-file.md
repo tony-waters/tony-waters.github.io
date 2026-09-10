@@ -4,6 +4,10 @@ layout: post
 header-img: "img/bash.png"
 ---
 
+If you have found yourself copying chunks of a codebase, this may be for you.
+
+---
+
 Sometimes you want to [show most of a code base to a reviewer](https://github.com/tony-waters/directory-to-text/tree/main) (like ChatGPT), without zipping, uploading, or losing context. Copy-pasting files one by one is painful. Dumping raw directories is noisy and unreadable.
 
 What you sometimes want is:

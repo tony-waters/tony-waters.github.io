@@ -4,6 +4,8 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
+Can we use Terraform for local development environments? Why not. Though its not the fastest.
+
 ---
 
 > This is the third of three posts exploring creating, testing, deploying, and observing a non-trivial REST application created using Spring Boot:

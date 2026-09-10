@@ -4,6 +4,8 @@ layout: post
 header-img: "img/kubernetes.png"
 ---
 
+Let's deploy the REST application from a previous post into a KIND cluster using the new Kubernetes Gateway API.
+
 ---
 
 > This is the second of three posts exploring creating, testing, deploying, and observing a non-trivial REST application created using Spring Boot:
