@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-An open-source repository of AI-agnostic agent skills designed for real engineering workflows. Time to stop "vibe coding"?
+Matt Pocock's open-source repository of AI-agnostic agent skills are designed for real engineering workflows. Time to stop "vibe coding"?
 
 ---
 I have been watching a number of [Matt Pocock](https://www.aihero.dev/) videos recently and visiting his site, and was keen to try out his process.
