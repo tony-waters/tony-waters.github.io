@@ -266,7 +266,7 @@ The user now triggers an application action that requires protected API data by 
 
 ---
 
-## (18) Browser → Web Application: `GET /api/orders`
+### (18) Browser → Web Application: `GET /api/orders`
 
 The browser then calls the Web Application:
 
@@ -282,7 +282,7 @@ web-1       | {"event":"api_proxy_started","requestId":"07f8eaf5-833b-4f58-a934-
 
 ---
 
-## (19) Web Application → Spring API: `GET /api/orders` with bearer token
+### (19) Web Application → Spring API: `GET /api/orders` with bearer token
 
 The Web Application retrieves the access token associated with `alice`'s server-side session and sends it to the Spring API.
 
@@ -294,7 +294,7 @@ api-1       | 2026-08-11T19:34:26.570Z  INFO 1 --- [oauth2-demo] [nio-8081-exec-
 
 ---
 
-## (20/21) Spring API → Keycloak: fetch signing certificates / JWKS
+### (20/21) Spring API → Keycloak: fetch signing certificates / JWKS
 
 Before the API logs the decoded JWT, the Spring API requests Keycloak certificates:
 
