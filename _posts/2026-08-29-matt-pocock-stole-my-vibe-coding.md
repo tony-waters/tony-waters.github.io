@@ -66,7 +66,7 @@ D. Other tracker
 Which issue tracker should these skills use?
 ```
 
-When used in its new 'with-docs' format it will also create a Language section in `CONTEXT.md` to include the Domain Language (or 'Ubiquitous Language'<sup>[[1]](#notes)</sup>) it has derived from the grilling:
+When used in its new 'with-docs' format the skill actively builds and maintains a CONTEXT.md file and Architectural Decision Records (ADRs). This creates a "ubiquitous language"<sup>[[1]](#notes)</sup> or shared glossary that prevents the AI from rediscovering or misinterpreting terms in every session. This ensures the AI's "ontology" of the project is explicitly defined and aligned with the codebase architecture.
 
 ``` text
 ## Language
