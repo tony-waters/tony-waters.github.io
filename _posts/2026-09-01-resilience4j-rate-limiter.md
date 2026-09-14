@@ -1,5 +1,5 @@
 ---
-title: "Resilience4j Rate Limiter in Spring Boot (and dealing with a rate-limited downstream service)"
+title: "Both sides of Resilience4j Rate Limiting in Spring Boot"
 layout: post
 header-img: "img/spring5.jpg"
 ---
@@ -11,14 +11,14 @@ This is another post in a series on [Resilience4j](https://resilience4j.readme.i
 
 A rate limiter controls how much work a service is willing to accept over a period of time. Instead of letting every caller push unlimited traffic, the service defines a quota and rejects requests once that quota has been used.
 
-This demo uses two Spring Boot services:
+This prototype uses two Spring Boot services:
 
 - `rest-service` accepts orders, saves them to Postgres, and calls the email service.
 - `email-service` pretends to send order confirmation emails and is protected by a Resilience4j rate limiter.
 
 ![System diagram: rest-service, email-service, Postgres, and the resilience4j rate limiter between them]({{ site.baseurl }}/img/system-design-rate-limiter.png "System Diagram")
 
-The code can be found [here](https://github.com/tony-waters/resilience4j-rate-limiter-demo-mp).
+The code can be found [here](https://github.com/tony-waters/resilience4j-rate-limiter-prototype-mp).
 
 Configuration for the rate limiter is in `application.yaml`:
 
@@ -134,7 +134,7 @@ private void recordRateLimitState(HttpHeaders headers) {
 }
 ```
 
-There's no retry within the request. A `RATE_LIMITED` or `FAILED` outcome is recorded and the response goes back immediately. That's a deliberate scope choice for this demo, covered below in Problems.
+There's no retry within the request. A `RATE_LIMITED` or `FAILED` outcome is recorded and the response goes back immediately. That's a deliberate scope choice for this prototype, covered below in Problems.
 
 ## Running the System
 
@@ -215,7 +215,7 @@ Looking at the k6 results, the expected outcome is a mix of sent emails and rate
 
 ## Checking the Database
 
-Postgres is useful for checking the final state after the run. You can compare total orders with sent emails directly:
+Postgres is useful for checking the final state after the run. We can compare the total number of orders created with the number of confirmation emails actually sent:
 
 ```bash
 docker compose exec postgres psql -U orders -d orders \
@@ -223,52 +223,78 @@ docker compose exec postgres psql -U orders -d orders \
 ```
 
 ```text
- orders_processed | emails_sent 
+ orders_processed | emails_sent
 ------------------+-------------
                75 |           5
 ```
 
-Clearly, the rate limiting is causing a large percentage of the email to not be sent.
+Clearly, once the request rate exceeds the configured quota, a large proportion of the confirmation emails are not sent.
+
+From the perspective of `email-service`, however, this is exactly what the rate limiter is intended to achieve. Instead of accepting unlimited traffic and becoming overloaded, the service controls how much work it accepts during each time window.
+
+`rest-service` also behaves more predictably when calling a rate-limited downstream service. Once it learns that the email quota has been exhausted, it stops making calls that it already knows are likely to fail. This avoids unnecessary network requests and allows the order request to complete without waiting for repeated `429` responses, helping to keep the latency of the order endpoint relatively low.
+
+There is an obvious trade-off: protecting the downstream service means some email notifications are skipped. That is acceptable for demonstrating rate-limiting behaviour, but it also exposes some limitations in the design.
 
 ## Problems
 
-This demo intentionally keeps the order save and email call in one HTTP request flow. That makes the rate-limit behavior easy to see, but it also demonstrates a common transaction boundary problem: a potentially slow downstream call should not happen inside a database transaction.
+This prototype deliberately keeps the order save and email notification within a single HTTP request flow. That makes the rate-limiting behaviour easy to observe, but it also exposes two important limitations that would need to be addressed in a production system.
 
-Also, here we are rate-limiting to a single service instance. How would this work in a distributed system where different instances may need to sync the number of requests.
+First, a potentially slow downstream call should not be allowed to hold a database transaction open. If `rest-service` waits for `email-service` while the transaction is active, database connections can remain occupied for far longer than necessary.
+
+Second, the rate-limiting state in this prototype exists only within a single application instance. That works for a simple example, but in a distributed deployment with multiple replicas, each instance would otherwise maintain its own independent view of the request quota.
+
+The following sections look at both problems in more detail.
 
 ### Problem #1: Transaction Boundary Problem
 
-If `rest-service` waits for the `email-service` rate-limit to be available while the order transaction is open, those waiting requests hold database connections from the Hikari pool. Under enough concurrent load, new requests can fail before they even start their own transaction:
+If `rest-service` waits for the `email-service` rate limit to become available while the order transaction is still open, those waiting requests continue to hold database connections from the Hikari pool. Under enough concurrent load, the pool can be exhausted and new requests may fail before they can even start their own transaction:
 
 ```text
 HikariPool-1 - Connection is not available, request timed out after 30000ms
 CannotCreateTransactionException: Could not open JPA EntityManager for transaction
 ```
 
-This version avoids that specific failure by using two short transactions:
+This version avoids that specific failure by splitting the work into two short database transactions:
 
 1. Save the order and commit.
 2. Call `email-service` outside the database transaction.
-3. Update the order email status in a second transaction.
+3. Update the order's email status in a second transaction.
 
-That keeps database connections out of the rate-limit wait, but it introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/) if the process crashes between those steps.
+This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/): if the process crashes between these steps, the database state and the external side effect can become inconsistent.
 
-It is also still synchronous. The HTTP request thread waits while `rest-service` calls `email-service`. This version protects the database connection pool, but it does not free the request thread. To avoid holding that thread too, email delivery needs to move to a background worker, outbox, or queue.
+The flow is also still synchronous. The HTTP request thread remains blocked while `rest-service` waits for `email-service`. So although this design protects the database connection pool, it does not free the request thread. To avoid holding that thread as well, email delivery needs to move to asynchronous processing, such as a background worker, transactional outbox, or message queue.
 
-If `email-service` is unavailable rather than just rate limited, the order is still saved first. The email call fails, `rest-service` records the outcome as `FAILED`, and the API can still return the created order. That is better than losing the order, but it is not durable email recovery. Without an outbox or queue, there is no separate worker that will reliably pick that email up later.
+If `email-service` is unavailable rather than merely rate limited, the order has already been saved. The email call fails, `rest-service` records the email status as `FAILED`, and the API can still return the newly created order.
 
-The more durable version of this design is a [transactional outbox](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). Save the order and an `email_requested` outbox row in the same database transaction. A separate worker reads the outbox, calls `email-service`, and marks the message processed after success. This keeps the database transaction short and gives the system a durable record of work that still needs to happen.
+That is better than losing the order entirely, but it does not provide durable email recovery. Without an outbox or queue, there is no independent worker that can reliably discover the failed email and retry it later.
 
-### Problem #2: Distributed System Problem
+A more robust version of this design uses a [transactional outbox](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). The order and an `email_requested` outbox record are written in the same database transaction. A separate worker then reads the outbox, calls `email-service`, and marks the message as processed after a successful delivery.
 
-There is an additional problem if we are using a distributed system. If different instances of an application receive requests there needs to be a centralised resource that will keep track of the requests and remaining quota.
+This keeps the database transaction short while also creating a durable record of work that still needs to be completed.
 
-Resilience4j's `RateLimiter` is deliberately JVM-local, in-memory state — it has no concept of any other instance. Scale `email-service` out to several replicas behind a load balancer and each replica enforces its own full quota independently (five replicas would together accept five times the intended traffic, not the configured five requests per ten seconds). The same limitation applies on the calling side — `EmailNotificationClient`'s `blockedUntil` is a single in-memory `AtomicReference`, scoped to one `rest-service` instance. With multiple `rest-service` replicas, each would learn the budget independently, and none would know what the others had already spent.
+### Problem #2: Distributed Rate Limiting
 
-Making the quota distributed means moving it out of process into shared state that every instance reads and writes — for example a Redis-backed token bucket (libraries like Bucket4j support this). Alternatively, we could push enforcement out of the application entirely and into an API Gateway (though if we used multiple Gateways the problem would return).
+There is another problem once the application is deployed as a distributed system.
+
+If requests can be handled by multiple instances, the rate-limit state must be shared between them if the quota is intended to apply globally.
+
+Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in memory. It has no knowledge of other application instances. If `email-service` is scaled to five replicas behind a load balancer, each replica maintains its own independent rate limit.
+
+For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five.
+
+The same limitation exists on the calling side. `EmailNotificationClient`'s `blockedUntil` value is stored in an in-memory `AtomicReference`, so it is scoped to a single `rest-service` instance. With multiple `rest-service` replicas, each instance learns about the available quota independently, and none knows what the others have already consumed.
+
+To enforce a global quota, the rate-limit state needs to move out of the individual application processes and into shared infrastructure that every instance can access. One option is a Redis-backed token bucket; libraries such as Bucket4j can support this kind of distributed rate limiting.
+
+Another option is to move rate limiting out of the application entirely and enforce it at an API Gateway or similar edge component. In that case, however, the gateway itself must provide coordinated rate-limit state across its replicas; simply running multiple independent gateway instances would recreate the same problem at a different layer.
 
 ## Conclusion
 
-In this demo, the email service accepts only a small number of requests per time window. When the quota is exhausted, it returns `429`. Each call returns headers that tell the caller the current budget and when it resets. The REST service uses those headers to avoid pointless calls instead of guessing.
+This prototype demonstrates both sides of rate limiting.
 
-For order confirmation emails, deferring the email inside the response is acceptable for a prototype. For payments, stock reservations, refunds, account changes, or anything with financial or legal consequences, delayed work usually needs a durable path, such as writing it to a database or publishing it to a queue.
+On the protected side, `email-service` uses Resilience4j to limit how much work it accepts within each time window. When the quota is exhausted, it returns `429 Too Many Requests` together with headers describing the remaining budget and when that budget will reset.
+
+On the calling side, `rest-service` uses those headers to avoid making requests that it already knows are likely to be rejected. That reduces unnecessary traffic and helps the order endpoint remain responsive even when the downstream email service is at its limit.
+
+The prototype also shows where this simple approach stops being sufficient. The email call is still part of the synchronous HTTP request flow, and the rate-limit state exists only within individual application instances. In a production system, those concerns would normally need to be separated: slow or retryable work moved onto a durable asynchronous path, and any global rate limit backed by state shared across instances.
