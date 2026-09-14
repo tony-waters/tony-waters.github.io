@@ -66,7 +66,7 @@ D. Other tracker
 Which issue tracker should these skills use?
 ```
 
-When using `grill-with-docs` — which layers a `domain-modeling` pass on top of `grilling` — the skill actively builds and maintains a CONTEXT.md file and Architectural Decision Records (ADRs). This creates a "ubiquitous language"<sup>[[1]](#notes)</sup> or shared glossary that prevents the AI from rediscovering or misinterpreting terms in every session. This keeps the AI's "ontology" of the project explicitly defined and aligned with the codebase.
+When using `grill-with-docs` — which layers a `domain-modeling` pass on top of `grilling` — the skill actively builds and maintains a CONTEXT.md file and Architectural Decision Records (ADRs). This creates a "ubiquitous language"<sup>[[1]](#notes)</sup> or shared glossary that prevents the AI from rediscovering or misinterpreting terms in every session. This keeps the [`AI Ontology'](https://dev.to/bikashdaga/ontology-in-ai-2025-guide-structure-semantics-applications-in-knowledge-representation-44aa) of the project explicitly defined and aligned with the codebase.
 
 ``` text
 ## Language
