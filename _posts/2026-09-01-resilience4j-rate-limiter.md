@@ -1,5 +1,5 @@
 ---
-title: "Resilience4j Rate Limiter in Spring Boot: Dealing With a Rate-Limited Downstream Service"
+title: "Resilience4j Rate Limiter in Spring Boot (and dealing with a rate-limited downstream service)"
 layout: post
 header-img: "img/spring5.jpg"
 ---
