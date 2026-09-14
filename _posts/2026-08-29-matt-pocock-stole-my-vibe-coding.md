@@ -4,13 +4,13 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Matt Pocock's open-source repository of AI-agnostic agent skills are designed for real engineering workflows. Time to stop "vibe coding"?
+Matt Pocock's open-source repository of AI-agnostic agent skills is designed for real engineering workflows. Time to stop "vibe coding"?
 
 ---
-I have been watching a number of [Matt Pocock](https://www.aihero.dev/) videos recently and visiting his site, and was keen to try out his process.
-He basically has a collection of AI-agnostic `skills` [he provides](https://github.com/mattpocock/skills), along with a process to take an idea into production code.
+I have been watching a number of [Matt Pocock](https://www.aihero.dev/) videos recently, and visiting his site, and was keen to try out his process.
+He has a collection of AI-agnostic [skills](https://github.com/mattpocock/skills), along with a process for taking an idea into production code.
 
-One of the primary skills is `grill-me` (or the more current `grill-with-docs`), which is described as:
+One of the entry points is `grill-me` (or the doc-producing `grill-with-docs`). Both are thin wrappers around the underlying `grilling` skill, which is described as:
 
 > Grill the user relentlessly about a plan, decision, or idea.
 
@@ -36,7 +36,7 @@ C. Same as A, plus a working external MCP client config.
 Recommended answer: A. It is concrete, testable, and respects the slice boundaries we already chose
 ```
 
-The goal behind the `grill-me` skill is the subsequent creation of a spec:
+The goal behind grilling is the subsequent creation of a spec:
 
 ``` text
 Q35 - Next Step After Grilling: After we finish this design pass, what should I produce next?
@@ -51,11 +51,11 @@ B. No, continue grilling the design.
 Recommended answer: A. The important boundaries are now decided: user, demo promise, safety line, UI shape, MCP transport, database, first slice, tests, and completion criteria.
 ```
 
-Which can then be turned into tickets addressing vertical slices in the system. If we are happy with the spec and the tickets we go ahead and get the agent to implement it in code.
+That spec can then be turned into tickets addressing vertical slices in the system. If we are happy with the spec and the tickets, we go ahead and get the agent to implement it in code.
 
 Conveniently, we can use GitHub to store the tickets, or local markdown files:
 
-``` test
+``` text
 Section A - Issue Tracker
 Recommended: Local markdown. This repo has no remote, and we already need tickets for the MCP prototype, so local files under .scratch/<feature>/issues/ are the most direct fit.
 Options:
@@ -66,7 +66,7 @@ D. Other tracker
 Which issue tracker should these skills use?
 ```
 
-When used in its new 'with-docs' format the skill actively builds and maintains a CONTEXT.md file and Architectural Decision Records (ADRs). This creates a "ubiquitous language"<sup>[[1]](#notes)</sup> or shared glossary that prevents the AI from rediscovering or misinterpreting terms in every session. This ensures the AI's "ontology" of the project is explicitly defined and aligned with the codebase architecture.
+When using `grill-with-docs` — which layers a `domain-modeling` pass on top of `grilling` — the skill actively builds and maintains a CONTEXT.md file and Architectural Decision Records (ADRs). This creates a "ubiquitous language"<sup>[[1]](#notes)</sup> or shared glossary that prevents the AI from rediscovering or misinterpreting terms in every session. This keeps the AI's "ontology" of the project explicitly defined and aligned with the codebase architecture.
 
 ``` text
 ## Language
@@ -80,10 +80,11 @@ A support signal on a Customer. `normal` has no warning, `watch` warns the Suppo
 _Avoid_: fraud status, account status
 ```
 
-This is extremely useful! The terminology here will be used for class and method names in the resulting code.
+This is extremely useful. The terminology captured here flows straight into the class and method names in the resulting code.
 
-At the time of writing I have tried the `grill-with-docs` skill on two (admittedly different sized) projects. For the first project I got asked 111 questions, for the second a little under 40. I am excited about trying this process again.
+At the time of writing I have tried `grill-with-docs` on two (admittedly differently sized) projects. The first asked 111 questions, the second a little under 40. I'm excited to run it again.
+
+Which brings me back to the title. This isn't "vibe coding" in the loose, improvised sense at all. It's a structured interview that forces the decisions up front, before any code gets written, and leaves a paper trail (spec, tickets, ADRs, glossary) behind it. That's a trade — more upfront friction for less drift and rework later — but for anything beyond a throwaway prototype, it's one I'm happy to make.
 
 ## <a name="notes"></a>Notes
 1. Eric Evans, Domain Driven Design (2003)
-
