@@ -84,7 +84,5 @@ This is extremely useful. The terminology captured here flows straight into the 
 
 At the time of writing I have tried `grill-with-docs` on two (admittedly differently sized) projects. The first asked 111 questions, the second a little under 40. I'm excited to run it again.
 
-Which brings me back to the title. This isn't "vibe coding" in the loose, improvised sense at all. It's a structured interview that forces the decisions up front, before any code gets written, and leaves a paper trail (spec, tickets, ADRs, glossary) behind it. That's a trade — more upfront friction for less drift and rework later — but for anything beyond a throwaway prototype, it's one I'm happy to make.
-
 ## <a name="notes"></a>Notes
 1. Eric Evans, Domain Driven Design (2003)
