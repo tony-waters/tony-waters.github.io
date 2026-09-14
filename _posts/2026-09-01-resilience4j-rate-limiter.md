@@ -9,7 +9,7 @@ How to implement a rate-limiter using Resilience4j and Spring Boot, and dealing 
 ---
 This is another post in a series on [Resilience4j](https://resilience4j.readme.io/) with Spring Boot. Resilience4j provides common resilience patterns that can be used with Spring Boot. In this post I am interested in the [Rate Limiter](https://resilience4j.readme.io/docs/ratelimiter) pattern.
 
-A rate limiter controls how much work a service is willing to accept over a period of time. Instead of letting every caller push unlimited traffic, the service defines a quota and rejects requests once that quota has been used.
+A rate limiter controls how much work a service is willing to accept within a time window. Instead of letting every caller push unlimited traffic, the service defines a quota and rejects requests once that quota has been used.
 
 This prototype uses two Spring Boot services:
 
@@ -72,7 +72,7 @@ The fallback returns `429 Too Many Requests` with rate-limit headers:
 
 These follow the field names from the [IETF `RateLimit` header fields draft](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html). `email-service` sends them on **every** response, success or `429`. On a `429` specifically, the fallback also sets the standard `Retry-After` header to the same value as `RateLimit-Reset`, so a generic HTTP client that doesn't know the `RateLimit-*` convention still knows how long to back off.
 
-Sending the headers on success too is what lets `rest-service` track the budget pre-emptively instead of only reacting to rejections.
+`email-service` sending the headers on success (not just `429`) is what lets `rest-service` track the budget pre-emptively instead of only reacting to rejections.
 
 ## The Calling Service
 
@@ -114,7 +114,7 @@ public NotificationOutcome notify(Order order) {
 
 Otherwise `rest-service` attempts the call, which can succeed, come back `429`, or fail outright (timeout, connection refused, and so on).
 
-Every response updates `rest-service`'s picture of the budget:
+The headers from every response are used to update the picture of the budget held by the `rest-service`:
 
 ```java
 private void recordRateLimitState(HttpHeaders headers) {
@@ -134,7 +134,7 @@ private void recordRateLimitState(HttpHeaders headers) {
 }
 ```
 
-There's no retry within the request. A `RATE_LIMITED` or `FAILED` outcome is recorded and the response goes back immediately. That's a deliberate scope choice for this prototype, covered below in Problems.
+There's no retry within the request. A `RATE_LIMITED` or `FAILED` outcome is recorded and the response goes back immediately. That's a deliberate scope choice for this prototype.
 
 ## Running the System
 
@@ -150,7 +150,7 @@ Run the k6 load test:
 k6 run k6/burst-test.js
 ```
 
-The k6 test sends more order traffic than the email service can accept immediately.
+The k6 test sends more `order` traffic than the email service can accept immediately.
 
 The logs below are a trimmed excerpt from one run, edited for readability (the test fires concurrent requests from multiple virtual users, so real log interleaving is messier than this).
 
@@ -164,7 +164,7 @@ email-service | INFO - ...emailservice.NotificationController  : Sending email t
 email-service | INFO - ...emailservice.NotificationController  : Sending email to buyer@example.com for order 1
 ```
 
-Then rate limit kicks in. `rest-service` knows how long to wait (because of the headers returned by the rate limited request). Any orders received during this time have their email notification skipped, and no call is made to the `email-service`:
+Then rate limits kick in. `rest-service` knows how long to wait (because of the headers returned by the rate limited request). Any orders received during this time have their email notification skipped, so no call is made to the `email-service`:
 
 ```text
 email-service | INFO - ...emailservice.NotificationController  : Rate limiting on request from buyer@example.com for order 3
@@ -228,7 +228,7 @@ docker compose exec postgres psql -U orders -d orders \
                75 |           5
 ```
 
-Clearly, once the request rate exceeds the configured quota, a large proportion of the confirmation emails are not sent.
+Clearly, once the `email-service` request rate exceeds the configured quota, a large proportion of the confirmation emails are not sent.
 
 From the perspective of `email-service`, however, this is exactly what the rate limiter is intended to achieve. Instead of accepting unlimited traffic and becoming overloaded, the service controls how much work it accepts during each time window.
 
@@ -238,17 +238,17 @@ There is an obvious trade-off: protecting the downstream service means some emai
 
 ## Problems
 
-This prototype deliberately keeps the order save and email notification within a single HTTP request flow. That makes the rate-limiting behaviour easy to observe, but it also exposes two important limitations that would need to be addressed in a production system.
+This prototype deliberately keeps `save order` and `send email notification` within a single HTTP request flow. That makes the rate-limiting behaviour easy to observe, but it also exposes two important limitations that would need to be addressed in a production system.
 
 First, a potentially slow downstream call should not be allowed to hold a database transaction open. If `rest-service` waits for `email-service` while the transaction is active, database connections can remain occupied for far longer than necessary.
 
-Second, the rate-limiting state in this prototype exists only within a single application instance. That works for a simple example, but in a distributed deployment with multiple replicas, each instance would otherwise maintain its own independent view of the request quota.
+Second, the rate-limiting state in this prototype exists only within a single application instance. In a distributed deployment with multiple replicas, each instance will maintain its own independent view of the request quota.
 
 The following sections look at both problems in more detail.
 
 ### Problem #1: Transaction Boundary Problem
 
-If `rest-service` waits for the `email-service` rate limit to become available while the order transaction is still open, those waiting requests continue to hold database connections from the Hikari pool. Under enough concurrent load, the pool can be exhausted and new requests may fail before they can even start their own transaction:
+If `rest-service` waits for the `email-service` rate limit to become available while the order transaction is still open, those waiting requests continue to hold database connections from the Hikari Connection Pool. Under enough concurrent load, the pool can become exhausted and new requests may fail before they can even start their own transaction:
 
 ```text
 HikariPool-1 - Connection is not available, request timed out after 30000ms
@@ -261,15 +261,13 @@ This version avoids that specific failure by splitting the work into two short d
 2. Call `email-service` outside the database transaction.
 3. Update the order's email status in a second transaction.
 
-This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/): if the process crashes between these steps, the database state and the external side effect can become inconsistent.
+This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). If the process crashes between these steps, the database state and what actually happened can become inconsistent.
 
-The flow is also still synchronous. The HTTP request thread remains blocked while `rest-service` waits for `email-service`. So although this design protects the database connection pool, it does not free the request thread. To avoid holding that thread as well, email delivery needs to move to asynchronous processing, such as a background worker, transactional outbox, or message queue.
+The flow is also still synchronous. The HTTP request thread remains blocked while `rest-service` waits for `email-service`. So although this design protects the database connection pool, it does not free the request thread. To avoid holding that thread as well, email delivery would need to move to asynchronous processing.
 
-If `email-service` is unavailable rather than merely rate limited, the order has already been saved. The email call fails, `rest-service` records the email status as `FAILED`, and the API can still return the newly created order.
+If `email-service` is unavailable rather than merely rate limited, the order has already been saved. The email call fails, `rest-service` records the email status as `FAILED`, and the API can still return the newly created order. That is better than losing the order entirely, but it does not provide durable email recovery.
 
-That is better than losing the order entirely, but it does not provide durable email recovery. Without an outbox or queue, there is no independent worker that can reliably discover the failed email and retry it later.
-
-A more robust version of this design uses a [transactional outbox](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). The order and an `email_requested` outbox record are written in the same database transaction. A separate worker then reads the outbox, calls `email-service`, and marks the message as processed after a successful delivery.
+One way of fixing this is by using a [transactional outbox](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). The order and an `email_requested` outbox record are written in the same database transaction. A separate process reads the outbox, calls `email-service`, and marks the message as processed after a successful delivery.
 
 This keeps the database transaction short while also creating a durable record of work that still needs to be completed.
 
@@ -283,11 +281,11 @@ Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in me
 
 For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five.
 
-The same limitation exists on the calling side. `EmailNotificationClient`'s `blockedUntil` value is stored in an in-memory `AtomicReference`, so it is scoped to a single `rest-service` instance. With multiple `rest-service` replicas, each instance learns about the available quota independently, and none knows what the others have already consumed.
+The same limitation exists when distributing the calling side. With multiple `rest-service` replicas, each instance learns about the available quota independently, and none of them know what the others have already consumed.
 
-To enforce a global quota, the rate-limit state needs to move out of the individual application processes and into shared infrastructure that every instance can access. One option is a Redis-backed token bucket; libraries such as Bucket4j can support this kind of distributed rate limiting.
+To enforce a global quota, the rate-limit state needs to move out of the individual application processes and into shared infrastructure that every instance can access. One option is a Redis-backed token bucket. Libraries such as [Bucket4j](https://github.com/bucket4j/bucket4j#bucket4j-distributed-features) can support this kind of distributed rate limiting.
 
-Another option is to move rate limiting out of the application entirely and enforce it at an API Gateway or similar edge component. In that case, however, the gateway itself must provide coordinated rate-limit state across its replicas; simply running multiple independent gateway instances would recreate the same problem at a different layer.
+Another option is to move rate limiting out of the application entirely and enforce it at an API Gateway or similar edge component. In that case, however, the gateway itself must provide coordinated rate-limit state across its replicas. Simply running multiple independent gateway instances would recreate the same problem at a different layer.
 
 ## Conclusion
 
@@ -297,4 +295,4 @@ On the protected side, `email-service` uses Resilience4j to limit how much work 
 
 On the calling side, `rest-service` uses those headers to avoid making requests that it already knows are likely to be rejected. That reduces unnecessary traffic and helps the order endpoint remain responsive even when the downstream email service is at its limit.
 
-The prototype also shows where this simple approach stops being sufficient. The email call is still part of the synchronous HTTP request flow, and the rate-limit state exists only within individual application instances. In a production system, those concerns would normally need to be separated: slow or retryable work moved onto a durable asynchronous path, and any global rate limit backed by state shared across instances.
+The prototype also shows where this simple approach stops being sufficient. The email call is still part of the synchronous HTTP request flow, and the rate-limit state exists only within individual application instances. In a production system those concerns would normally need to be separated, with slow or retryable work moved onto a durable asynchronous path, and any global rate limit backed by state shared across instances.
