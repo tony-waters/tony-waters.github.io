@@ -70,7 +70,7 @@ The fallback returns `429 Too Many Requests` with rate-limit headers:
 - `RateLimit-Remaining` — permits left in the current period, read straight from resilience4j's own `RateLimiter.getMetrics().getAvailablePermissions()`.
 - `RateLimit-Reset` — seconds until the next period starts, so callers know how long to wait.
 
-These follow the field names from the [IETF `RateLimit` header fields draft](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html). `email-service` sends them on **every** response, success or `429`. On a `429` specifically, the fallback also sets the standard `Retry-After` header to the same value as `RateLimit-Reset`, so a generic HTTP client that doesn't know the `RateLimit-*` convention still knows how long to back off.
+These follow the field names from the [IETF RateLimit header fields draft](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html). `email-service` sends them on **every** response, success or `429`. On a `429` specifically, the fallback also sets the standard `Retry-After` header to the same value as `RateLimit-Reset`, so a generic HTTP client that doesn't know the `RateLimit-*` convention still knows how long to back off.
 
 `email-service` sending the headers on success (not just `429`) is what lets `rest-service` track the budget pre-emptively instead of only reacting to rejections.
 
@@ -179,7 +179,7 @@ rest-service  | INFO - ...restservice.EmailNotificationClient  : Skipping email-
 rest-service  | INFO - ...restservice.EmailNotificationClient  : Skipping email-service call for order 13: known rate-limited until 2026-09-14T13:21:57.873076122Z
 ```
 
-Once the rate limit has been refreshed, email start getting sent again:
+Once the rate limit has been refreshed, emails start getting sent again:
 
 ```text
 email-service | INFO - ...emailservice.NotificationController  : Sending email to buyer@example.com for order 16
@@ -234,7 +234,7 @@ From the perspective of `email-service`, however, this is exactly what the rate 
 
 `rest-service` also behaves more predictably when calling a rate-limited downstream service. Once it learns that the email quota has been exhausted, it stops making calls that it already knows are likely to fail. This avoids unnecessary network requests and allows the order request to complete without waiting for repeated `429` responses, helping to keep the latency of the order endpoint relatively low.
 
-There is an obvious trade-off: protecting the downstream service means some email notifications are skipped. That is acceptable for demonstrating rate-limiting behaviour, but it also exposes some limitations in the design.
+There is an obvious trade-off here. Protecting the downstream service means some email notifications are skipped. That is acceptable for demonstrating rate-limiting behaviour, but it also exposes some limitations in the design.
 
 ## Problems
 
@@ -261,7 +261,7 @@ This version avoids that specific failure by splitting the work into two short d
 2. Call `email-service` outside the database transaction.
 3. Update the order's email status in a second transaction.
 
-This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). If the process crashes between these steps, the database state and what actually happened can become inconsistent.
+This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). If the process crashes between these steps then the database state and what actually happened can become inconsistent.
 
 The flow is also still synchronous. The HTTP request thread remains blocked while `rest-service` waits for `email-service`. So although this design protects the database connection pool, it does not free the request thread. To avoid holding that thread as well, email delivery would need to move to asynchronous processing.
 
@@ -277,9 +277,7 @@ There is another problem once the application is deployed as a distributed syste
 
 If requests can be handled by multiple instances, the rate-limit state must be shared between them if the quota is intended to apply globally.
 
-Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in memory. It has no knowledge of other application instances. If `email-service` is scaled to five replicas behind a load balancer, each replica maintains its own independent rate limit.
-
-For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five.
+Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in memory. It has no knowledge of other application instances. If `email-service` is scaled to five replicas behind a load balancer, each replica maintains its own independent rate limit. For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five.
 
 The same limitation exists when distributing the calling side. With multiple `rest-service` replicas, each instance learns about the available quota independently, and none of them know what the others have already consumed.
 
