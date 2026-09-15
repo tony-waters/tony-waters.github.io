@@ -259,9 +259,9 @@ CannotCreateTransactionException: Could not open JPA EntityManager for transacti
 
 This version avoids that specific failure by splitting the work into two **short** database transactions:
 
-1. Save the order and commit.
+1. Save the order and commit (transaction #1).
 2. Call `email-service` outside the database transaction.
-3. Update the order's email status in a second transaction.
+3. Update the order's email status (transaction #2).
 
 This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). If the process crashes between these steps then the database state and what actually happened can become inconsistent.
 
@@ -269,7 +269,7 @@ The flow is also still synchronous. The HTTP request thread remains blocked whil
 
 If `email-service` is unavailable rather than merely rate limited, the order has already been saved. The email call fails, `rest-service` records the email status as `FAILED`, and the API can still return the newly created order. That is better than losing the order entirely, but it does not provide durable email recovery.
 
-One way of fixing this is by using a [transactional outbox](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). The order and an `email_requested` outbox record are written in the same database transaction. A separate process reads the outbox, calls `email-service`, and marks the message as processed after a successful delivery.
+One way of fixing this is by using a [transactional outbox](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). The `order` and an `email_requested` outbox record are written in the same database transaction. A separate process reads the outbox, calls `email-service`, and marks the message as processed after a successful delivery.
 
 This keeps the database transaction short while also creating a durable record of work that still needs to be completed.
 
