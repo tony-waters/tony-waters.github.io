@@ -257,7 +257,7 @@ HikariPool-1 - Connection is not available, request timed out after 30000ms
 CannotCreateTransactionException: Could not open JPA EntityManager for transaction
 ```
 
-This version avoids that specific failure by splitting the work into two short database transactions:
+This version avoids that specific failure by splitting the work into two **short** database transactions:
 
 1. Save the order and commit.
 2. Call `email-service` outside the database transaction.
