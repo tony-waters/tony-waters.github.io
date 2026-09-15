@@ -16,7 +16,9 @@ This prototype uses two Spring Boot services:
 - `rest-service` accepts orders, saves them to Postgres, and calls the email service.
 - `email-service` pretends to send order confirmation emails and is protected by a Resilience4j rate limiter.
 
+
 ![System diagram: rest-service, email-service, Postgres, and the resilience4j rate limiter between them]({{ site.baseurl }}/img/system-design-rate-limiter.png "System Diagram")
+
 
 The code can be found [here](https://github.com/tony-waters/resilience4j-rate-limiter-prototype-mp).
 
