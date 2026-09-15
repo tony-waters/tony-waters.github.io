@@ -246,7 +246,7 @@ First, a potentially slow downstream call should not be allowed to hold a databa
 
 Second, the rate-limiting state in this prototype exists only within a single application instance. In a distributed deployment with multiple replicas, each instance will maintain its own independent view of the request quota.
 
-The following sections look at both problems in more detail.
+I want to consider both of these problems in (just a little) more detail.
 
 ### Problem #1: Transaction Boundary Problem
 
@@ -267,7 +267,7 @@ This keeps database connections out of the rate-limit wait, but introduces a [du
 
 The flow is also still synchronous. The HTTP request thread remains blocked while `rest-service` waits for `email-service`. So although this design protects the database connection pool, it does not free the request thread. To avoid holding that thread as well, email delivery would need to move to asynchronous processing.
 
-If `email-service` is unavailable rather than merely rate limited, the order has already been saved. The email call fails, `rest-service` records the email status as `FAILED`, and the API can still return the newly created order. That is better than losing the order entirely, but it does not provide durable email recovery.
+If `email-service` is unavailable rather than merely rate limited, the order has already been saved. The email call fails, `rest-service` records the email status as `FAILED`, and the API can still return the newly created order. That is better than losing the order entirely, but it does not provide durable email recovery. And imagine it was not a confirmation email we were delivering here, but a (insert important action here). 
 
 One way of fixing this is by using a [transactional outbox](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). The `order` and an `email_requested` outbox record are written in the same database transaction. A separate process reads the outbox, calls `email-service`, and marks the message as processed after a successful delivery.
 
@@ -279,7 +279,7 @@ There is another problem once the application is deployed as a distributed syste
 
 If requests can be handled by multiple instances, the rate-limit state must be shared between them if the quota is intended to apply globally.
 
-Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in memory. It has no knowledge of other application instances. If `email-service` is scaled to five replicas behind a load balancer, each replica maintains its own independent rate limit. For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five.
+Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in memory. It has no knowledge of other application instances. If `email-service` is scaled to five replicas behind a load balancer, each replica maintains its own independent rate limit. For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five<sup>[[1]](#notes)</sup>.
 
 The same limitation exists when distributing the calling side. With multiple `rest-service` replicas, each instance learns about the available quota independently, and none of them know what the others have already consumed.
 
@@ -295,4 +295,7 @@ On the protected side, `email-service` uses Resilience4j to limit how much work 
 
 On the calling side, `rest-service` uses those headers to avoid making requests that it already knows are likely to be rejected. That reduces unnecessary traffic and helps the order endpoint remain responsive even when the downstream email service is at its limit.
 
-The prototype also shows where this simple approach stops being sufficient. The email call is still part of the synchronous HTTP request flow, and the rate-limit state exists only within individual application instances. In a production system those concerns would normally need to be separated, with slow or retryable work moved onto a durable asynchronous path, and any global rate limit backed by state shared across instances.
+The prototype also shows where this simple approach stops being sufficient. The email call is still part of the synchronous HTTP request flow, and the rate-limit state exists only within individual application instances. In a production system those concerns would normally need to be separated, with **slow or retryable work moved onto a durable asynchronous path**, and **any global rate limit backed by state shared across instances**.
+
+## <a name="notes"></a>Notes
+1. Which may be fine (even useful) if the reason for the rate limiter is in the service code itself, and not one of its dependencies.
