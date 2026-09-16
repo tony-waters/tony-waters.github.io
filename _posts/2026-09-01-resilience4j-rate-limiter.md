@@ -74,11 +74,11 @@ The fallback returns `429 Too Many Requests` with rate-limit headers:
 
 These follow the field names from the [IETF RateLimit header fields draft](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html). `email-service` sends them on **every** response, success or `429`. On a `429` specifically, the fallback also sets the standard `Retry-After` header to the same value as `RateLimit-Reset`, so a generic HTTP client that doesn't know the `RateLimit-*` convention still knows how long to back off.
 
-`email-service` sending the headers on success (not just `429`) is what lets `rest-service` track the budget pre-emptively instead of only reacting to rejections.
+`email-service` sending the headers on success, not just `429` responses, is what lets `rest-service` track the budget pre-emptively instead of only reacting to rejections.
 
 ## The Calling Service
 
-`rest-service` calls `email-service` synchronously, using Spring's blocking `RestClient`. `rest-service` remembers the rate-limit budget that `email-service` last reported. If an earlier response showed the quota exhausted, and the reset window hasn't passed yet, `rest-service` skips the call entirely rather than making one it already knows will be rejected — and the notification is marked `SKIPPED` on the order:
+`rest-service` calls `email-service` synchronously, using Spring's blocking [`RestClient`](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html). `rest-service` remembers the rate-limit budget that `email-service` last reported. If an earlier response showed the quota exhausted, and the reset window hasn't passed yet, `rest-service` skips the call entirely rather than making one it already knows will be rejected — and the notification is marked `SKIPPED` on the order:
 
 ```java
 public NotificationOutcome notify(Order order) {
