@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-How to implement a rate-limiter using Resilience4j and Spring Boot, and dealing with calling it using code and returned headers.
+How to implement a rate-limiter using Resilience4j and Spring Boot, and deal with calling it using code and returned headers.
 
 ---
 This is another post in a series on [Resilience4j](https://resilience4j.readme.io/) with Spring Boot. Resilience4j provides common resilience patterns that can be used with Spring Boot. In this post I am interested in the [Rate Limiter](https://resilience4j.readme.io/docs/ratelimiter) pattern.
