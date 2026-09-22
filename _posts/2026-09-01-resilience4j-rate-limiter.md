@@ -277,8 +277,6 @@ This keeps the database transaction short while also creating a durable record o
 
 There is another problem once the application is deployed as a distributed system.
 
-If requests can be handled by multiple instances, the rate-limit state must be shared between them if the quota is intended to apply globally.
-
 Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in memory. It has no knowledge of other application instances. If `email-service` is scaled to five replicas behind a load balancer, each replica maintains its own independent rate limit. For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five<sup>[[1]](#notes)</sup>.
 
 The same limitation exists when distributing the calling side. With multiple `rest-service` replicas, each instance learns about the available quota independently, and none of them know what the others have already consumed.
