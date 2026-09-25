@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Limit how much shared capacity a particular operation or dependency can consume at once. If a slow downstream service starts tying up threads or HTTP connections, a bulkhead caps the number of concurrent calls allowed to reach it, helping protect the rest of the application<sup>[[1]](#notes)</sup>.
+> Limit how much shared capacity a particular operation or dependency can consume at once. If a slow downstream service starts tying up threads or HTTP connections, a bulkhead caps the number of concurrent calls allowed to reach it, helping protect the rest of the application<sup>[[1]](#notes)</sup>.
 
 ---
 

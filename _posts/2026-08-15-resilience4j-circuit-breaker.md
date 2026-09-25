@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Stop an application from repeatedly calling a dependency that is already failing. Instead of sending every request over the network and waiting for another error, the circuit breaker reacts to recent outcomes. When failures cross a configured threshold, it opens and rejects new calls immediately.
+> Stop an application from repeatedly calling a dependency that is already failing. Instead of sending every request over the network and waiting for another error, the circuit breaker reacts to recent outcomes. When failures cross a configured threshold, it opens and rejects new calls immediately.
 
 ---
 

@@ -4,7 +4,7 @@ layout: post
 header-img: "img/bash.png"
 ---
 
-If you have found yourself copying chunks of a codebase, this may be for you.
+> If you have found yourself copying chunks of a codebase, this may be for you.
 
 ---
 

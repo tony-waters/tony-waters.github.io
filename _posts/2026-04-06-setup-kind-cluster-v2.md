@@ -4,7 +4,7 @@ layout: post
 header-img: "img/kubernetes.png"
 ---
 
-Let's deploy the REST application from a previous post into a KIND cluster using the new Kubernetes Gateway API.
+> Let's deploy the REST application from a previous post into a KIND cluster using the new Kubernetes Gateway API.
 
 ---
 

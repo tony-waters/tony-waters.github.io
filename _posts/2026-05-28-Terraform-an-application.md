@@ -4,7 +4,7 @@ layout: post
 header-img: "img/spring5.jpg"
 ---
 
-Can we use Terraform for local development environments? Why not. Though its not the fastest.
+> Can we use Terraform for local development environments? Why not. Though its not the fastest.
 
 ---
 
