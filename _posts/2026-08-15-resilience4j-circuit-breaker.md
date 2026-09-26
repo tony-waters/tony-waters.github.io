@@ -151,7 +151,7 @@ Looking at the K6 results we can see that not all emails were sent:
 
 ## Checking the Database
 
-Postgres is also useful for checking the final state after the run:
+Postgres is useful for checking the final state after the run:
 
 ```bash
 docker compose exec postgres psql -U demo -d orders \
