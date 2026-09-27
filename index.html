@@ -14,10 +14,10 @@ description: "Java and DevOps; using Kubernetes, Terraform, and Spring"
             {% assign thumb = post.header-img | default: site.header-img %}
             {% assign thumb_is_light = false %}
             {% assign thumb_is_lighter = false %}
-            {% if thumb contains 'security.jpg' or thumb contains 'terraform.jpg' or thumb contains 'containers.jpg' or thumb contains 'spring-2.jpg' %}
+            {% if thumb contains 'security.jpg' or thumb contains 'terraform.jpg' or thumb contains 'containers.jpg' %}
                 {% assign thumb_is_light = true %}
             {% endif %}
-            {% if thumb contains 'system-design.jpg' %}
+            {% if thumb contains 'system-design.jpg' or thumb contains 'spring-2.jpg' %}
                 {% assign thumb_is_lighter = true %}
             {% endif %}
             {% if thumb %}
