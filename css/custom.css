@@ -870,3 +870,44 @@ footer .fa-inverse {
         display: none;
     }
 }
+
+article img.is-zoomable {
+    cursor: zoom-in;
+    transition: opacity 0.15s ease;
+}
+
+article img.is-zoomable:hover {
+    opacity: 0.92;
+}
+
+body.img-lightbox-active {
+    overflow: hidden;
+}
+
+.img-lightbox-overlay {
+    align-items: center;
+    background: rgba(8, 16, 22, 0.92);
+    cursor: zoom-out;
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    opacity: 0;
+    padding: 5vh 5vw;
+    position: fixed;
+    transition: opacity 0.2s ease;
+    visibility: hidden;
+    z-index: 2000;
+}
+
+.img-lightbox-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.img-lightbox-overlay img {
+    border-radius: 4px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
+    max-height: 90vh;
+    max-width: 90vw;
+    object-fit: contain;
+}
