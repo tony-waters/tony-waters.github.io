@@ -1,8 +1,7 @@
 ---
 title: Breaking down an OAuth2/OIDC request 
 layout: post
-header-img: "img/spring5.jpg"
-image: "img/spring5.jpg"
+header-img: "img/security.jpg"
 ---
 
 > Buckle up for a long post! Using logs and a sequence diagram to walk through the surprising number of steps in a relatively simple OAuth/OIDC interaction.

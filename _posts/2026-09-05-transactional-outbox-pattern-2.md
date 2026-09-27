@@ -1,7 +1,7 @@
 ---
 title: "Transactional Outbox Pattern (with Spring Boot, Debezium, and Kafka)"
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/system-design.jpg"
 ---
 
 > How the transactional outbox pattern, Debezium, and Kafka close the transaction-boundary gap — and what's still unsolved once things become asynchronous? (or, how to move slow or retry-able work to a durable asynchronous path)

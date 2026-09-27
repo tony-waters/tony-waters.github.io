@@ -1,7 +1,7 @@
 ---
 title: Matt Pocock stole my Vibe (Coding)
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/coding.jpg"
 ---
 
 > Matt Pocock's open-source repository of AI-agnostic agent skills is designed for real engineering workflows. Time to stop "vibe coding"?

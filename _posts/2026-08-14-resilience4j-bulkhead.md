@@ -1,7 +1,7 @@
 ---
 title: Resilience4j Bulkhead in Spring Boot
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/resilience.jpg"
 ---
 
 > If a slow downstream service starts tying up threads or HTTP connections, a bulkhead caps the number of concurrent calls allowed to reach it, helping protect the rest of the application<sup>[[1]](#notes)</sup>.

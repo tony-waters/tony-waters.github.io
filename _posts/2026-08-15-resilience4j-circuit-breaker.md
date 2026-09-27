@@ -1,7 +1,7 @@
 ---
 title: Resilience4j Circuit Breaker in Spring Boot
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/resilience.jpg"
 ---
 
 > Stop an application from repeatedly calling a dependency that is already failing.

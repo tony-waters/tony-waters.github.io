@@ -1,7 +1,7 @@
 ---
 title: Six Ways to Map One-to-One Relationships in Spring JPA
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/system-design.jpg"
 ---
 
 > For a seemingly straightforward JPA annotation, `@OneToOne` relationships can be mapped in a surprising number of ways. The problem is not choosing *a* mapping — it’s understanding the trade-offs between them. I want to explore some<sup>[[1]](#notes)</sup> variants of these mappings using a simple Customer–Profile relationship existing in a simple Parent-Child setup.

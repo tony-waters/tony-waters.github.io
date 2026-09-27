@@ -1,7 +1,7 @@
 ---
 title: Deploying the Spring REST Demo in KIND (using Gateway API and Helm)
 layout: post
-header-img: "img/kubernetes.png"
+header-img: "img/containers.jpg"
 ---
 
 > Let's deploy the REST application from a previous post into a KIND cluster using the new Kubernetes Gateway API.

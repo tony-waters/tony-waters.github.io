@@ -411,6 +411,8 @@ h1,
 .intro-header {
     background-color: #18212a;
     background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     height: auto;
     margin-bottom: 0;
     min-height: 46vh;
@@ -420,8 +422,8 @@ h1,
 
 .intro-header::before {
     background:
-        linear-gradient(90deg, rgba(8, 16, 22, 0.84), rgba(8, 16, 22, 0.46)),
-        linear-gradient(180deg, rgba(8, 16, 22, 0.35), rgba(8, 16, 22, 0.62));
+        linear-gradient(90deg, rgba(8, 16, 22, 0.32), rgba(8, 16, 22, 0.08)),
+        linear-gradient(180deg, rgba(8, 16, 22, 0.06), rgba(8, 16, 22, 0.14));
     content: "";
     inset: 0;
     position: absolute;
@@ -777,14 +779,8 @@ footer .fa-inverse {
     }
 
     .intro-header {
-        background-image: none !important;
-        background: #ffffff;
-        border-bottom: 1px solid var(--line);
-        min-height: 0;
-    }
-
-    .intro-header::before {
-        display: none;
+        border-bottom: 0;
+        min-height: 34vh;
     }
 
     .site-heading,
@@ -796,19 +792,19 @@ footer .fa-inverse {
     .intro-header .site-heading h1,
     .intro-header .page-heading h1,
     .intro-header .post-heading h1 {
-        color: var(--ink);
+        color: #ffffff;
         font-size: 54px;
     }
 
     .intro-header .site-heading .subheading,
     .intro-header .page-heading .subheading,
     .intro-header .post-heading .subheading {
-        color: var(--muted);
+        color: rgba(255, 255, 255, 0.88);
         font-size: 22px;
     }
 
     .intro-header .post-heading .meta {
-        color: var(--muted);
+        color: rgba(255, 255, 255, 0.78);
     }
 
     body > .container > .row > .col-lg-8 {

@@ -1,7 +1,7 @@
 ---
 title: Flattening a Codebase into a Single File (for Review, LLMs, and Sanity)
 layout: post
-header-img: "img/bash.png"
+header-img: "img/coding.jpg"
 ---
 
 > If you have found yourself copying chunks of a codebase, this may be for you.

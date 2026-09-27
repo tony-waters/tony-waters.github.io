@@ -1,7 +1,7 @@
 ---
 title: "(Both sides of) Resilience4j Rate Limiting in Spring Boot"
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/resilience.jpg"
 ---
 
 > Implement a rate-limiter using Resilience4j and Spring Boot, and deal with calling it using code and returned headers.
