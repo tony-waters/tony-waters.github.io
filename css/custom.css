@@ -501,6 +501,33 @@ body > .container > .row > .col-lg-8 {
     padding-top: 30px;
 }
 
+.post-summary-row {
+    align-items: center;
+    display: flex;
+    gap: 24px;
+}
+
+.post-thumb {
+    background-color: #18212a;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 8px;
+    filter: brightness(1.55);
+    flex: 0 0 168px;
+    height: 112px;
+    width: 168px;
+}
+
+.post-thumb-light {
+    filter: brightness(2.1);
+}
+
+.post-summary-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .post-summary .post-title {
     color: var(--ink);
     font-size: 32px;
@@ -652,6 +679,12 @@ footer .fa-inverse {
 
     .post-summary .post-title {
         font-size: 26px;
+    }
+
+    .post-thumb {
+        flex-basis: 96px;
+        height: 72px;
+        width: 96px;
     }
 
     .bio-image {

@@ -1,7 +1,7 @@
 ---
 title: Domain Object Security without ACLs using Spring Security 3.2
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/spring-2.jpg"
 ---
 In my [previous post]({{ "/2015/03/11/spring-security-users-roles-permissions" | prepend: site.baseurl }}) I looked at adapting Spring Security to work with Permissions to avoid hard-coding Roles into the security configuration. In this post I want to move beyond generic roles and permissions to look at how we can grant or deny access to specific objects within our application.
 

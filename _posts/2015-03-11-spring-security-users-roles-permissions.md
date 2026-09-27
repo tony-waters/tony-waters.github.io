@@ -1,7 +1,7 @@
 ---
 title: Users, Roles and Permissions (unobtrusively) with Spring Security 3.2 and JPA
 layout: post
-header-img: "img/spring5.jpg"
+header-img: "img/spring-2.jpg"
 ---
 If the documentation and standard schemas are anything to go by, Spring Security 3 doesn't appear to encourage the common configuration of User -> Role -> Permission, and instead leans towards hard-coding roles into the security configuration. Leaving us writing this:
 

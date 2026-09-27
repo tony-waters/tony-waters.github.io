@@ -10,12 +10,20 @@ description: "Java and DevOps; using Kubernetes, Terraform, and Spring"
 {% for post in paginator.posts %}
 <article class="post-preview post-summary">
     <a class="post-summary-link" href="{{ post.url | prepend: site.baseurl }}">
-        <h2 class="post-title">{{ post.title }}</h2>
-        {% if post.subtitle %}
-        <h3 class="post-subtitle">
-            {{ post.subtitle }}
-        </h3>
-        {% endif %}
+        <div class="post-summary-row">
+            {% assign thumb = post.header-img | default: site.header-img %}
+            {% if thumb %}
+            <div class="post-thumb{% if thumb contains 'system-design.jpg' %} post-thumb-light{% endif %}" style="background-image: url('{{ site.baseurl }}/{{ thumb }}');"></div>
+            {% endif %}
+            <div class="post-summary-main">
+                <h2 class="post-title">{{ post.title }}</h2>
+                {% if post.subtitle %}
+                <h3 class="post-subtitle">
+                    {{ post.subtitle }}
+                </h3>
+                {% endif %}
+            </div>
+        </div>
     </a>
     <p class="post-meta">
         <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time>
