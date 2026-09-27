@@ -523,6 +523,10 @@ body > .container > .row > .col-lg-8 {
     filter: brightness(2.1);
 }
 
+.post-thumb-lighter {
+    filter: brightness(2.7);
+}
+
 .post-summary-main {
     flex: 1 1 auto;
     min-width: 0;
