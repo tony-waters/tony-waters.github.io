@@ -7,7 +7,7 @@ header-img: "img/system-design.jpg"
 > How the transactional outbox pattern, Debezium, and Kafka close the transaction-boundary gap — and what's still unsolved once things become asynchronous?
 
 ---
-In a [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) I looked at both sides of [rate limiting](https://resilience4j.readme.io/docs/ratelimiter) a SpringBoot service with Resilience4j. On one side the *called* `email-service` protected itself with a rate limiter. On the other side the *calling* `rest-service` reacted to the `429`s and the returned headers to reduce additional (inevitably failing) calls. That post ended with two unresolved problems.
+In a [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) I looked at both sides of [rate limiting](https://resilience4j.readme.io/docs/ratelimiter) a SpringBoot service with Resilience4j. On one side the *called* `email-service` protected itself with a rate limiter. On the other side the *calling* `rest-service` reacted to the `429`s and the returned headers to reduce additional (likely failing) calls. That post ended with two unresolved problems.
 
 One of the problems, and the one I am going to address here, was around transaction boundaries. `rest-service` called the (possibly slow, possibly failing, knowingly rate-limited) `email-service` from inside the same request that saved the order. Splitting that request into two short transactions kept database connections from piling up, but introduced a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/).
 
