@@ -7,7 +7,7 @@ header-img: "img/system-design.jpg"
 > How the transactional outbox pattern, Debezium, and Kafka close the transaction-boundary gap — and what's still unsolved once things become partly asynchronous?
 
 ---
-In a [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) I looked at both sides of [rate limiting](https://resilience4j.readme.io/docs/ratelimiter) a SpringBoot service with Resilience4j. On one side the *called* `email-service` protected itself with a rate limiter. On the other side the *calling* `rest-service` reacted to the `429`s and the returned headers to reduce additional (likely failing) calls. That post ended with two unresolved problems.
+In a [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) I looked at both sides of [rate limiting](https://resilience4j.readme.io/docs/ratelimiter) a SpringBoot service with Resilience4j. On one side the *called* `email-service` protected itself with a rate limiter. On the other side the *calling* `rest-service` reacted to the `429 Too Many Requests` and the returned headers to reduce additional (likely failing) calls. That post ended with two unresolved problems.
 
 One of the problems was around transaction boundaries. `rest-service` called the (possibly slow, possibly failing, knowingly rate-limited) `email-service` from inside the same request that saved the order. Splitting that request into two short transactions kept database connections from piling up, but introduced a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). This is the problem I am going to address here.
 
@@ -18,7 +18,7 @@ One of the problems was around transaction boundaries. `rest-service` called the
 
 ## Fixing the `dual-write` problem
 
-A common fix to the dual-write problem is the [transactional outbox pattern](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). In this scenario:
+A common fix to the dual-write problem is the [transactional outbox pattern](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). If we use the same domain as the [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) we have the following flow:
 
 * `rest-service` writes the order and an outbox event in the same database transaction.
 * Debezium reads the database transaction log and relays the outbox event to Kafka.
@@ -26,7 +26,7 @@ A common fix to the dual-write problem is the [transactional outbox pattern](htt
 
 ![System diagram: rest-service writes Order and Outbox in one transaction, Debezium relays the outbox row to Kafka, email-service consumes it through a rate limiter]({{ site.baseurl }}/img/system-design-transactional-outbox.png "System Diagram")
 
-## Writing the Order and the Outbox Event Together
+### Writing the Order and the Outbox Event Together
 
 The key point here, if we want to fix the dual-write problem, is for the `rest-service` to write both the `order` and the `outbox` records in a single `@Transactional` method:
 
@@ -45,7 +45,7 @@ public Order createOrder(CreateOrderRequest request) {
 
 Because the `order` row and the `outbox` row are saved in the same transaction, there is no point where the order is committed but the intention to send the email has been lost. Or *vice versa*. Either both rows commit, or neither row commits.
 
-## Relaying the Outbox
+### Relaying the Outbox
 
 Something still has to get rows from the `outbox` table into Kafka. This is where [Kafka Connect](https://kafka.apache.org/43/kafka-connect/overview/) and [Debezium](https://debezium.io/) come in.
 
@@ -88,7 +88,7 @@ spec:
     transforms.outbox.route.topic.replacement: "outbox.event.${routedByValue}"
 ```
 
-## Consuming the Event
+### Consuming the Event
 
 `email-service` is now a Kafka consumer instead of an HTTP dependency in the order request path:
 
@@ -147,7 +147,7 @@ curl -i -X POST http://$NODE_IP:30081/orders \
   -d '{"customerEmail": "you@example.com", "amount": 19.99}'
 ```
 
-`rest-service` returns `201 Created` after writing the order and the outbox row. It does not wait for `email-service`.
+`rest-service` quickly returns `201 Created` after writing the order and the outbox row. It does not wait for `email-service`.
 
 ## Observing the Load Test
 
@@ -242,9 +242,6 @@ Of the issues just pointed out, I think the next hardest one to resolve is the p
 ## Conclusion
 
 The transactional outbox pattern closes the dual-write gap a [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) left open. Writing the order and the outbox event in one transaction means there's no window where the two can disagree, and moving email delivery onto Kafka means `rest-service` no longer waits on `email-service` at all — not for the database transaction, and not for the request thread either.
-
-
-
 
 ## <a name="notes"></a>Notes
 1. Other solutions are available (https://www.confluent.io/blog/dual-write-problem/)
