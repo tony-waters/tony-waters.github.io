@@ -25,6 +25,9 @@
         }
 
         images.forEach(function (image) {
+            if (image.closest('a')) {
+                return;
+            }
             image.classList.add('is-zoomable');
             image.addEventListener('click', function () {
                 open(image);

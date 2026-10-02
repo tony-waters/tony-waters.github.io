@@ -9,7 +9,12 @@ header-img: "img/system-design.jpg"
 ---
 In a [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) I looked at both sides of [rate limiting](https://resilience4j.readme.io/docs/ratelimiter) a SpringBoot service with Resilience4j. On one side the *called* `email-service` protected itself with a rate limiter. On the other side the *calling* `rest-service` reacted to the `429`s and the returned headers to reduce additional (likely failing) calls. That post ended with two unresolved problems.
 
-One of the problems, and the one I am going to address here, was around transaction boundaries. `rest-service` called the (possibly slow, possibly failing, knowingly rate-limited) `email-service` from inside the same request that saved the order. Splitting that request into two short transactions kept database connections from piling up, but introduced a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/).
+One of the problems was around transaction boundaries. `rest-service` called the (possibly slow, possibly failing, knowingly rate-limited) `email-service` from inside the same request that saved the order. Splitting that request into two short transactions kept database connections from piling up, but introduced a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). This is the problem I am going to address here.
+
+>The code can be found [in this repo](https://github.com/tony-waters/transactional-outbox-pattern-mp).
+>You can see an architectural summary of the solution by clicking on the image below:
+>
+>[![Image alt]({{ site.baseurl }}/img/architecture-transactional-outbox.png "System Summary: Opens in this window")](https://tony-waters.github.io/transactional-outbox-pattern-mp/)
 
 ## Fixing the `dual-write` problem
 
@@ -20,8 +25,6 @@ A common solution to the dual-write problem is the [transactional outbox pattern
 * `email-service` consumes the Kafka event and sends the confirmation email at its own pace.
 
 ![System diagram: rest-service writes Order and Outbox in one transaction, Debezium relays the outbox row to Kafka, email-service consumes it through a rate limiter]({{ site.baseurl }}/img/system-design-transactional-outbox.png "System Diagram")
-
-The code can be found [in this repo](https://github.com/tony-waters/transactional-outbox-pattern-mp).
 
 ## Writing the Order and the Outbox Event Together
 
@@ -151,7 +154,7 @@ curl -i -X POST http://$NODE_IP:30081/orders \
 The k6 test drives the full path through the public HTTP interfaces:
 
 ```bash
-NODE_IP=$(docker inspect outbox-worker --format '{{\.NetworkSettings.Networks.kind.IPAddress}}')
+NODE_IP=$(docker inspect outbox-worker --format '{{.NetworkSettings.Networks.kind.IPAddress}}')
 k6 run \
   -e REST_SERVICE_URL=http://$NODE_IP:30081 \
   -e EMAIL_SERVICE_URL=http://$NODE_IP:30082 \
@@ -211,7 +214,7 @@ The dashboard shows:
 
 This highlights a number of pertinent points with regards the Kafka 'queue' and the Rate Limiter. Orders rise quickly (1). Emails rise more slowly (2), in line with the configured downstream capacity. Consumer lag rises while the order burst is ahead of the email sender (3), then drains as the consumer catches up (4).
 
-While we are here, let us see what happens when a partition goes temporarily offline. I have looped the K6 tests to keep requests flowing to the system. Then I did a `kubectl delete` on one of the brokers:
+While we are here, let us see what happens when a partition goes temporarily offline. I have looped the K6 tests to keep requests flowing to the system. Then I did a `kubectl delete` on one of the brokers. Of course, kubernetes creates a new replica fairly quickly, but there is a broker failure:
 
 ![System diagram]({{ site.baseurl }}/img/system-design-outbox-grafana-2.png "System Diagram")
 
