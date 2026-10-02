@@ -12,7 +12,7 @@ In a [previous post]({% post_url 2026-09-01-resilience4j-rate-limiter %}) I look
 One of the problems was around transaction boundaries. `rest-service` called the (possibly slow, possibly failing, knowingly rate-limited) `email-service` from inside the same request that saved the order. Splitting that request into two short transactions kept database connections from piling up, but introduced a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). This is the problem I am going to address here.
 
 >The code can be found [in this repo](https://github.com/tony-waters/transactional-outbox-pattern-mp).
->You can see an architectural summary of the solution by clicking on the image below:
+>You can see an architectural summary of this solution by clicking on the image below:
 >
 >[![Image alt]({{ site.baseurl }}/img/architecture-transactional-outbox.png "System Summary: Opens in this window")](https://tony-waters.github.io/transactional-outbox-pattern-mp/)
 
