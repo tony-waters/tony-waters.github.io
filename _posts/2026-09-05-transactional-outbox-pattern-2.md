@@ -189,11 +189,11 @@ checks_failed......: 0.00%   0 out of 22
 ✓ delivery took at least as long as the rate limiter mandates (throttling was actually exercised)
 ```
 
-The important difference from the synchronous HTTP versions is the outcome. The order API accepts the requests immediately, and all 20 emails are eventually sent. Under pressure, Kafka absorbs the mismatch between order creation speed and email sending speed.
+The important difference from the synchronous HTTP versions is the outcome. The order API accepts the requests immediately, and all 20 emails are eventually sent. Under pressure (see next section), Kafka absorbs the mismatch between order creation speed and email sending speed.
 
 In the earlier rate-limiter version, excess work would become `SKIPPED` or `RATE_LIMITED`. In this version, the same pressure shows up as Kafka consumer lag.
 
-Result!
+Good result :)
 
 ## Metrics and Tracing
 
@@ -213,19 +213,24 @@ The dashboard shows:
 
 ![System diagram]({{ site.baseurl }}/img/system-design-outbox-grafana-1.png "System Diagram")
 
-This highlights a number of pertinent points with regards the Kafka 'queue' and the Rate Limiter. Orders rise quickly (1). Emails rise more slowly (2), in line with the configured downstream capacity. Consumer lag rises while the order burst is ahead of the email sender (3), then drains as the consumer catches up (4).
+This highlights a number of pertinent points with regards `Kafka` and the `Rate Limiter`:
+
+1. Orders rise quickly
+2. Emails rise more slowly, in line with the configured downstream capacity
+3. Consumer lag rises while the order burst is ahead of the email sender
+4. ... then drains as the consumer catches up
 
 While we are here, let us see what happens when a partition goes temporarily offline. I have looped the K6 tests to keep requests flowing to the system. Then I did a `kubectl delete` on one of the brokers. Of course, kubernetes creates a new replica fairly quickly, but there is a (albeit temporary) broker failure:
 
 ![System diagram]({{ site.baseurl }}/img/system-design-outbox-grafana-2.png "System Diagram")
 
-As the diagram illustrates, the partition leader is quickly replaced, and the interruption does not stop the processing of emails (though in this case you can notice the small impact on the `rest-service`).
+As Grafana illustrates, the partition leader is quickly replaced, and the interruption does not stop the processing of emails (though in this case you can notice the small impact on the `rest-service`).
 
 ## What this fixes
 
 This fixes the transaction boundary problem from the last [synchronous Resilience4j example]({% post_url 2026-09-01-resilience4j-rate-limiter %}). `rest-service` no longer holds a database transaction open while waiting for `email-service`. The durable intent to send the email is written in the same transaction as the order.
 
-It also changes the role of the rate limiter. In the HTTP version, the rate limiter protected the email service by rejecting excess requests. In the outbox version, the rate limiter slows the consumer down. That is a better fit when the work is important enough to complete later rather than fail fast.
+It also changes the role of the rate limiter. In the [previous HTTP version]({% post_url 2026-09-01-resilience4j-rate-limiter %}) the rate limiter protected the email service by *rejecting* excess requests. In this version, the rate limiter just slows the consumer down. That is a better fit when the work is important enough to complete later rather than fail fast.
 
 Also, Kafkas "partition per consumer" approach makes centralising the rate limiting using something like Redis and Bucket4j unnecessary (at least for the moment). Kafka already limits to a single partition per consumer, and consequently only one consumer is rate limited (providing it is not consuming from other topics). 
 
@@ -238,7 +243,7 @@ In terms of a production system there are a number of issues still to be address
 - no Dead Letter Queue (DLQ) or retry logic
 - potential duplication because `POST /orders` is not idempotent
 
-Of the issues just pointed out, I think the next hardest one to resolve is the potential duplication of POST requests. One solution to this is to make the `OrderCreated` consumer idempotent. I plan to look at this next.
+Of these issues I think the next hardest one to resolve is the potential duplication of POST requests. One solution is to make the `OrderCreated` consumer idempotent. I plan to look at this next.
 
 ## Conclusion
 
