@@ -49,7 +49,7 @@ Because the `order` row and the `outbox` row are saved in the same transaction, 
 
 Something still has to get rows from the `outbox` table into Kafka. This is where [Kafka Connect](https://kafka.apache.org/43/kafka-connect/overview/) and [Debezium](https://debezium.io/) come in.
 
-> Kafka Connect is the general-purpose runtime framework for data integration, while Debezium is a specialized family of Change Data Capture (CDC) connectors that run on top of it.
+> Kafka Connect is the general-purpose runtime framework for data integration, while Debezium is a specialised family of Change Data Capture (CDC) connectors that run on top of it.
 
 Postgres uses something called [Write-Ahead Logging](https://en.wikipedia.org/wiki/Write-ahead_logging) (WAL). Before making changes to its actual data files it first writes the intended changes to a WAL log file. If the system crashes, the WAL can be used to restore the database to a consistent state.
 
