@@ -90,7 +90,7 @@ spec:
 
 ### Consuming the Event
 
-`email-service` is now a Kafka consumer instead of an HTTP dependency in the order request path:
+In the [earlier rate-limiter post]({% post_url 2026-09-01-resilience4j-rate-limiter %}), the HTTP endpoint returned `429 Too Many Requests` when the quota was exhausted. That made sense for an HTTP caller that needed an immediate response. Using the Spring[`@KafkaListener`](https://docs.spring.io/spring-kafka/reference/kafka/receiving-messages/listener-annotation.html) annotation `email-service` is now a Kafka consumer instead:
 
 ```java
 @KafkaListener(topics = OUTBOX_ORDER_TOPIC)
@@ -98,6 +98,9 @@ void onMessage(String payload) {
     confirmationService.send(readEvent(payload));
 }
 ```
+
+
+> @KafkaListener hides a poll-Kafka loop. Spring runs a background thread that continually calls poll(), and for each record returned, it calls `onMethod` on that same thread.
 
 The actual `send` operation is still protected by Resilience4j:
 
@@ -110,9 +113,7 @@ void send(OrderCreatedEvent event) {
 }
 ```
 
-In the [earlier rate-limiter post]({% post_url 2026-09-01-resilience4j-rate-limiter %}), the HTTP endpoint returned `429 Too Many Requests` when the quota was exhausted. That made sense for an HTTP caller that needed an immediate response.
-
-Here the caller is Kafka. There is no customer request waiting for an immediate answer from `email-service`. If the rate limiter blocks, the consumer messages are delayed rather than skipped.
+But now if the rate limiter blocks, the confirmation emails are delayed rather than skipped.
 
 ## Running the System
 
@@ -220,7 +221,7 @@ While we are here, let us see what happens when a partition goes temporarily off
 
 As the diagram illustrates, the partition leader is quickly replaced, and the interruption does not stop the processing of emails (though in this case you can notice the small impact on the `rest-service`).
 
-## What This Fixes
+## What this fixes
 
 This fixes the transaction boundary problem from the last [synchronous Resilience4j example]({% post_url 2026-09-01-resilience4j-rate-limiter %}). `rest-service` no longer holds a database transaction open while waiting for `email-service`. The durable intent to send the email is written in the same transaction as the order.
 
@@ -228,7 +229,7 @@ It also changes the role of the rate limiter. In the HTTP version, the rate limi
 
 Also, Kafkas "partition per consumer" approach makes centralising the rate limiting using something like Redis and Bucket4j unnecessary (at least for the moment). Kafka already limits to a single partition per consumer, and consequently only one consumer is rate limited (providing it is not consuming from other topics). 
 
-## What this doesnt fix
+## What this does not fix
 
 In terms of a production system there are a number of issues still to be addressed:
 
