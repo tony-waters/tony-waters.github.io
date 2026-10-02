@@ -18,7 +18,7 @@ One of the problems was around transaction boundaries. `rest-service` called the
 
 ## Fixing the `dual-write` problem
 
-A common solution to the dual-write problem is the [transactional outbox pattern](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). In this scenario:
+A common fix to the dual-write problem is the [transactional outbox pattern](https://developer.confluent.io/courses/microservices/the-transactional-outbox-pattern/). In this scenario:
 
 * `rest-service` writes the order and an outbox event in the same database transaction.
 * Debezium reads the database transaction log and relays the outbox event to Kafka.
