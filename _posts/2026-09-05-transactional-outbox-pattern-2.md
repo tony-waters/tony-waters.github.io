@@ -99,7 +99,7 @@ void onMessage(String payload) {
 }
 ```
 
-The actual "send" operation is still protected by Resilience4j:
+The actual `send` operation is still protected by Resilience4j:
 
 ```java
 @RateLimiter(name = "emailSender")
