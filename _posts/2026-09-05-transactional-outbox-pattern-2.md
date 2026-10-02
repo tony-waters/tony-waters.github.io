@@ -51,7 +51,7 @@ Something still has to get rows from the `outbox` table into Kafka. This is wher
 
 > Kafka Connect is the general-purpose runtime framework for data integration, while Debezium is a specialised family of Change Data Capture (CDC) connectors that run on top of it.
 
-Postgres uses something called [Write-Ahead Logging](https://en.wikipedia.org/wiki/Write-ahead_logging) (WAL). Before making changes to its actual data files it first writes the intended changes to a WAL log file. If the system crashes, the WAL can be used to restore the database to a consistent state.
+By default `PostgreSQL` uses something called [Write-Ahead Logging](https://en.wikipedia.org/wiki/Write-ahead_logging) (WAL). Before making changes to its actual data files it first writes the intended changes to a WAL log file. If the system crashes, the WAL can be used to restore the database to a consistent state.
 
 We can use Karfa Connect/Debezium as a method of [Change Data Capture](https://en.wikipedia.org/wiki/Change_data_capture) to stream the content of these WAL files to Kafka.
 
