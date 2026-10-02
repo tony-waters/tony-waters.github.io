@@ -214,7 +214,7 @@ The dashboard shows:
 
 This highlights a number of pertinent points with regards the Kafka 'queue' and the Rate Limiter. Orders rise quickly (1). Emails rise more slowly (2), in line with the configured downstream capacity. Consumer lag rises while the order burst is ahead of the email sender (3), then drains as the consumer catches up (4).
 
-While we are here, let us see what happens when a partition goes temporarily offline. I have looped the K6 tests to keep requests flowing to the system. Then I did a `kubectl delete` on one of the brokers. Of course, kubernetes creates a new replica fairly quickly, but there is a broker failure:
+While we are here, let us see what happens when a partition goes temporarily offline. I have looped the K6 tests to keep requests flowing to the system. Then I did a `kubectl delete` on one of the brokers. Of course, kubernetes creates a new replica fairly quickly, but there is a (albeit temporary) broker failure:
 
 ![System diagram]({{ site.baseurl }}/img/system-design-outbox-grafana-2.png "System Diagram")
 
