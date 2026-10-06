@@ -275,7 +275,7 @@ This keeps the database transaction short while also creating a durable record o
 
 ### Problem #2: Distributed Rate Limiting
 
-There is another problem once the application is deployed as a distributed system.
+There is potentially another problem once the application is deployed as a distributed system.
 
 Resilience4j's `RateLimiter` is deliberately JVM-local and keeps its state in memory. It has no knowledge of other application instances. If `email-service` is scaled to five replicas behind a load balancer, each replica maintains its own independent rate limit. For example, if each replica is configured to allow five requests every ten seconds, five replicas could collectively accept up to 25 requests during that period rather than the intended five<sup>[[1]](#notes)</sup>.
 
