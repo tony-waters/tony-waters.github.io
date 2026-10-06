@@ -243,7 +243,7 @@ In terms of a production system there are a number of issues still to be address
 - no Dead Letter Queue (DLQ) or retry logic
 - potential duplication because `POST /orders` is not idempotent
 
-Of these issues I think the next hardest one to resolve is the potential duplication of POST requests. One solution is to make the `OrderCreated` consumer idempotent. I plan to look at this next.
+Of these issues I think the most coding-intense is the potential duplication of POST requests. One solution is to make the `OrderCreated` consumer idempotent. I plan to look at this next.
 
 ## Conclusion
 
