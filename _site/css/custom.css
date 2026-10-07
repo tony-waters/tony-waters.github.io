@@ -911,3 +911,83 @@ body.img-lightbox-active {
     max-width: 90vw;
     object-fit: contain;
 }
+
+/* Code block toolbar: a file header bar atop the sample, copy + view-on-GitHub */
+.code-toolbar {
+    align-items: center;
+    background: color-mix(in srgb, var(--code-bg) 92%, var(--ink) 8%);
+    border: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    gap: 10px;
+    padding: 8px 12px;
+}
+
+.has-code-toolbar .highlight > pre,
+.has-code-toolbar > pre {
+    border-radius: 0 0 6px 6px;
+    margin-top: 0;
+}
+
+.code-toolbar-github {
+    align-items: center;
+    color: var(--muted);
+    display: inline-flex;
+    gap: 7px;
+    min-width: 0;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.code-toolbar-github:hover,
+.code-toolbar-github:focus {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.code-toolbar-github .fa-github {
+    flex: 0 0 auto;
+    font-size: 13px;
+}
+
+.code-toolbar-filename {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.code-toolbar-copy {
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    margin-left: auto;
+    padding: 4px 7px;
+    transition: color 0.15s ease;
+}
+
+.code-toolbar-copy .fa {
+    font-size: 13px;
+}
+
+.code-toolbar-copy:hover,
+.code-toolbar-copy:focus {
+    color: var(--accent);
+}
+
+.code-toolbar-copy.is-copied {
+    color: var(--accent-dark);
+}
+
+@media only screen and (max-width: 420px) {
+    .code-toolbar-filename {
+        font-size: 12px;
+    }
+}

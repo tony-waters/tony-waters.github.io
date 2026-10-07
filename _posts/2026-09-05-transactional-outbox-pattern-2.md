@@ -2,6 +2,17 @@
 title: "Transactional Outbox Pattern (with Spring Boot, Debezium, and Kafka)"
 layout: post
 header-img: "img/system-design.jpg"
+github_links:
+  - https://github.com/tony-waters/transactional-outbox-pattern-mp/blob/cab36b9f4769204c8510c9c59e2917e0b49cc631/rest-service/src/main/java/com/example/outbox/rest/order/OrderService.java#L25-L34
+  - https://github.com/tony-waters/transactional-outbox-pattern-mp/blob/6ca89a14beab7f23d560e72e4246cfedf2920da6/k8s/03-kafka-connect.yaml#L25-L58
+  - https://github.com/tony-waters/transactional-outbox-pattern-mp/blob/aa441171dc2d3ec4371cadae7d74d2ffbe3e1504/email-service/src/main/java/com/example/outbox/email/order/OrderCreatedListener.java#L21-L24
+  - https://github.com/tony-waters/transactional-outbox-pattern-mp/blob/a5ec2348dd71437a048c8ffc21414e15acb0f9c5/email-service/src/main/java/com/example/outbox/email/order/ConfirmationService.java#L23-L27
+  - https://github.com/tony-waters/transactional-outbox-pattern-mp/blob/e4cb7b07aaa1bb627653f1b5e8c883b42f81315d/README.md#L48
+  - ""
+  - https://github.com/tony-waters/transactional-outbox-pattern-mp/blob/e4cb7b07aaa1bb627653f1b5e8c883b42f81315d/README.md#L170-L172
+  - https://github.com/tony-waters/transactional-outbox-pattern-mp/blob/e4cb7b07aaa1bb627653f1b5e8c883b42f81315d/README.md#L235-L239
+  - ""
+  - ""
 ---
 
 > How the transactional outbox pattern, Debezium, and Kafka close the transaction-boundary gap — and what's still unsolved once things become partly asynchronous?
@@ -71,20 +82,34 @@ kind: KafkaConnector
 metadata:
   name: outbox-connector
   namespace: kafka
+  labels:
+    strimzi.io/cluster: outbox-connect
 spec:
   class: io.debezium.connector.postgresql.PostgresConnector
   tasksMax: 1
   config:
     database.hostname: postgres
+    database.port: "5432"
+    database.user: postgres
+    database.password: postgres
     database.dbname: outbox
+    topic.prefix: rest-service
+    schema.include.list: public
     table.include.list: public.outbox
     plugin.name: pgoutput
     slot.name: outbox_slot
+    publication.autocreate.mode: filtered
+    tombstones.on.delete: "false"
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
     transforms: outbox
     transforms.outbox.type: io.debezium.transforms.outbox.EventRouter
     transforms.outbox.route.by.field: aggregatetype
+    transforms.outbox.table.field.event.id: id
     transforms.outbox.table.field.event.key: aggregateid
+    transforms.outbox.table.field.event.type: type
     transforms.outbox.table.field.event.payload: payload
+    transforms.outbox.route.topic.regex: "(?<routedByValue>.*)"
     transforms.outbox.route.topic.replacement: "outbox.event.${routedByValue}"
 ```
 

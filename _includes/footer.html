@@ -58,3 +58,9 @@
 
 <!-- Image Lightbox -->
 <script src="{{ "/js/img-lightbox.js " | prepend: site.baseurl }}"></script>
+
+<!-- Code Block Toolbar -->
+{% if page.github_links %}
+<script>window.postGithubLinks = {{ page.github_links | jsonify }};</script>
+<script src="{{ "/js/code-toolbar.js " | prepend: site.baseurl }}"></script>
+{% endif %}
