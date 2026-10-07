@@ -136,9 +136,9 @@ The script creates the Kind cluster, installs the Strimzi operator, builds and l
 
 Once the cluster is up, get a node IP:
 
-<code>
-NODE_IP=$(docker inspect outbox-worker --format '{{.NetworkSettings.Networks.kind.IPAddress}}')
-</code>
+``` bash
+NODE_IP=$(docker inspect outbox-worker | jq -r '.[0].NetworkSettings.Networks.kind.IPAddress')
+```
 
 Then create an order through the public NodePort:
 
@@ -155,7 +155,7 @@ curl -i -X POST http://$NODE_IP:30081/orders \
 The k6 test drives the full path through the public HTTP interfaces:
 
 ```bash
-NODE_IP=$(docker inspect outbox-worker --format '{{.NetworkSettings.Networks.kind.IPAddress}}')
+NODE_IP=$(docker inspect outbox-worker | jq -r '.[0].NetworkSettings.Networks.kind.IPAddress')
 k6 run \
   -e REST_SERVICE_URL=http://$NODE_IP:30081 \
   -e EMAIL_SERVICE_URL=http://$NODE_IP:30082 \
