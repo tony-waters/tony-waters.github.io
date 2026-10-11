@@ -182,7 +182,7 @@ Only the caller that gets `Acquired` is allowed to execute the service method. E
 - `Replayable`: the first request completed with the same fingerprint
 - `Conflict`: the key was already used with a different request body
 
-The aspect maps those outcomes to the API contract and records each one as a Prometheus counter (`idempotency.outcomes`), which is the same metric used in the Grafana screenshots later in the post.
+The aspect maps those other outcomes to the appropriate API response:
 
 ```java
 LockResult result = store.tryBegin(scope, idempotencyKey, fingerprint);
@@ -217,7 +217,7 @@ private Object replay(Class<?> returnType, UUID id) {
 
 This avoids keeping a second copy of the HTTP response in Redis. Postgres remains the source of truth for orders. Redis only remembers enough to make retries safe.
 
-If the wrapped method throws, the aspect releases the key immediately. That matters because a failed attempt should not poison the key for the full TTL. The next retry should be able to make a clean attempt:
+If the method wrapped by `@Idempotent` throws an exception then the aspect releases the key immediately. That matters because a failed attempt should not poison the key for the full TTL. The next retry should be able to make a clean attempt:
 
 ```java
 private Object proceedAndRecord(ProceedingJoinPoint joinPoint, String scope, String key, String fingerprint) throws Throwable {
@@ -263,13 +263,13 @@ After the TTL expires, a request with the same `Idempotency-Key` is treated as a
 
 ![System diagram]({{ site.baseurl }}/img/architecture-failure-points.png "System Diagram")
 
-Lets revisit our failure points, and see how the clients only real option, resending the request, now works. What happens with this re-tried request given any of the three failure locations:
+Lets revisit our failure points and see how the clients only real option, resending the request, now works. What happens to this re-tried request in any of the three failure scenarios:
 
 - **(1) Previous request never arrived.** Nothing in `rest-service` was previously run — no Redis key, no database row. A retry with the same `Idempotency-Key` behaves exactly like the first attempt, but hopefully succeeds this time.
 - **(2) The server failed mid-processing.** If the second request is right after the first Redis holds an `IN_PROGRESS` record for that key, and the client gets back `425 Too Early`. If the original request failed outright instead the key is freed immediately. Either way, no duplicate `Order` can be created from this path.
-- **(3) Response was lost on the way back.** This is the case the whole mechanism exists for. The order and outbox row were committed inside the one transaction, `store.complete(...)` wrote a `COMPLETED` record carrying the new `orderId`, and then the response itself never reached the client. The retry arrives, `tryBegin` finds that `COMPLETED` record with a matching fingerprint, and returns `Replayable(orderId)` — the aspect re-fetches the same `Order` row from Postgres and hands it back, so the client receives the original order rather than creating a second one.
+- **(3) Response was lost on the way back.** This is the case the whole mechanism exists for. The order and outbox row were committed inside the one transaction, but the client did not get a 201 response. In this scenario the aspect re-fetches the same `Order` row from Postgres and hands it back, so the client receives the original order rather than creating a second one.
 
-In every case, the diagram's three failure points collapse onto the same server-side code path: the `Idempotency-Key` is what lets a retry discover what the *first* attempt actually did, rather than leaving the client to guess whether its original request succeeded.
+From the client perspective it no longer matters at what point the failure occurred. They can safely retry the request.
 
 ---
 
@@ -326,4 +326,4 @@ The client cannot know whether a timed-out `POST` failed before it arrived, fail
 
 The `Idempotency-Key` gives each attempt a stable identity. Redis uses that identity to guard the work and remember the result for a bounded retry window (24 hours, in this case). Postgres remains the source of truth for the order itself. On a retry, `rest-service` can make a deliberate decision: run the request, reject it because the first attempt is still in flight, replay the completed order, or reject it because the same key is being used for a different request.
 
-Together with the [transactional outbox]({% post_url 2026-09-05-transactional-outbox-pattern-2 %}) from the previous post, this gives `rest-service` both sides of the guarantee. The database transaction keeps the order and outbox event together. The idempotency layer keeps retries from repeating the order creation. That is the useful version of "effectively exactly-once".
+Together with the [transactional outbox]({% post_url 2026-09-05-transactional-outbox-pattern-2 %}) from the previous post, this makes `rest-service` significantly more robust against data loss due to network or server failures. The database transaction keeps the order and outbox event together. The idempotency layer keeps retries from repeating the order creation.
