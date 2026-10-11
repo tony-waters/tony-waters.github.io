@@ -1,5 +1,5 @@
 ---
-title: Making POST requests idempotent in a distributed system
+title: Making a POST request idempotent in a distributed system
 layout: post
 header-img: "img/system-design.jpg"
 github_links:
