@@ -26,10 +26,10 @@ In a [previous post]({% post_url 2026-09-05-transactional-outbox-pattern-2 %}) I
 
 In this post I want to look at how we make our REST API idempotent using a unique `Idempotency-Key`.
 
->The code can be found [in this repo](https://github.com/tony-waters/idempotent-rest-service-md).
+>The code can be found [in this repo](https://github.com/tony-waters/idempotent-rest-service-mp).
 >You can see an architectural summary of this solution by clicking on the image below:
 > 
-> [![Image alt]({{ site.baseurl }}/img/architecture-idempotency.png "System Summary: Opens in this window")](https://tony-waters.github.io/idempotent-rest-service-md/)
+> [![Image alt]({{ site.baseurl }}/img/architecture-idempotency.png "System Summary: Opens in this window")](https://tony-waters.github.io/idempotent-rest-service-mp/)
 
 
 ## Planning for failure
