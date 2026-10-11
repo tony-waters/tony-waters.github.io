@@ -16,7 +16,7 @@ github_links:
   - https://github.com/tony-waters/idempotent-rest-service-md/blob/bfb7a6a2d0b15ce0640ed1382aa0a17b8a78afee/rest-service/src/main/java/uk/bit1/outbox/rest/idempotency/IdempotencyProperties.java#L7-L19
 ---
 
-> There are only two hard problems in distributed systems: 2. Exactly-once delivery 1. Guaranteed order of messages 2. Exactly-once delivery
+> There are only two hard problems in distributed systems: 2. Exactly-once delivery, 1. Guaranteed order of messages, 2. Exactly-once delivery
 >
 > (Mathias Verraes)
 
