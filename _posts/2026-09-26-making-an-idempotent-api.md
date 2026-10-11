@@ -48,7 +48,7 @@ This is a good thing if the failure was at (1), and sometimes if it was at (2), 
 
 What we really want is `exactly-once` delivery.
 
-Exactly-once delivery would guarantee that a message is processed exactly one time, preventing both data loss and duplication. This is difficult to implement in distributed systems due to network unreliability (summarised by the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals'_Problem)).  Fortunately, systems can achieve "effectively exactly-once" semantics by combining at-least-once delivery with idempotent processing, ensuring that duplicate messages have no additional adverse effects. A common pattern for achieving this is to include an `Idempotency-Key` in the request.
+Exactly-once delivery would guarantee that a message is processed exactly one time, preventing both data loss and duplication. This is difficult to implement in distributed systems due to network unreliability (illustrated by the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals'_Problem)).  Fortunately, systems can achieve "effectively exactly-once" semantics by combining at-least-once delivery with idempotent processing, ensuring that duplicate messages have no additional adverse effects. A common pattern for achieving this is to include an `Idempotency-Key` in the request.
 
 
 
