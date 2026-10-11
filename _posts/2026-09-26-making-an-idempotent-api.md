@@ -74,7 +74,7 @@ The software solution has three responsibilities:
 2. make one caller win the right to do the work
 3. turn every later retry into a clear outcome
 
-I did not want those rules hand-written inside every controller method. Instead, `rest-service` exposes them through a reusable `@Idempotent` annotation. The controller still looks like ordinary HTTP code: it receives the client-supplied `Idempotency-Key` header and passes it into the application service.
+Rather than write this code inside every non-idempotent controller method the `rest-service` exposes them through a reusable `@Idempotent` annotation. The controller still looks like ordinary HTTP code. It receives the client-supplied `Idempotency-Key` header and passes it into the application service.
 
 ```java
 @PostMapping
