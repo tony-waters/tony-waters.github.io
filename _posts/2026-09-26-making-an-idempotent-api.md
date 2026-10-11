@@ -16,9 +16,15 @@ github_links:
   - https://github.com/tony-waters/idempotent-rest-service-md/blob/bfb7a6a2d0b15ce0640ed1382aa0a17b8a78afee/rest-service/src/main/java/uk/bit1/outbox/rest/idempotency/IdempotencyProperties.java#L7-L19
 ---
 
+> There are only two hard problems in distributed systems: 2. Exactly-once delivery 1. Guaranteed order of messages 2. Exactly-once delivery
+>
+> (Mathias Verraes)
+
+---
+
 In a [previous post]({% post_url 2026-09-05-transactional-outbox-pattern-2 %}) I looked at how the `Transational Outbox Pattern` closes the dual-write gap caused by a rate-limited service. Writing the order and the outbox event in one transaction meant there was no window where the two could disagree, and moving email delivery onto Kafka meant `rest-service` no longer waited on `email-service` for the database transaction or for the request thread.
 
-In this post I want to look at how we make our REST API idempotent. Unless we do this we risk duplicate orders appearing in the database. To make the API idempotent, the client sends a unique `Idempotency-Key` with each request. `rest-service` uses this key to recognise when a retry is taking place.
+In this post I want to look at how we make our REST API idempotent using a unique `Idempotency-Key`.
 
 >The code can be found [in this repo](https://github.com/tony-waters/idempotent-rest-service-md).
 >You can see an architectural summary of this solution by clicking on the image below:
@@ -28,7 +34,7 @@ In this post I want to look at how we make our REST API idempotent. Unless we do
 
 ## Planning for failure
 
-One reason for implementing idempotency is to plan for network or server failure. If we take the simple case of a client request to a server we can easily identify three places a failure could occur:
+One reason for implementing idempotency is to plan for network or server failure. If we take the simple case of a client request to a server we can easily identify three places such a failure could occur:
 
 ![System diagram]({{ site.baseurl }}/img/architecture-failure-points.png "System Diagram")
 
@@ -36,21 +42,21 @@ One reason for implementing idempotency is to plan for network or server failure
 2. Once it has reached its destination but before it has been fully processed.
 3. During the response to the successful request.
 
-While only (3) has a successful result *they all look the same to the client*. The client is left with a timeout, and does not know if the payload has been processed. From the clients perspective the only realistic option is often to just retry the request.
+While only (3) has a successful result *they all look the same to the client*. The client is left with a timeout, and does not know if the payload has been processed. From the clients perspective, often the only realistic option is to just retry the request.
 
 This is a good thing if the failure was at (1) or (2), since we do not want to lose the message. However, if the failure was at (3) we risk consuming the message more than once.
 
 What we really want is `exactly-once` delivery.
 
-Exactly-once delivery guarantees that a message is processed exactly one time, preventing both data loss and duplication, but it is theoretically impossible to guarantee in distributed systems due to the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals'_Problem) and network unreliability.  Instead, systems achieve "effectively exactly-once" semantics by combining at-least-once delivery with idempotent processing or deduplication, ensuring that duplicate messages have no additional adverse effects.
+Exactly-once delivery guarantees that a message is processed exactly one time, preventing both data loss and duplication, but it can be difficult to guarantee in distributed systems due to the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals'_Problem) and network unreliability.  Fortunately, systems can achieve "effectively exactly-once" semantics by combining at-least-once delivery with idempotent processing, ensuring that duplicate messages have no additional adverse effects. A common pattern for achieving this is to include an `Idempotency-Key` in the request.
 
 
 
-## The solution - architecture
+## Architectural changes - adding Redis
 
 ![System diagram]({{ site.baseurl }}/img/architecture-idempotency-2.png "System Diagram")
 
-In order for this to work we need somewhere to record if we have seen the `Idempotency-Key` before, and that record has to be visible to *every* instance handling requests. `rest-service` runs as multiple replicas behind a load balancer, so an in-memory map on one JVM instance would miss a retry that lands on another. The state has to live outside any single instance.
+In order for this to work we need somewhere to record if we have seen the `Idempotency-Key` before, and that has to be visible to *every* instance handling requests. `rest-service` runs as multiple replicas behind a load balancer, so an in-memory map on one JVM instance would miss a retry that lands on another. The state has to live outside any single instance.
 
 Redis is a good fit for that shared state, for three reasons:
 
@@ -60,15 +66,15 @@ Redis is a good fit for that shared state, for three reasons:
 
 Postgres still owns the durable `Order` and `Outbox` rows. Redis only ever holds the lock/record for the request itself.
 
-## The solution - software
+## What the software has to do
 
-The software version of the architecture has three responsibilities:
+The software solution has three responsibilities:
 
-1. give each unsafe request a stable identity,
-2. make one caller win the right to do the work,
-3. turn every later retry into a clear outcome.
+1. give each unsafe request a stable identity
+2. make one caller win the right to do the work
+3. turn every later retry into a clear outcome
 
-I did not want those rules hand-written inside every controller method. `rest-service` exposes them through a reusable `@Idempotent` annotation instead. The controller still looks like ordinary HTTP code: it receives the client-supplied `Idempotency-Key` header and passes it into the application service.
+I did not want those rules hand-written inside every controller method. Instead, `rest-service` exposes them through a reusable `@Idempotent` annotation. The controller still looks like ordinary HTTP code: it receives the client-supplied `Idempotency-Key` header and passes it into the application service.
 
 ```java
 @PostMapping
@@ -97,14 +103,14 @@ public Order createOrder(@IdempotencyKey String idempotencyKey, CreateOrderReque
 }
 ```
 
-The important point is that the business method still contains business logic. It creates the `Order`, writes the outbox event, and returns the order. It does not know how Redis locks work, how retries are detected, or which HTTP status code a duplicate in-flight request should receive.
+Note that the business method still contains business logic. It creates the `Order`, writes the outbox event, and returns the order. It does not know how the Redis locks works, how retries are detected, or which HTTP status code a duplicate in-flight request should receive as a response.
 
-That work is split between two infrastructure classes:
+This work is split between two infrastructure classes:
 
-- `IdempotencyAspect` wraps annotated methods and maps idempotency outcomes back to HTTP behaviour.
-- `IdempotencyStore` owns the Redis state machine.
+- `IdempotencyAspect` wraps annotated methods and maps idempotency outcomes back to HTTP behaviour
+- `IdempotencyStore` owns the Redis state machine
 
-The aspect starts by extracting the annotated key and calculating a scope from the method name. The Redis key is then namespaced as `idempotency:<scope>:<key>`, so the same client key can be used safely against different idempotent endpoints.
+The aspect starts by extracting the annotated key and deriving the `<scope>` from the method name. The Redis key is then namespaced as `idempotency:<scope>:<key>`, so the same `Idempotency-Key` key can be used safely against different idempotent endpoints:
 
 ```java
 String scope = method.getDeclaringClass().getName() + "." + method.getName();
@@ -114,7 +120,7 @@ String fingerprint = fingerprint(method, args);
 
 ### The Redis record
 
-The value stored in Redis is deliberately small. It is not a cached HTTP response. It is just enough state to answer one question: what happened to the first request with this key?
+The value stored in Redis is small. And not a cached HTTP response. It is just enough state to answer "what happened to the first request with this key?":
 
 ```java
 record IdempotencyRecord(Status status, String fingerprint, UUID resultId) {
@@ -131,7 +137,7 @@ That `fingerprint` field is there to catch accidental key reuse. The aspect hash
 
 ### The lock state machine
 
-`IdempotencyStore` turns the Redis record into a domain-level result. Callers do not receive raw JSON, Redis strings, or partial records. They receive one of four outcomes:
+`IdempotencyStore` turns the Redis record into a domain-level result. Callers receive one of four outcomes:
 
 ```java
 sealed interface LockResult {
@@ -142,9 +148,7 @@ sealed interface LockResult {
 }
 ```
 
-That type is useful because it makes the rest of the code exhaustive. If the store grows a fifth outcome later, the compiler forces the aspect to decide what HTTP behaviour that outcome should have.
-
-The critical operation is `setIfAbsent`, backed by Redis `SET ... NX PX`. It creates the `IN_PROGRESS` record only if the key does not already exist, and attaches the TTL in the same operation.
+The below call to `setIfAbsent` is backed by Redis `SET ... NX PX`. It creates the `IN_PROGRESS` record only if the key does not already exist, and attaches the TTL in the same operation.
 
 ```java
 LockResult tryBegin(String scope, String key, String fingerprint) {
@@ -174,9 +178,9 @@ LockResult tryBegin(String scope, String key, String fingerprint) {
 
 Only the caller that gets `Acquired` is allowed to execute the service method. Every other caller is interpreting state left behind by the first attempt:
 
-- `InProgress`: the first request is still running.
-- `Replayable`: the first request completed with the same fingerprint.
-- `Conflict`: the key was already used with a different request body.
+- `InProgress`: the first request is still running
+- `Replayable`: the first request completed with the same fingerprint
+- `Conflict`: the key was already used with a different request body
 
 The aspect maps those outcomes to the API contract and records each one as a Prometheus counter (`idempotency.outcomes`), which is the same metric used in the Grafana screenshots later in the post.
 
@@ -200,7 +204,7 @@ return switch (result) {
 };
 ```
 
-The replay path is intentionally boring. Redis stores the `resultId`, then the aspect uses Spring Data to fetch the real entity from Postgres and lets the normal response serialization run again.
+The replay path is straightforward. We just fetch the real entity from Postgres:
 
 ```java
 private Object replay(Class<?> returnType, UUID id) {
@@ -211,9 +215,9 @@ private Object replay(Class<?> returnType, UUID id) {
 }
 ```
 
-This avoids keeping a second copy of the HTTP response in Redis. Postgres remains the source of truth for orders; Redis only remembers enough to make retries safe.
+This avoids keeping a second copy of the HTTP response in Redis. Postgres remains the source of truth for orders. Redis only remembers enough to make retries safe.
 
-If the wrapped method throws, the aspect releases the key immediately. That matters because a failed attempt should not poison the key for the full TTL. The next retry should be able to make a clean attempt.
+If the wrapped method throws, the aspect releases the key immediately. That matters because a failed attempt should not poison the key for the full TTL. The next retry should be able to make a clean attempt:
 
 ```java
 private Object proceedAndRecord(ProceedingJoinPoint joinPoint, String scope, String key, String fingerprint) throws Throwable {
@@ -230,7 +234,7 @@ private Object proceedAndRecord(ProceedingJoinPoint joinPoint, String scope, Str
 }
 ```
 
-If the method succeeds, the aspect replaces the `IN_PROGRESS` record with `COMPLETED` and stores the returned entity id.
+If the method succeeds, the aspect replaces `IN_PROGRESS` with `COMPLETED` and stores the returned entity id:
 
 ```java
 void complete(String scope, String key, String fingerprint, UUID resultId) {
@@ -241,7 +245,7 @@ void complete(String scope, String key, String fingerprint, UUID resultId) {
 
 ### Expiration
 
-Idempotency does not have to last forever. It has to last longer than any realistic client retry window. The TTL is configured as application properties and defaults to 24 hours:
+Idempotency only has to last longer than any realistic client retry window. The TTL is configured as an application property and defaults to 24 hours:
 
 ```java
 @ConfigurationProperties(prefix = "app.idempotency")
@@ -251,7 +255,7 @@ public class IdempotencyProperties {
 }
 ```
 
-Every Redis write uses that TTL. After it expires, a request with the same `Idempotency-Key` is treated as a new request and can create a new order. That is an explicit trade-off: keep retry protection for a bounded period, but do not let Redis grow forever with keys that nobody will replay.
+After the TTL expires, a request with the same `Idempotency-Key` is treated as a new request and can create a new order. That is an explicit trade-off. It keeps retry protection for a bounded period, but does not let Redis grow forever with keys that nobody will replay.
 
 
 
@@ -303,7 +307,7 @@ Here is what happens when we run the K6 tests once:
 The four series on the "Idempotency outcomes over time" panel are the dashboard's names for the four `LockResult` cases — `created`, `in_progress`, `replayed`, or `conflict`. A couple of things stand out from a single run:
 
 - All four outcomes fire within one test run, including a `conflict`. This was designed into the K6 tests.
-- `in_progress` and `replayed` both spike and drop back to zero within about a minute. Nothing lingers `in_progress` after the run ends, which is what you'd expect given the lock is released as soon as the wrapped method returns or throws.
+- `in_progress` and `replayed` both spike and drop back to zero within about a minute. Nothing lingers `in_progress` after the run ends, which is what you would expect given the lock is released as soon as the wrapped method returns or throws.
 
 If we run the K6 tests in a loop it looks like this:
 
@@ -318,6 +322,8 @@ Looping the same K6 tests for ten minutes shows us:
 ---
 ## Conclusion
 
-Idempotency closes the gap that at-least-once delivery leaves open. The client supplies an `Idempotency-Key`; `IdempotencyStore` turns it into an atomic Redis lock, scoped by method name so endpoints can never collide on the same key; and `IdempotencyAspect` maps every outcome — acquired, in-progress, replayed, conflict — onto an HTTP response that tells the client what happened to its *first* attempt, rather than leaving it to guess. A retry stops being risky: it either does the work once, waits on the attempt already in flight, replays what that attempt produced, or is rejected as a different request wearing the same key.
+The client cannot know whether a timed-out `POST` failed before it arrived, failed while it was running, or succeeded and lost the response on the way back. Idempotency moves that uncertainty onto the server, where we have enough state to answer it.
 
-Paired with the [transactional outbox]({% post_url 2026-09-05-transactional-outbox-pattern-2 %}) from the previous post, `rest-service` now has both halves of the guarantee this series set out to build: the order and the intent to notify the customer can never disagree, and a dropped response can never turn into a duplicate order. Together they get as close to exactly-once as a distributed system can reasonably promise, without claiming something the network itself can't guarantee.
+The `Idempotency-Key` gives each attempt a stable identity. Redis uses that identity to guard the work and remember the result for a bounded retry window (24 hours, in this case). Postgres remains the source of truth for the order itself. On a retry, `rest-service` can make a deliberate decision: run the request, reject it because the first attempt is still in flight, replay the completed order, or reject it because the same key is being used for a different request.
+
+Together with the [transactional outbox]({% post_url 2026-09-05-transactional-outbox-pattern-2 %}) from the previous post, this gives `rest-service` both sides of the guarantee. The database transaction keeps the order and outbox event together. The idempotency layer keeps retries from repeating the order creation. That is the useful version of "effectively exactly-once".
