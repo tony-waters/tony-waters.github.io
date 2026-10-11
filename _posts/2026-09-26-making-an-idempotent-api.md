@@ -44,7 +44,7 @@ One reason for implementing idempotency is to plan for network or server failure
 
 While only (3) has a successful result *they all look the same to the client*. The client is left with a timeout, and does not know if the payload has been processed. From the clients perspective, often the only realistic option is to just retry the request.
 
-This is a good thing if the failure was at (1) or (2), since we do not want to lose the message. However, if the failure was at (3) we risk consuming the message more than once.
+This is a good thing if the failure was at (1), and sometimes if it was at (2), since we do not want to lose the message. However, if the failure was at (3) we risk consuming the message more than once.
 
 What we really want is `exactly-once` delivery.
 
