@@ -76,7 +76,7 @@ The software solution has three responsibilities:
 2. make one caller win the right to do the work
 3. turn every later retry into a clear outcome
 
-Rather than write this code inside every non-idempotent controller method the `rest-service` exposes them through a reusable `@Idempotent` annotation. The controller still looks like ordinary HTTP code. It receives the client-supplied `Idempotency-Key` header and passes it into the application service.
+Rather than write this code inside every non-idempotent service method, the `rest-service` exposes them through a reusable annotation (which I have cunningly called `@Idempotent`). The controller still looks like ordinary HTTP code. It receives the client-supplied `Idempotency-Key` header and passes it into the application service.
 
 ```java
 @PostMapping
@@ -88,7 +88,7 @@ public OrderResponse createOrder(@RequestHeader("Idempotency-Key") String idempo
 }
 ```
 
-The service method is where the idempotency boundary starts. `@Idempotent` says "guard this operation", and `@IdempotencyKey` identifies which argument carries the client's retry key.
+The service method is where the `@Idempotent`  boundary starts. `@IdempotencyKey` identifies which argument carries the client's retry key.
 
 ```java
 @Idempotent
