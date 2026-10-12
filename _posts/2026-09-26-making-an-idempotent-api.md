@@ -324,7 +324,7 @@ Looping the same K6 tests for ten minutes shows us:
 ---
 ## Conclusion
 
-The client cannot know whether a timed-out `POST` failed before it arrived, failed while it was running, or succeeded and lost the response on the way back. Idempotency moves that uncertainty onto the server, where we have enough state to answer it.
+A client cannot know whether a timed-out `POST` failed before it arrived, failed while it was running, or succeeded and lost the response on the way back. Idempotency moves that uncertainty onto the server, where we have enough state to answer it.
 
 The `Idempotency-Key` gives each attempt a stable identity. Redis uses that identity to guard the work and remember the result for a bounded retry window (24 hours, in this case). Postgres remains the source of truth for the order itself. On a retry, `rest-service` can make a deliberate decision: run the request, reject it because the first attempt is still in flight, replay the completed order, or reject it because the same key is being used for a different request.
 
