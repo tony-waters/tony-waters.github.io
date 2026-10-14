@@ -318,7 +318,6 @@ If we run the K6 tests in a loop it looks like this:
 Looping the same K6 tests for ten minutes shows us:
 
 - The outcome rates settle into a steady state rather than climbing. `in_progress` in particular doesn't creep upward over time, which is what you'd see if locks were leaking instead of being released on completion or after a failure.
-- `conflict` stays the smallest of the four throughout, consistent with it being one deliberately-provoked case in the test (the "reusing the key with a different body" check) rather than a systemic problem.
 - All four series drop quickly back to zero after the loop stops, instead of draining gradually. There is no backlog of outstanding locks left behind.
 
 ---
