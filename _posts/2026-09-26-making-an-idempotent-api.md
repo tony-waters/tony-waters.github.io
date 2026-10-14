@@ -62,8 +62,8 @@ In order for this to work we need somewhere to record if we have seen the `Idemp
 
 Redis is a good fit for that shared state, for three reasons:
 
-- **An atomic primitive for the race.** Two replicas can receive the same `Idempotency-Key` within milliseconds of each other. Redis's `SET ... NX PX` (`setIfAbsent`) atomically creates the key and attaches its TTL in one round trip, so exactly one caller wins the right to process the request.
-- **TTL as a first-class feature.** Idempotency keys only need to survive for as long as a client might plausibly retry. Redis expires keys itself, so there is no cleanup job to write, schedule, or forget to run.
+- **Atomic processing.** Two replicas can receive the same `Idempotency-Key` within milliseconds of each other. Redis's `SET ... NX PX` (`setIfAbsent`) atomically creates the key and attaches its TTL in one round trip, so exactly one caller wins the right to process the request.
+- **Automatic TTL cleanup.** Idempotency keys only need to survive for as long as a client might plausibly retry. Redis expires keys itself, so there is no cleanup job to write, schedule, or forget to run.
 - **Low Latency.** This check sits in front of every write `rest-service` makes. Redis's in-memory operations keep that overhead small.
 
 Postgres still owns the durable `Order` and `Outbox` rows. Redis only ever holds the lock/record for the request itself.
