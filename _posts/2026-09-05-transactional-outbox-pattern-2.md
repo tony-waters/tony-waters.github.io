@@ -70,7 +70,7 @@ We can use Karfa Connect/Debezium as a method of [Change Data Capture](https://e
 
 Debezium reads the Postgres write-ahead log rather than polling the table directly. When an application inserts an `outbox` row Postgres records that insert in the WAL. The Debezium connector streams that change into Kafka Connect, where the [Outbox Event Router](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html) reshapes the raw database change event into a domain event.
 
-Without this reshape, consumers would see a Debezium change-data-capture envelope containing table metadata, operation type, before/after row state, and connector details. The Event Router reshapes raw CDC records into clean domain messages, using the `aggregate ID` for the Kafka message key and the `aggregate type` to determine the target topic
+> Without this reshape, consumers would see a Debezium change-data-capture envelope containing table metadata, operation type, before/after row state, and connector details. The Event Router reshapes raw CDC records into clean domain messages, using the `aggregate ID` for the Kafka message key and the `aggregate type` to determine the target topic
 
 ---
 
