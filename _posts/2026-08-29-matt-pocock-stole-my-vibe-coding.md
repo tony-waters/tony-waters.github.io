@@ -66,7 +66,7 @@ D. Other tracker
 Which issue tracker should these skills use?
 ```
 
-When using `grill-with-docs` — which layers a `domain-modeling` pass on top of `grilling` — the skill actively builds and maintains a CONTEXT.md file and Architectural Decision Records (ADRs). This creates a "ubiquitous language"<sup>[[1]](#notes)</sup> or shared glossary that prevents the AI from rediscovering or misinterpreting terms in every session. This helps keep the [`AI Ontology'](https://dev.to/bikashdaga/ontology-in-ai-2025-guide-structure-semantics-applications-in-knowledge-representation-44aa) of the project explicitly defined and aligned with the codebase.
+When using `grill-with-docs` — which layers a `domain-modeling` pass on top of `grilling` — the skill actively builds and maintains a ~~CONTEXT.md~~ GLOSSARY.md<sup>[[1]](#notes)</sup> file and Architectural Decision Records (ADRs). This helps create a "ubiquitous language"<sup>[[2]](#notes)</sup> or shared glossary that prevents the AI from rediscovering or misinterpreting terms in every session. This helps keep the [`AI Ontology'](https://dev.to/bikashdaga/ontology-in-ai-2025-guide-structure-semantics-applications-in-knowledge-representation-44aa) of the project explicitly defined and aligned with the codebase.
 
 ``` text
 ## Language
@@ -85,4 +85,5 @@ This is extremely useful. The terminology captured here flows straight into the 
 At the time of writing I have tried `grill-with-docs` on two (admittedly differently sized) projects. The first asked 111 questions, the second a little under 40. I'm excited to run it again.
 
 ## <a name="notes"></a>Notes
-1. Eric Evans, Domain Driven Design (2003)
+1. Changed form CONTEXT.md to GLOSSARY.md in version 1.3
+2. Eric Evans, Domain Driven Design (2003)
