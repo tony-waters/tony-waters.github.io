@@ -267,9 +267,9 @@ After the TTL expires, a request with the same `Idempotency-Key` is treated as a
 
 Lets revisit our failure points and see how the clients only real option, resending the request, now works. What happens to this re-tried request in any of the three failure scenarios:
 
-- **(1) Previous request never arrived.** Nothing in `rest-service` was previously run — no Redis key, no database row. A retry with the same `Idempotency-Key` behaves exactly like the first attempt, but hopefully succeeds this time.
-- **(2) The server failed mid-processing.** If the second request is right after the first Redis holds an `IN_PROGRESS` record for that key, and the client gets back `425 Too Early`. If the original request failed outright instead the key is freed immediately. Either way, no duplicate `Order` can be created from this path.
-- **(3) Response was lost on the way back.** This is the case the whole mechanism exists for. The order and outbox row were committed inside the one transaction, but the client did not get a 201 response. In this scenario the aspect re-fetches the same `Order` row from Postgres and hands it back, so the client receives the original order rather than creating a second one.
+1. **Previous request never arrived.** Nothing in `rest-service` was previously run — no Redis key, no database row. A retry with the same `Idempotency-Key` behaves exactly like the first attempt, but hopefully succeeds this time.
+2. **The server failed mid-processing.** If the second request is right after the first Redis holds an `IN_PROGRESS` record for that key, and the client gets back `425 Too Early`. If the original request failed outright instead the key is freed immediately. Either way, no duplicate `Order` can be created from this path.
+3. **Response was lost on the way back.** This is the case the whole mechanism exists for. The order and outbox row were committed inside the one transaction, but the client did not get a 201 response. In this scenario the aspect re-fetches the same `Order` row from Postgres and hands it back, so the client receives the original order rather than creating a second one.
 
 From the client perspective it no longer matters at what point the failure occurred. They can safely retry the request.
 
