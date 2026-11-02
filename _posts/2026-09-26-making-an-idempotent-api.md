@@ -150,7 +150,7 @@ sealed interface LockResult {
 }
 ```
 
-The below call to `setIfAbsent` is backed by Redis `SET ... NX PX`. It creates the `IN_PROGRESS` record only if the key does not already exist, and attaches the TTL in the same operation.
+The below call to `setIfAbsent` is backed by Redis [`SET ... NX PX`](https://redis.io/docs/latest/commands/set/). It creates the `IN_PROGRESS` record only if the key does not already exist, and attaches the TTL in the same operation.
 
 ```java
 LockResult tryBegin(String scope, String key, String fingerprint) {
