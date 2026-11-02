@@ -308,7 +308,7 @@ Here is what happens when we run the K6 tests once:
 
 ![System diagram]({{ site.baseurl }}/img/system-design-idempotent-grafana-1.png "System Diagram")
 
-The four series on the "Idempotency outcomes over time" panel are the dashboard's names for the four `LockResult` cases — `created`, `in_progress`, `replayed`, or `conflict`. A couple of things stand out from a single run:
+The four series on the `Idempotency outcomes over time` panel are the dashboard's names for the four `LockResult` cases — `created`, `in_progress`, `replayed`, or `conflict`. A couple of things stand out from a single run:
 
 - All four outcomes fire within one test run, including a `conflict`. This was designed into the K6 tests.
 - `in_progress` and `replayed` both spike and drop back to zero within about a minute. Nothing lingers `in_progress` after the run ends, which is what you would expect given the lock is released as soon as the wrapped method returns or throws.
