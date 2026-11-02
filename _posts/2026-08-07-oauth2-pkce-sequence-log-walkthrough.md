@@ -53,7 +53,7 @@ The Web Application then records that it is starting the OAuth/OIDC login flow. 
 web-1       | {"event":"login_started","requestId":"8c500581-f702-4c44-8b45-d47a712a1f9b","redirectUri":"http://localhost:3000/callback","scope":"openid profile email"}
 ```
 
-The application also creates the OAuth authorization request. The later Keycloak request (5) confirms that this request contains `state`, `nonce`, a PKCE `code_challenge`, and `code_challenge_method=S256`.
+The application also creates the OAuth authorisation request. The later Keycloak request (5) confirms that this request contains `state`, `nonce`, a PKCE `code_challenge`, and `code_challenge_method=S256`.
 
 ---
 
@@ -67,9 +67,9 @@ web-1       | {"event":"request_completed","requestId":"8c500581-f702-4c44-8b45-
 
 ---
 
-### (4) Browser → Keycloak: `Authorization Request`
+### (4) Browser → Keycloak: `Authorisation Request`
 
-The browser follows the redirect and calls Keycloak's OpenID Connect authorization endpoint.
+The browser follows the redirect and calls Keycloak's OpenID Connect authorisation endpoint.
 
 This log line is particularly useful because it exposes the important OAuth/OIDC request parameters, including:
 
@@ -82,7 +82,7 @@ This log line is particularly useful because it exposes the important OAuth/OIDC
 - `code_challenge=tMtnSM6RJWYja2oky2yqUbWnH5K6p0jicp_PakElseI`
 - `code_challenge_method=S256`
 
-The presence of `response_type=code` shows that this is the **Authorization Code flow**. The `code_challenge` and `code_challenge_method=S256` parameters show that **PKCE** is being used.
+The presence of `response_type=code` shows that this is the **Authorisation Code flow**. The `code_challenge` and `code_challenge_method=S256` parameters show that **PKCE** is being used.
 
 ```text
 keycloak-1  | 2026-08-11 19:34:14,667 INFO  [io.quarkus.http.access-log] (executor-thread-1) 172.18.0.1 - - [11/Aug/2026:19:34:14 +0000] "GET /realms/oauth2-demo/protocol/openid-connect/auth?client_id=web-client&scope=openid%20profile%20email&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=fwiljQUGFYmOfqyQ2HNQKsxtKATfMeQOpWAPRqjGIIc&nonce=vf-_DRVL9tnc3V4fJHxE_EQqDc3Xz01CF954_6cJTMk&code_challenge=tMtnSM6RJWYja2oky2yqUbWnH5K6p0jicp_PakElseI&code_challenge_method=S256 HTTP/1.1" 200 6906
@@ -92,7 +92,7 @@ keycloak-1  | 2026-08-11 19:34:14,667 INFO  [io.quarkus.http.access-log] (execut
 
 ### (5) — Keycloak → Browser: Keycloak login page
 
-The authorization request returns HTTP `200`, meaning Keycloak sent the login page to the browser.
+The authorisation request returns HTTP `200`, meaning Keycloak sent the login page to the browser.
 
 ```text
 keycloak-1  | 2026-08-11 19:34:14,667 INFO  [io.quarkus.http.access-log] (executor-thread-1) 172.18.0.1 - - [11/Aug/2026:19:34:14 +0000] "GET /realms/oauth2-demo/protocol/openid-connect/auth?client_id=web-client&scope=openid%20profile%20email&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=fwiljQUGFYmOfqyQ2HNQKsxtKATfMeQOpWAPRqjGIIc&nonce=vf-_DRVL9tnc3V4fJHxE_EQqDc3Xz01CF954_6cJTMk&code_challenge=tMtnSM6RJWYja2oky2yqUbWnH5K6p0jicp_PakElseI&code_challenge_method=S256 HTTP/1.1" 200 6906
@@ -138,7 +138,7 @@ The `type="LOGIN"` entry confirms successful authentication. The HTTP request re
 
 After successful authentication, Keycloak redirects the browser back to the Web Application using Proof Key for Code Exchange (PKCE): 
 
-> PKCE works by having the client generate a random secret called a code verifier, then derive a code challenge from it. The code challenge is sent with the authorization request, and the original verifier is sent when exchanging the code for a token. This ensures only the client that started the flow can complete it.
+> PKCE works by having the client generate a random secret called a code verifier, then derive a code challenge from it. The code challenge is sent with the authorisation request, and the original verifier is sent when exchanging the code for a token. This ensures only the client that started the flow can complete it.
 > OAuth Docs (https://oauth.net/2/pkce/)
 
 The successful authentication POST completes with HTTP `302`:
@@ -153,7 +153,7 @@ keycloak-1  | 2026-08-11 19:34:22,474 INFO  [io.quarkus.http.access-log] (execut
 
 The browser returns to the Web Application's callback endpoint.
 
-At the start of this request, the Web Application still reports the request as unauthenticated because the authorization code has not yet been exchanged for a token.
+At the start of this request, the Web Application still reports the request as unauthenticated because the authorisation code has not yet been exchanged for a token.
 
 ```text
 web-1       | {"event":"request_started","requestId":"e52823d6-3b0a-457c-8792-2bd0fd917016","method":"GET","path":"/callback","authenticated":false,"principal":null}
@@ -161,14 +161,14 @@ web-1       | {"event":"request_started","requestId":"e52823d6-3b0a-457c-8792-2b
 
 ---
 
-### (10) Web Application → Keycloak: exchange authorization code for tokens
+### (10) Web Application → Keycloak: exchange authorisation code for tokens
 
-The Web Application now exchanges the authorization code for tokens at Keycloak's token endpoint.
+The Web Application now exchanges the authorisation code for tokens at Keycloak's token endpoint.
 
 Keycloak records the OAuth event:
 
 ```text
-keycloak-1  | 2026-08-11 19:34:22,550 DEBUG [org.keycloak.events] (executor-thread-1) type="CODE_TO_TOKEN", realmId="94107831-a88c-4e54-9ded-b9e0a22350f7", realmName="oauth2-demo", clientId="web-client", userId="4622b398-6079-4930-b21c-b20705057173", sessionId="242a51f2-e130-4ce5-aa38-7578a9491481", ipAddress="172.18.0.5", token_id="onrtac:581284e9-dfb6-4df8-9c21-fb259167fb4d", grant_type="authorization_code", refresh_token_type="Refresh", scope="openid profile email", refresh_token_id="2c97ccc6-fe5c-45d7-8dfb-a838526961a5", code_id="242a51f2-e130-4ce5-aa38-7578a9491481", client_auth_method="client-secret"
+keycloak-1  | 2026-08-11 19:34:22,550 DEBUG [org.keycloak.events] (executor-thread-1) type="CODE_TO_TOKEN", realmId="94107831-a88c-4e54-9ded-b9e0a22350f7", realmName="oauth2-demo", clientId="web-client", userId="4622b398-6079-4930-b21c-b20705057173", sessionId="242a51f2-e130-4ce5-aa38-7578a9491481", ipAddress="172.18.0.5", token_id="onrtac:581284e9-dfb6-4df8-9c21-fb259167fb4d", grant_type="authorisation_code", refresh_token_type="Refresh", scope="openid profile email", refresh_token_id="2c97ccc6-fe5c-45d7-8dfb-a838526961a5", code_id="242a51f2-e130-4ce5-aa38-7578a9491481", client_auth_method="client-secret"
 ```
 
 The `CODE_TO_TOKEN` event shows that:
@@ -178,7 +178,7 @@ The `CODE_TO_TOKEN` event shows that:
 - the requested scope is `openid profile email`;
 - the Web Application authenticates as a confidential client using `client-secret`.
 
-The logs do **not** print the `code_verifier`, so the PKCE verifier itself cannot be demonstrated directly from this token-endpoint log. However, stage (4) proves that the authorization request was initiated with a PKCE `code_challenge` and `code_challenge_method=S256`.
+The logs do **not** print the `code_verifier`, so the PKCE verifier itself cannot be demonstrated directly from this token-endpoint log. However, stage (4) proves that the authorisation request was initiated with a PKCE `code_challenge` and `code_challenge_method=S256`.
 
 ---
 
@@ -190,7 +190,7 @@ The token endpoint returns HTTP `200`:
 keycloak-1  | 2026-08-11 19:34:22,553 INFO  [io.quarkus.http.access-log] (executor-thread-1) 172.18.0.5 - - [11/Aug/2026:19:34:22 +0000] "POST /realms/oauth2-demo/protocol/openid-connect/token HTTP/1.1" 200 3260
 ```
 
-Together with the successful `CODE_TO_TOKEN` event, this shows that Keycloak successfully exchanged the authorization code for tokens.
+Together with the successful `CODE_TO_TOKEN` event, this shows that Keycloak successfully exchanged the authorisation code for tokens.
 A JWT token is returned ot the Web Application and stored in the server-side session.
 
 ---
