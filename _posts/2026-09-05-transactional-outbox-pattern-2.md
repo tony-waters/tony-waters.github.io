@@ -54,7 +54,7 @@ public Order createOrder(CreateOrderRequest request) {
 }
 ```
 
-Because the `order` row and the `outbox` row are saved in the same transaction, there is no point where the order is committed but the intention to send the email has been lost. Or *vice versa*. Either both rows commit, or neither row commits.
+Because the `order` row and the `outbox` row are saved in the same transaction, there is no point where the order is committed but *the intention to send the email* has been lost. Or *vice versa*. Either both rows commit, or neither row commits.
 
 ### Relaying the Outbox
 
