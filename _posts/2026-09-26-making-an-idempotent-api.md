@@ -219,6 +219,8 @@ private Object replay(Class<?> returnType, UUID id) {
 
 This avoids keeping a second copy of the HTTP response in Redis. Postgres remains the source of truth for orders. Redis only remembers enough to make retries safe.
 
+### Dealing with Exceptions in the @Idempotent aspect
+
 If the method wrapped by `@Idempotent` throws an exception then the aspect releases the key immediately. That matters because a failed attempt should not poison the key for the full TTL. The next retry should be able to make a clean attempt:
 
 ```java
