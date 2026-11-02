@@ -178,7 +178,7 @@ LockResult tryBegin(String scope, String key, String fingerprint) {
 }
 ```
 
-Only the caller that gets `Acquired` is allowed to execute the service method. Every other caller is interpreting state left behind by the first attempt:
+Only the caller that gets `Acquired` is allowed to execute the service method. Every other caller is responded to based on the first attempt:
 
 - `InProgress`: the first request is still running
 - `Replayable`: the first request completed with the same fingerprint
