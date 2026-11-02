@@ -263,7 +263,7 @@ This version avoids that specific failure by splitting the work into two **short
 2. Call `email-service` outside the database transaction.
 3. Update the order's email status (transaction #2).
 
-This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). If the process crashes between these steps then the database state and what actually happened can become inconsistent.
+This keeps database connections out of the rate-limit wait, but introduces a [dual-write problem](https://www.confluent.io/blog/dual-write-problem/). If the process fails between these steps then the database state and what actually happened can become inconsistent.
 
 The flow is also still synchronous. The HTTP request thread remains blocked while `rest-service` waits for `email-service`. So although this design protects the database connection pool, it does not free the request thread. To avoid holding that thread as well, email delivery would need to move to asynchronous processing.
 
