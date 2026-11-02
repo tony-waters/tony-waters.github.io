@@ -257,7 +257,7 @@ This fixes the transaction boundary problem from the last [synchronous Resilienc
 
 It also changes the role of the rate limiter. In the [previous HTTP version]({% post_url 2026-09-01-resilience4j-rate-limiter %}) the rate limiter protected the email service by *rejecting* excess requests. In this version, the rate limiter just slows the consumer down. That is a better fit when the work is important enough to complete later rather than fail fast.
 
-Also, Kafkas "partition per consumer" approach makes centralising the rate limiting using something like Redis and Bucket4j unnecessary (at least for the moment). Kafka already limits to a single partition per consumer, and consequently only one consumer is rate limited (providing it is not consuming from other topics). 
+Also, Kafkas `partition per consumer` approach makes centralising the rate limiting using something like Redis and Bucket4j unnecessary (at least for the moment). Kafka already limits to a single partition per consumer, and consequently only one consumer is rate limited (providing it is not consuming from other topics). 
 
 ## What this does not fix
 
