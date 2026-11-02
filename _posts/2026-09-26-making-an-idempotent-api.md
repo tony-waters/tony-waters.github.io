@@ -135,11 +135,11 @@ The record moves through two states:
 - `IN_PROGRESS`: one request has acquired the key and is still running.
 - `COMPLETED`: the request finished, and `resultId` points at the `Order` row it created.
 
-That `fingerprint` field is there to catch accidental key reuse. The aspect hashes the method arguments, excluding the idempotency key itself. If a retry arrives with the same key and the same body, it is a replay. If it arrives with the same key and a different body, it is a conflict.
+That `fingerprint` field is there to catch accidental or malicious key reuse. The aspect hashes the method arguments, excluding the idempotency key itself. If a retry arrives with the same key and the same body, it is probably just a client-side re-try, so we replay the response. If it arrives with the same key and a different body this is at best a client-side mistake, or potentially malicious.
 
 ### The lock state machine
 
-`IdempotencyStore` turns the Redis record into a domain-level result. Callers receive one of four outcomes:
+`IdempotencyStore` turns the Redis record into a suitable response. Callers receive one of four outcomes:
 
 ```java
 sealed interface LockResult {
@@ -150,7 +150,7 @@ sealed interface LockResult {
 }
 ```
 
-The below call to `setIfAbsent` is backed by Redis [`SET ... NX PX`](https://redis.io/docs/latest/commands/set/). It creates the `IN_PROGRESS` record only if the key does not already exist, and attaches the TTL in the same operation.
+The below call to `setIfAbsent` is backed by Redis [`SET ... NX PX`](https://redis.io/docs/latest/commands/set/). An ATOMIC action that creates the `IN_PROGRESS` record only if the key does not already exist, and attaches the TTL in the same operation:
 
 ```java
 LockResult tryBegin(String scope, String key, String fingerprint) {
