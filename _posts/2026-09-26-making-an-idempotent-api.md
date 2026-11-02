@@ -122,7 +122,7 @@ String fingerprint = fingerprint(method, args);
 
 ### The Redis record
 
-The value stored in Redis is small. And not a cached HTTP response. It is just enough state to answer "what happened to the first request with this key?":
+The value stored in Redis is small. And not a cached HTTP response. It is just enough state to answer *what happened to the first request with this key?*:
 
 ```java
 record IdempotencyRecord(Status status, String fingerprint, UUID resultId) {
