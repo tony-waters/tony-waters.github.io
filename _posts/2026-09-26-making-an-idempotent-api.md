@@ -39,18 +39,16 @@ One reason for implementing idempotency is to plan for network or server failure
 ![System diagram]({{ site.baseurl }}/img/architecture-failure-points.png "System Diagram")
 
 1. After the request has been sent but before it reaches its destination.
-2. Once it has reached its destination but before it has been fully processed.
+2. Once it has reached its destination but before it has responded. The request may have been fully processed, or not.
 3. During the response to the successful request.
 
-While only (3) has a successful result *they all look the same to the client*. The client is left with a timeout, and does not know if the payload has been processed. From the clients perspective, often the only realistic option is to just retry the request.
-
-This is a good thing if the failure was at (1), and sometimes if it was at (2), since we do not want to lose the message. However, if the failure was at (3) we risk consuming the message more than once.
+Rationally, (3) had a definitely successful (though not acknowledged) result, (2) *may* have been successful (or maybe not), and (1) was definitely not successful. However, *they all look the same to the client*. The client is left with a timeout, and does not know if the payload has been processed. From the clients perspective, often the only realistic option is to just retry the request.
 
 ---
 
 What we really want is `exactly-once` delivery.
 
-Exactly-once delivery would guarantee that a message is processed exactly one time, preventing both data loss and duplication. This is difficult to implement in distributed systems due to network unreliability (illustrated by the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals'_Problem)).  Fortunately, systems can achieve "effectively exactly-once" semantics by combining at-least-once delivery with idempotent processing, ensuring that duplicate messages have no additional adverse effects. A common pattern for achieving this is to include an `Idempotency-Key` in the request.
+Exactly-once delivery would guarantee that a message is processed exactly one time, preventing both data loss and duplication. This is difficult to implement in distributed systems since the client can never know if the request was actually processed (illustrated by the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals'_Problem)).  Fortunately, systems can achieve "effectively exactly-once" semantics by combining at-least-once delivery with idempotent processing, ensuring that duplicate messages have no additional adverse effects. A common pattern for achieving this is to include an `Idempotency-Key` in the request.
 
 
 
@@ -270,8 +268,8 @@ After the TTL expires, a request with the same `Idempotency-Key` is treated as a
 Lets revisit our failure points and see how the clients only real option, resending the request, now works. What happens to this re-tried request in any of the three failure scenarios:
 
 1. **Previous request never arrived.** Nothing in `rest-service` was previously run — no Redis key, no database row. A retry with the same `Idempotency-Key` behaves exactly like the first attempt, but hopefully succeeds this time.
-2. **The server failed mid-processing.** If the second request is right after the first Redis holds an `IN_PROGRESS` record for that key, and the client gets back `425 Too Early`. If the original request failed outright instead the key is freed immediately. Either way, no duplicate `Order` can be created from this path.
-3. **Response was lost on the way back.** This is the case the whole mechanism exists for. The order and outbox row were committed inside the one transaction, but the client did not get a 201 response. In this scenario the aspect re-fetches the same `Order` row from Postgres and hands it back, so the client receives the original order rather than creating a second one.
+2. **The server failed after receiving the request but before sending the response ('mid-processing').** If the second request is right after the first Redis holds an `IN_PROGRESS` record for that key, and the client gets back `425 Too Early`. If the original request failed outright instead the key is freed immediately. Either way, no duplicate `Order` can be created from this path.
+3. **Response was lost on the way back.** The order and outbox row were committed inside the one transaction, but the client did not get a 201 response. In this scenario the aspect re-fetches the same `Order` row from Postgres and hands it back, so the client receives the original order rather than creating a second one.
 
 From the client perspective it no longer matters at what point the failure occurred. They can safely retry the request.
 
